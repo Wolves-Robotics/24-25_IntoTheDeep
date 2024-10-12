@@ -12,11 +12,9 @@ public class IntakeRun extends OpMode {
     DcMotor motor;
     Servo servo, servo2;
 
-    public static double servoRot = 0.5, servoPos = 0.25;
-
     @Override
     public void init() {
-//        motor = hardwareMap.dcMotor.get("intake");
+        motor = hardwareMap.dcMotor.get("intake");
         servo = hardwareMap.servo.get("clawPivot");
         servo.setPosition(0.5);
         servo2 = hardwareMap.servo.get("claw");
@@ -25,13 +23,11 @@ public class IntakeRun extends OpMode {
 
     @Override
     public void loop() {
-//        if (gamepad1.a) motor.setPower(1);
-//        else if (gamepad1.b) motor.setPower(-1);
-//        else motor.setPower(0);
+        motor.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
         if (gamepad1.a) servo.setPosition(0.5);
         if (gamepad1.b) servo.setPosition(1);
         if (gamepad1.x) servo.setPosition(0);
-        if (gamepad1.y) servo2.setPosition(servoPos);
+        if (gamepad1.y) servo2.setPosition(0.25);
         else servo2.setPosition(0);
     }
 }
