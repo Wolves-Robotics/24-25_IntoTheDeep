@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.autonomous.enums.Color;
+import org.firstinspires.ftc.teamcode.autonomous.collections.Color;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.HashMap;
