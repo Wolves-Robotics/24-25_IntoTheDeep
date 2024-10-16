@@ -70,7 +70,7 @@ public class BaseAuto extends OpMode {
             time = true;
             elapsedTime.reset();
         } else time = false;
-        return bool && time;
+        return time;
     }
 
     private void switchColorAndStartPos() {
