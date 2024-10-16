@@ -40,7 +40,6 @@ abstract public class BaseAuto extends OpMode {
         if (timeLimit(gamepad1.dpad_up)) switchNumber--;
         switchNumber %= 3;
 
-
         if (timeLimit(gamepad1.dpad_right)) {
             switchColorAndStartPos();
             if (switchNumber == 2) {
@@ -53,6 +52,7 @@ abstract public class BaseAuto extends OpMode {
             }
         }
         timeOffset = Math.max(timeOffset, 0);
+        telemetry.addData("switch number", switchNumber);
         telemetry.addData("Selected", enumMaps.switchMap.get(switchNumber));
         telemetry.addData("Color", enumMaps.colorMap.get(color));
         telemetry.addData("Start position", enumMaps.startPosMap.get(startPos));
