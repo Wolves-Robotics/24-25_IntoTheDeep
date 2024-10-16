@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import java.util.HashMap;
 
 @Autonomous
-abstract public class BaseAuto extends OpMode {
+public class BaseAuto extends OpMode {
     private EnumMaps enumMaps;
     private RobotHardware robotHardware;
     private Follower follower;
@@ -31,14 +31,14 @@ abstract public class BaseAuto extends OpMode {
         switchNumber = 0;
         timeOffset = 0;
         elapsedTime = new ElapsedTime();
-        robotHardware = new RobotHardware(hardwareMap, color);
+//        robotHardware = new RobotHardware(hardwareMap, color);
     }
 
     @Override
     public void init_loop() {
         if (timeLimit(gamepad1.dpad_down)) switchNumber++;
-        if (timeLimit(gamepad1.dpad_up)) switchNumber--;
-        switchNumber %= 3;
+        else if (timeLimit(gamepad1.dpad_up)) switchNumber--;
+//        switchNumber %= 3;
 
         if (timeLimit(gamepad1.dpad_right)) {
             switchColorAndStartPos();
