@@ -65,11 +65,11 @@ public class BaseAuto extends OpMode {
     }
 
     private boolean timeLimit(boolean bool) {
-        boolean time = false;
-        if (0.25 > elapsedTime.seconds()) {
+        boolean time;
+        if (0.25 > elapsedTime.seconds() && bool) {
             time = true;
             elapsedTime.reset();
-        }
+        } else time = false;
         return bool && time;
     }
 
