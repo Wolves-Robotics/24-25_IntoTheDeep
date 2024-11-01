@@ -64,12 +64,15 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     @Override
     protected void runPeriotic() {
+        controller.setPID(p1, i1, d1);
+        secondaryController.setPID(p2, i2, d2);
+
         target = Math.min(target, maxTarget);
         int armPos = robotHardware.getMotorPos(Names.intakeExtendo);
 
-        double power = armPos > maxTarget ?
-                secondaryController.calculate(armPos, target) :
-                controller.calculate(armPos, target);
+        double power = armPos < maxTarget ?
+                controller.calculate(armPos, target) :
+                secondaryController.calculate(armPos, target);
 
         robotHardware.setMotorPower(Names.intakeExtendo, power);
         telemetry.addData("Intake pos", armPos);

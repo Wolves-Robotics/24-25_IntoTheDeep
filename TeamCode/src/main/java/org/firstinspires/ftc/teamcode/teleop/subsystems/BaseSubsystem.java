@@ -10,6 +10,7 @@ abstract public class BaseSubsystem extends SubsystemBase {
     MultipleTelemetry telemetry;
 
     public BaseSubsystem(RobotHardware _robotHardware, MultipleTelemetry _telemetry) {
+        super();
         robotHardware = _robotHardware;
         telemetry = _telemetry;
     }

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -21,9 +22,6 @@ import java.util.List;
 
 @Config
 public class RobotHardware extends Thread {
-    public static double inputDeadTime = 0.3;
-    public static double bumperDeadZone = 0.75;
-
     private static HardwareMap hardwareMap;
     private List<LynxModule> allHubs;
 
@@ -33,8 +31,6 @@ public class RobotHardware extends Thread {
 
     private IMU imu;
     private YawPitchRollAngles imuAngles;
-
-    private VisionPortal visionPortal;
 
     private ElapsedTime deltaTime;
     private double lastLoopTime;
@@ -50,11 +46,11 @@ public class RobotHardware extends Thread {
     }
 
     private static class ServoClass {
-        Servo servo;
+        ServoImplEx servo;
         double pos = 0d;
 
         public ServoClass(Names name, boolean isReverse) {
-            servo = hardwareMap.servo.get(nameHashMap.get(name));
+            servo = hardwareMap.get(ServoImplEx.class, nameHashMap.get(name));
             if (isReverse) servo.setDirection(Servo.Direction.REVERSE);
         }
     }
@@ -70,17 +66,11 @@ public class RobotHardware extends Thread {
 
         setImu();
 
-        servoInit();
+//        servoInit();
     }
 
     public RobotHardware(HardwareMap _hardwareMap) {
         standardInit(_hardwareMap);
-    }
-
-    public RobotHardware(HardwareMap _hardwareMap, Color color) {
-        standardInit(_hardwareMap);
-
-        setCamera(color);
     }
 
     private void lynxModuleInit() {
@@ -118,25 +108,23 @@ public class RobotHardware extends Thread {
 
     private void setHardwareMap() {
         motorClassMap = new HashMap<>();
-
-        motorClassMap.put("frontLeft", new MotorClass(Names.frontLeft, false));
+        motorClassMap.put("frontLeft", new MotorClass(Names.frontLeft, true));
         motorClassMap.put("frontRight", new MotorClass(Names.frontRight, false));
-        motorClassMap.put("backLeft", new MotorClass(Names.backLeft, false));
+        motorClassMap.put("backLeft", new MotorClass(Names.backLeft, true));
         motorClassMap.put("backRight", new MotorClass(Names.backRight, false));
-        motorClassMap.put("slideLeft", new MotorClass(Names.slideLeft, false));
-        motorClassMap.put("slideRight", new MotorClass(Names.slideRight, false));
-        motorClassMap.put("intakeExtendo", new MotorClass(Names.intakeExtendo, false));
-        motorClassMap.put("slurp", new MotorClass(Names.slurp, false));
+//        motorClassMap.put("slideLeft", new MotorClass(Names.slideLeft, false));
+//        motorClassMap.put("slideRight", new MotorClass(Names.slideRight, false));
+//        motorClassMap.put("intakeExtendo", new MotorClass(Names.intakeExtendo, false));
+//        motorClassMap.put("slurp", new MotorClass(Names.slurp, false));
 
         servoClassMap = new HashMap<>();
-
-        servoClassMap.put("colorServo", new ServoClass(Names.colorServo, false));
-        servoClassMap.put("intakePitch", new ServoClass(Names.intakePitch, false));
-        servoClassMap.put("armPitch", new ServoClass(Names.armPitch, false));
-        servoClassMap.put("", new ServoClass(Names.outtake1, false));
-        servoClassMap.put("", new ServoClass(Names.outtake2, false));
-        servoClassMap.put("", new ServoClass(Names.outtakeRotate, false));
-        servoClassMap.put("", new ServoClass(Names.outtakeGrab, false));
+//        servoClassMap.put("colorServo", new ServoClass(Names.colorServo, false));
+//        servoClassMap.put("intakePitch", new ServoClass(Names.intakePitch, false));
+//        servoClassMap.put("armPitch", new ServoClass(Names.armPitch, false));
+//        servoClassMap.put("", new ServoClass(Names.outtake1, false));
+//        servoClassMap.put("", new ServoClass(Names.outtake2, false));
+//        servoClassMap.put("", new ServoClass(Names.outtakeRotate, false));
+//        servoClassMap.put("", new ServoClass(Names.outtakeGrab, false));
     }
 
     private void setImu() {
@@ -152,20 +140,6 @@ public class RobotHardware extends Thread {
         setServoPos(Names.colorServo, 0);
         setServoPos(Names.intakePitch, 0);
         setServoPos(Names.armPitch, 0);
-    }
-
-    private void setCamera(Color color) {
-        visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "camera"))
-                .setCameraResolution(new Size(640, 480))
-                .enableLiveView(true)
-//                .addProcessor()
-                .build();
-    }
-
-    public void closeCamera() {
-        visionPortal.close();
-
     }
 
     @Override
@@ -201,6 +175,7 @@ public class RobotHardware extends Thread {
     public double getServoPos(Names name) {
         return servoClassMap.get(nameHashMap.get(name)).pos;
     }
+
     public YawPitchRollAngles getImuAngles() {
         return imuAngles;
     }

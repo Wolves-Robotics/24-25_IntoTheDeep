@@ -17,6 +17,7 @@ public class EnumMaps {
         switchMap = new HashMap<>();
         switchMap.put(0, "Color");
         switchMap.put(1, "Start position");
+        switchMap.put(2, "Time Offset");
     }
 
     private void setColorMap() {

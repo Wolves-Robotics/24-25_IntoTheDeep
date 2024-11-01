@@ -10,24 +10,32 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class IntakeRun extends OpMode {
     DcMotor motor;
-    Servo servo, servo2;
+    Servo clawRot, claw, door;
 
     @Override
     public void init() {
         motor = hardwareMap.dcMotor.get("intake");
-        servo = hardwareMap.servo.get("clawPivot");
-        servo.setPosition(0.5);
-        servo2 = hardwareMap.servo.get("claw");
-        servo2.setPosition(0);
+//        clawRot = hardwareMap.servo.get("clawPivot");
+//        clawRot.setPosition(0.5);
+//        claw = hardwareMap.servo.get("claw");
+//        claw.setPosition(0);
+        door = hardwareMap.servo.get("door");
+        door.setPosition(0.07);
     }
 
     @Override
     public void loop() {
         motor.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
-        if (gamepad1.a) servo.setPosition(0.5);
-        if (gamepad1.b) servo.setPosition(1);
-        if (gamepad1.x) servo.setPosition(0);
-        if (gamepad1.y) servo2.setPosition(0.25);
-        else servo2.setPosition(0);
+//        if (gamepad1.a) clawRot.setPosition(0.5);
+//        if (gamepad1.b) clawRot.setPosition(1);
+//        if (gamepad1.x) clawRot.setPosition(0);
+//        if (gamepad1.y) claw.setPosition(0.25);
+//        else claw.setPosition(0);
+        if (gamepad1.a) {
+            door.setPosition(0.4);
+        }
+        if (gamepad1.b) {
+            door.setPosition(0.07);
+        }
     }
 }

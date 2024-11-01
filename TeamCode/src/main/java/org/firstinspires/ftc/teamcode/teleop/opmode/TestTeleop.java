@@ -38,40 +38,15 @@ public class TestTeleop extends CommandOpMode {
 
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
-
-        driveSubsystem.setDefaultCommand(driveSubsystem.driveCommand(
-                gamepadEx1.getLeftX(),
-                gamepadEx1.getLeftY(),
-                gamepadEx1.getRightX(),
-                false));
-
-        gamepadEx1.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(intakeSubsystem.toZero());
-
-        gamepadEx1.getGamepadButton(GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(intakeSubsystem.increaseTarget());
-
-        gamepadEx1.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(intakeSubsystem.decreaseTarget());
-
-        gamepadEx1.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
-                .whenPressed(outtakeSubsystem.toZero());
-
-        gamepadEx1.getGamepadButton(GamepadKeys.Button.A)
-                .whenPressed(outtakeSubsystem.bucket1());
-
-        gamepadEx1.getGamepadButton(GamepadKeys.Button.B)
-                .whenPressed(outtakeSubsystem.bucket2());
-
-        gamepadEx1.getGamepadButton(GamepadKeys.Button.X)
-                .whenPressed(outtakeSubsystem.lowChamber());
-
-        gamepadEx1.getGamepadButton(GamepadKeys.Button.Y)
-                .whenPressed(outtakeSubsystem.highChamber());
     }
 
     @Override
     public void run() {
+        schedule(driveSubsystem.driveCommand(
+                gamepadEx1.getLeftX(),
+                gamepadEx1.getLeftY(),
+                gamepadEx1.getRightX(),
+                true));
         multiTelem.update();
     }
 }
