@@ -1,36 +1,35 @@
 package org.firstinspires.ftc.teamcode.teleop.singleThings;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Config
 @TeleOp
 public class ServoTesting extends OpMode {
-    ServoImplEx claw, clawRot;
+    ServoImplEx intakePitch, armPitch, outtakeArm, outtakePivot;
+    public static double p1 = 0, p2 = 0, p3 = 0, p4 = 0;
+    public static boolean b1 = false, b2 = false, b3 = false, b4 = false;
 
     @Override
     public void init() {
-        claw = hardwareMap.get(ServoImplEx.class, "claw");
-        clawRot = hardwareMap.get(ServoImplEx.class, "clawPivot");
+        intakePitch = hardwareMap.get(ServoImplEx.class, "intakePitch");
+        armPitch = hardwareMap.get(ServoImplEx.class, "armPitch");
+        outtakeArm = hardwareMap.get(ServoImplEx.class, "outtakeArm");
+        outtakePivot = hardwareMap.get(ServoImplEx.class, "outtakePivot");
     }
 
     @Override
     public void loop() {
-        if (gamepad1.a) claw.setPosition(0);
-        if (gamepad1.b) claw.setPosition(0.25);
-        if (gamepad1.left_bumper) claw.getController().pwmDisable();
-        if (gamepad1.left_trigger > 0.75) claw.getController().pwmEnable();
-
-        if (gamepad1.dpad_down) clawRot.setPosition(0.5);
-        if (gamepad1.dpad_right) clawRot.setPosition(1);
-        if (gamepad1.dpad_left) clawRot.setPosition(0);
-        if (gamepad1.right_bumper) clawRot.getController().pwmDisable();
-        if (gamepad1.right_trigger > 0.75) clawRot.getController().pwmEnable();
-        telemetry.addData("claw cont", claw.getController());
-        telemetry.addData("claw rot cont", clawRot.getController());
-        telemetry.addData("Claw pwm", claw.isPwmEnabled());
-        telemetry.addData("Claw Rot pwm", clawRot.isPwmEnabled());
-        telemetry.update();
+        intakePitch.setPosition(p1);
+        intakePitch.setDirection(b1? Servo.Direction.REVERSE: Servo.Direction.FORWARD);
+        armPitch.setPosition(p2);
+        armPitch.setDirection(b2? Servo.Direction.REVERSE: Servo.Direction.FORWARD);
+        outtakeArm.setPosition(p3);
+        outtakeArm.setDirection(b3? Servo.Direction.REVERSE: Servo.Direction.FORWARD);
+        outtakePivot.setPosition(p4);
+        outtakePivot.setDirection(b4? Servo.Direction.REVERSE: Servo.Direction.FORWARD);
     }
 }

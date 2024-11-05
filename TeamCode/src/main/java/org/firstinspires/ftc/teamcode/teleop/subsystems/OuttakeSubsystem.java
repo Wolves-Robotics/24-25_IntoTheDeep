@@ -40,23 +40,23 @@ public class OuttakeSubsystem extends BaseSubsystem {
     }
 
     public InstantCommand openClaw() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.outtakeGrab, 1));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.claw, 1));
     }
 
     public InstantCommand closeClaw() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.outtakeGrab, 0));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.claw, 0));
     }
 
     public InstantCommand clawLeft() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.outtakeRotate, 0));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawRot, 0));
     }
 
     public InstantCommand clawMid() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.outtakeRotate, 0.5));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawRot, 0.5));
     }
 
     public InstantCommand clawRight() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.outtakeRotate, 1));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawRot, 1));
     }
 
     @Override

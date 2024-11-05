@@ -43,11 +43,11 @@ public class IntakeSubsystem extends BaseSubsystem {
     }
 
     public InstantCommand openColorServo() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.colorServo, 1));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.door, 1));
     }
 
     public InstantCommand closeColorServo() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.colorServo, 0));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.door, 0));
     }
 
     public InstantCommand lowerArmPitch() {

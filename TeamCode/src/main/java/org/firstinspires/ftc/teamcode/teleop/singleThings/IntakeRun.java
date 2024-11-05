@@ -14,7 +14,7 @@ public class IntakeRun extends OpMode {
 
     @Override
     public void init() {
-        motor = hardwareMap.dcMotor.get("intake");
+        motor = hardwareMap.dcMotor.get("slurp");
 //        clawRot = hardwareMap.servo.get("clawPivot");
 //        clawRot.setPosition(0.5);
 //        claw = hardwareMap.servo.get("claw");

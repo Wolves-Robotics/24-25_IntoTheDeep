@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
-import android.util.Size;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -12,10 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.autonomous.collections.Color;
-import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.HashMap;
 import java.util.List;
@@ -93,13 +88,13 @@ public class RobotHardware extends Thread {
         nameHashMap.put(Names.intakeExtendo, "intakeExtendo");
         nameHashMap.put(Names.slurp, "slurp");
 
-        nameHashMap.put(Names.colorServo, "colorServo");
+        nameHashMap.put(Names.door, "door");
         nameHashMap.put(Names.intakePitch, "intakePitch");
         nameHashMap.put(Names.armPitch, "armPitch");
-        nameHashMap.put(Names.outtake1, "");
-        nameHashMap.put(Names.outtake2, "");
-        nameHashMap.put(Names.outtakeRotate, "");
-        nameHashMap.put(Names.outtakeGrab, "");
+        nameHashMap.put(Names.outtakeArm, "outtakeArm");
+        nameHashMap.put(Names.outtakePivot, "outtakePivot");
+        nameHashMap.put(Names.clawRot, "clawRot");
+        nameHashMap.put(Names.claw, "claw");
 
         nameHashMap.put(Names.colorLeft, "colorLeft");
         nameHashMap.put(Names.colorMid, "colorMid");
@@ -112,19 +107,19 @@ public class RobotHardware extends Thread {
         motorClassMap.put("frontRight", new MotorClass(Names.frontRight, false));
         motorClassMap.put("backLeft", new MotorClass(Names.backLeft, true));
         motorClassMap.put("backRight", new MotorClass(Names.backRight, false));
-//        motorClassMap.put("slideLeft", new MotorClass(Names.slideLeft, false));
-//        motorClassMap.put("slideRight", new MotorClass(Names.slideRight, false));
-//        motorClassMap.put("intakeExtendo", new MotorClass(Names.intakeExtendo, false));
-//        motorClassMap.put("slurp", new MotorClass(Names.slurp, false));
+        motorClassMap.put("slideLeft", new MotorClass(Names.slideLeft, false));
+        motorClassMap.put("slideRight", new MotorClass(Names.slideRight, false));
+        motorClassMap.put("intakeExtendo", new MotorClass(Names.intakeExtendo, false));
+        motorClassMap.put("slurp", new MotorClass(Names.slurp, false));
 
         servoClassMap = new HashMap<>();
-//        servoClassMap.put("colorServo", new ServoClass(Names.colorServo, false));
-//        servoClassMap.put("intakePitch", new ServoClass(Names.intakePitch, false));
-//        servoClassMap.put("armPitch", new ServoClass(Names.armPitch, false));
-//        servoClassMap.put("", new ServoClass(Names.outtake1, false));
-//        servoClassMap.put("", new ServoClass(Names.outtake2, false));
-//        servoClassMap.put("", new ServoClass(Names.outtakeRotate, false));
-//        servoClassMap.put("", new ServoClass(Names.outtakeGrab, false));
+        servoClassMap.put("door", new ServoClass(Names.door, false));
+        servoClassMap.put("intakePitch", new ServoClass(Names.intakePitch, false));
+        servoClassMap.put("armPitch", new ServoClass(Names.armPitch, false));
+        servoClassMap.put("outtakeArm", new ServoClass(Names.outtakeArm, false));
+        servoClassMap.put("outtakePivot", new ServoClass(Names.outtakePivot, false));
+        servoClassMap.put("clawPivot", new ServoClass(Names.clawRot, false));
+        servoClassMap.put("claw", new ServoClass(Names.claw, false));
     }
 
     private void setImu() {
@@ -137,7 +132,7 @@ public class RobotHardware extends Thread {
     }
 
     private void servoInit() {
-        setServoPos(Names.colorServo, 0);
+        setServoPos(Names.door, 0);
         setServoPos(Names.intakePitch, 0);
         setServoPos(Names.armPitch, 0);
     }
