@@ -83,8 +83,8 @@ public class RobotHardware extends Thread {
         nameHashMap.put(Names.frontRight, "frontRight");
         nameHashMap.put(Names.backLeft, "backLeft");
         nameHashMap.put(Names.backRight, "backRight");
-        nameHashMap.put(Names.slideLeft, "leftOuttake");
-        nameHashMap.put(Names.slideRight, "rightOuttake");
+        nameHashMap.put(Names.leftOuttake, "leftOuttake");
+        nameHashMap.put(Names.rightOuttake, "rightOuttake");
         nameHashMap.put(Names.intakeExtendo, "intakeExtendo");
         nameHashMap.put(Names.slurp, "slurp");
 
@@ -93,7 +93,7 @@ public class RobotHardware extends Thread {
         nameHashMap.put(Names.armPitch, "armPitch");
         nameHashMap.put(Names.outtakeArm, "outtakeArm");
         nameHashMap.put(Names.outtakePivot, "outtakePivot");
-        nameHashMap.put(Names.clawRot, "clawRot");
+        nameHashMap.put(Names.clawPivot, "clawPivot");
         nameHashMap.put(Names.claw, "claw");
 
         nameHashMap.put(Names.colorLeft, "colorLeft");
@@ -107,8 +107,8 @@ public class RobotHardware extends Thread {
         motorClassMap.put("frontRight", new MotorClass(Names.frontRight, false));
         motorClassMap.put("backLeft", new MotorClass(Names.backLeft, true));
         motorClassMap.put("backRight", new MotorClass(Names.backRight, false));
-        motorClassMap.put("leftOuttake", new MotorClass(Names.slideLeft, false));
-        motorClassMap.put("rightOuttake", new MotorClass(Names.slideRight, false));
+        motorClassMap.put("leftOuttake", new MotorClass(Names.leftOuttake, false));
+        motorClassMap.put("rightOuttake", new MotorClass(Names.rightOuttake, false));
         motorClassMap.put("intakeExtendo", new MotorClass(Names.intakeExtendo, false));
         motorClassMap.put("slurp", new MotorClass(Names.slurp, false));
 
@@ -118,7 +118,7 @@ public class RobotHardware extends Thread {
         servoClassMap.put("armPitch", new ServoClass(Names.armPitch, false));
         servoClassMap.put("outtakeArm", new ServoClass(Names.outtakeArm, false));
         servoClassMap.put("outtakePivot", new ServoClass(Names.outtakePivot, false));
-        servoClassMap.put("clawPivot", new ServoClass(Names.clawRot, false));
+        servoClassMap.put("clawPivot", new ServoClass(Names.clawPivot, false));
         servoClassMap.put("claw", new ServoClass(Names.claw, false));
     }
 

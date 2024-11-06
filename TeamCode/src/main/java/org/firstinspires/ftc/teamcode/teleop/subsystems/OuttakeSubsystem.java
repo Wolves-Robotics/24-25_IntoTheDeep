@@ -48,24 +48,24 @@ public class OuttakeSubsystem extends BaseSubsystem {
     }
 
     public InstantCommand clawLeft() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawRot, 0));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawPivot, 0));
     }
 
     public InstantCommand clawMid() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawRot, 0.5));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawPivot, 0.5));
     }
 
     public InstantCommand clawRight() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawRot, 1));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawPivot, 1));
     }
 
     @Override
     protected void runPeriotic() {
-        int armPos = (robotHardware.getMotorPos(Names.slideLeft) + robotHardware.getMotorPos(Names.slideRight)) / 2;
+        int armPos = (robotHardware.getMotorPos(Names.slideLeft) + robotHardware.getMotorPos(Names.rightOuttake)) / 2;
         double power = controller.calculate(armPos, target);
 
         robotHardware.setMotorPower(Names.slideLeft, power);
-        robotHardware.setMotorPower(Names.slideRight, power);
+        robotHardware.setMotorPower(Names.rightOuttake, power);
         telemetry.addData("Outtake pos", armPos);
         telemetry.addData("Outtake target", target);
     }

@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop.singleThings;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.Names;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
@@ -45,8 +42,8 @@ public class MotorTesting extends OpMode {
 
         if (gamepad1.a) robotHardware.setMotorPower(Names.slideLeft, 0.25);
         else robotHardware.setMotorPower(Names.slideLeft, 0);
-        if (gamepad1.b) robotHardware.setMotorPower(Names.slideRight, 0.25);
-        else robotHardware.setMotorPower(Names.slideRight, 0);
+        if (gamepad1.b) robotHardware.setMotorPower(Names.rightOuttake, 0.25);
+        else robotHardware.setMotorPower(Names.rightOuttake, 0);
         if (gamepad1.x) robotHardware.setMotorPower(Names.intakeExtendo, 0.25);
         else robotHardware.setMotorPower(Names.intakeExtendo, 0);
         if (gamepad1.y) robotHardware.setMotorPower(Names.slurp, 0.25);
