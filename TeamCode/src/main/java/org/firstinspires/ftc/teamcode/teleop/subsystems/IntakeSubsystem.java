@@ -51,11 +51,11 @@ public class IntakeSubsystem extends BaseSubsystem {
     }
 
     public InstantCommand lowerArmPitch() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.armPitch, 1));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.intakeArm, 1));
     }
 
     public InstantCommand raiseArmPitch() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.armPitch, 0));
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.intakeArm, 0));
     }
 
     public SequentialCommandGroup resetIntake() {

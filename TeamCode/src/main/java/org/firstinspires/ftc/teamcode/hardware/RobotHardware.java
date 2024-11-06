@@ -89,8 +89,8 @@ public class RobotHardware extends Thread {
         nameHashMap.put(Names.slurp, "slurp");
 
         nameHashMap.put(Names.door, "door");
-        nameHashMap.put(Names.intakePitch, "intakePitch");
-        nameHashMap.put(Names.armPitch, "armPitch");
+        nameHashMap.put(Names.intakePivot, "intakePitch");
+        nameHashMap.put(Names.intakeArm, "intakeArm");
         nameHashMap.put(Names.outtakeArm, "outtakeArm");
         nameHashMap.put(Names.outtakePivot, "outtakePivot");
         nameHashMap.put(Names.clawPivot, "clawPivot");
@@ -114,8 +114,8 @@ public class RobotHardware extends Thread {
 
         servoClassMap = new HashMap<>();
         servoClassMap.put("door", new ServoClass(Names.door, false));
-        servoClassMap.put("intakePitch", new ServoClass(Names.intakePitch, false));
-        servoClassMap.put("armPitch", new ServoClass(Names.armPitch, false));
+        servoClassMap.put("intakePitch", new ServoClass(Names.intakePivot, false));
+        servoClassMap.put("intakeArm", new ServoClass(Names.intakeArm, false));
         servoClassMap.put("outtakeArm", new ServoClass(Names.outtakeArm, false));
         servoClassMap.put("outtakePivot", new ServoClass(Names.outtakePivot, false));
         servoClassMap.put("clawPivot", new ServoClass(Names.clawPivot, false));
@@ -133,8 +133,8 @@ public class RobotHardware extends Thread {
 
     private void servoInit() {
         setServoPos(Names.door, 0);
-        setServoPos(Names.intakePitch, 0);
-        setServoPos(Names.armPitch, 0);
+        setServoPos(Names.intakePivot, 0);
+        setServoPos(Names.intakeArm, 0);
     }
 
     @Override

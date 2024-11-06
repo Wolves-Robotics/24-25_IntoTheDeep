@@ -61,10 +61,10 @@ public class OuttakeSubsystem extends BaseSubsystem {
 
     @Override
     protected void runPeriotic() {
-        int armPos = (robotHardware.getMotorPos(Names.slideLeft) + robotHardware.getMotorPos(Names.rightOuttake)) / 2;
+        int armPos = (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake)) / 2;
         double power = controller.calculate(armPos, target);
 
-        robotHardware.setMotorPower(Names.slideLeft, power);
+        robotHardware.setMotorPower(Names.leftOuttake, power);
         robotHardware.setMotorPower(Names.rightOuttake, power);
         telemetry.addData("Outtake pos", armPos);
         telemetry.addData("Outtake target", target);
