@@ -83,8 +83,8 @@ public class RobotHardware extends Thread {
         nameHashMap.put(Names.frontRight, "frontRight");
         nameHashMap.put(Names.backLeft, "backLeft");
         nameHashMap.put(Names.backRight, "backRight");
-        nameHashMap.put(Names.slideLeft, "slideLeft");
-        nameHashMap.put(Names.slideRight, "slideRight");
+        nameHashMap.put(Names.slideLeft, "leftOuttake");
+        nameHashMap.put(Names.slideRight, "rightOuttake");
         nameHashMap.put(Names.intakeExtendo, "intakeExtendo");
         nameHashMap.put(Names.slurp, "slurp");
 
@@ -107,8 +107,8 @@ public class RobotHardware extends Thread {
         motorClassMap.put("frontRight", new MotorClass(Names.frontRight, false));
         motorClassMap.put("backLeft", new MotorClass(Names.backLeft, true));
         motorClassMap.put("backRight", new MotorClass(Names.backRight, false));
-        motorClassMap.put("slideLeft", new MotorClass(Names.slideLeft, false));
-        motorClassMap.put("slideRight", new MotorClass(Names.slideRight, false));
+        motorClassMap.put("leftOuttake", new MotorClass(Names.slideLeft, false));
+        motorClassMap.put("rightOuttake", new MotorClass(Names.slideRight, false));
         motorClassMap.put("intakeExtendo", new MotorClass(Names.intakeExtendo, false));
         motorClassMap.put("slurp", new MotorClass(Names.slurp, false));
 
