@@ -40,8 +40,8 @@ public class MotorTesting extends OpMode {
 //        telemetry.addData("back right", backRightPower);
 //        telemetry.update();
 
-        if (gamepad1.a) robotHardware.setMotorPower(Names.slideLeft, 0.25);
-        else robotHardware.setMotorPower(Names.slideLeft, 0);
+        if (gamepad1.a) robotHardware.setMotorPower(Names.leftOuttake, 0.25);
+        else robotHardware.setMotorPower(Names.leftOuttake, 0);
         if (gamepad1.b) robotHardware.setMotorPower(Names.rightOuttake, 0.25);
         else robotHardware.setMotorPower(Names.rightOuttake, 0);
         if (gamepad1.x) robotHardware.setMotorPower(Names.intakeExtendo, 0.25);
