@@ -108,13 +108,13 @@ public class RobotHardware extends Thread {
         motorClassMap.put("backLeft", new MotorClass(Names.backLeft, true));
         motorClassMap.put("backRight", new MotorClass(Names.backRight, false));
         motorClassMap.put("leftOuttake", new MotorClass(Names.leftOuttake, false));
-        motorClassMap.put("rightOuttake", new MotorClass(Names.rightOuttake, false));
+        motorClassMap.put("rightOuttake", new MotorClass(Names.rightOuttake, true));
         motorClassMap.put("intakeExtendo", new MotorClass(Names.intakeExtendo, false));
         motorClassMap.put("slurp", new MotorClass(Names.slurp, false));
 
         servoClassMap = new HashMap<>();
         servoClassMap.put("door", new ServoClass(Names.door, false));
-        servoClassMap.put("intakePitch", new ServoClass(Names.intakePivot, false));
+        servoClassMap.put("intakePivot", new ServoClass(Names.intakePivot, false));
         servoClassMap.put("intakeArm", new ServoClass(Names.intakeArm, false));
         servoClassMap.put("outtakeArm", new ServoClass(Names.outtakeArm, false));
         servoClassMap.put("outtakePivot", new ServoClass(Names.outtakePivot, false));
