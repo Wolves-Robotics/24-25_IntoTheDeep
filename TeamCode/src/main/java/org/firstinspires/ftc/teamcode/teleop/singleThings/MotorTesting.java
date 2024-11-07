@@ -44,7 +44,7 @@ public class MotorTesting extends OpMode {
         else robotHardware.setMotorPower(Names.leftOuttake, 0);
         if (gamepad1.b) robotHardware.setMotorPower(Names.rightOuttake, 0.25);
         else robotHardware.setMotorPower(Names.rightOuttake, 0);
-        if (gamepad1.x) robotHardware.setMotorPower(Names.intakeExtendo, 0.25);
+        if (gamepad1.x) robotHardware.setMotorPower(Names.intakeExtendo, 1);
         else robotHardware.setMotorPower(Names.intakeExtendo, 0);
         if (gamepad1.y) robotHardware.setMotorPower(Names.slurp, 0.25);
         else robotHardware.setMotorPower(Names.slurp, 0);
