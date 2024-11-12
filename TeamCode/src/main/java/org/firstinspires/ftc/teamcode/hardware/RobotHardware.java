@@ -61,7 +61,7 @@ public class RobotHardware extends Thread {
 
         setImu();
 
-//        servoInit();
+        servoInit();
     }
 
     public RobotHardware(HardwareMap _hardwareMap) {
@@ -133,8 +133,12 @@ public class RobotHardware extends Thread {
 
     private void servoInit() {
         setServoPos(Names.door, 0);
+        setServoPos(Names.intakeArm, 0.08);
         setServoPos(Names.intakePivot, 0);
-        setServoPos(Names.intakeArm, 0);
+        setServoPos(Names.outtakeArm, 0.02);
+        setServoPos(Names.outtakePivot, 0);
+        setServoPos(Names.clawPivot, 0.5);
+        setServoPos(Names.claw, 0);
     }
 
     @Override

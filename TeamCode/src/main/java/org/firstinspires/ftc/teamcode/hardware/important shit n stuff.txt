@@ -31,21 +31,33 @@ Expansion Hub
         claw 1
 
 Servo info
-    intakeArm
-
-    intakePivot
-
-    door forward
-        closed 0.07
-        open 0.4
-    outtakeArm
-
-    outtakePivot
-
-    clawPivot forward
-        straight 0.5
-        to left 0
-        to right 1
-    claw forward
-        grab 0
-        open 0.25
+    multi positions
+        intakeGrab
+            intakeArm 0.73
+            intakePivot 0.3
+        intakePlace
+            intakeArm 0.015
+            intakePivot 0
+            outtakeArm 0.02
+            outtakePivot 0
+        idle
+            intakeArm 0.08
+            intakePivot 0
+            outtakeArm 0.02
+            outtakePivot 0
+        outtakeGrab
+            outtakeArm 0.0
+            outtakePivot 0.04
+        outtakePlace
+            outtakeArm 0.35
+            outtakePivot 0.45
+    single positions
+        door
+            open 0.4
+            close 0
+        clawPivot
+            horizontal 0.5
+            vertical 0
+        claw
+            open 0
+            close 0.2

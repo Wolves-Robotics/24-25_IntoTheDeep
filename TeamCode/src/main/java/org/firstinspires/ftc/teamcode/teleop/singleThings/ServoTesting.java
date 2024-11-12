@@ -6,30 +6,30 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.teamcode.hardware.Names;
+import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
+
 @Config
 @TeleOp
 public class ServoTesting extends OpMode {
-    ServoImplEx intakePivot, intakeArm, outtakeArm, outtakePivot;
-    public static double p1 = 0, p2 = 0, p3 = 0, p4 = 0;
-    public static boolean b1 = false, b2 = false, b3 = false, b4 = false;
+    public static double p1=0, p2=0, p3=0, p4=0.05, p5=0, p6=0.5, p7=0;
+    private RobotHardware robotHardware;
 
     @Override
     public void init() {
-        intakePivot = hardwareMap.get(ServoImplEx.class, "intakePivot");
-        intakeArm = hardwareMap.get(ServoImplEx.class, "intakeArm");
-        outtakeArm = hardwareMap.get(ServoImplEx.class, "outtakeArm");
-        outtakePivot = hardwareMap.get(ServoImplEx.class, "outtakePivot");
+        robotHardware = new RobotHardware(hardwareMap);
+        robotHardware.setDaemon(true);
+        robotHardware.start();
     }
 
     @Override
     public void loop() {
-        intakePivot.setPosition(p1);
-        intakePivot.setDirection(b1? Servo.Direction.REVERSE: Servo.Direction.FORWARD);
-        intakeArm.setPosition(p2);
-        intakeArm.setDirection(b2? Servo.Direction.REVERSE: Servo.Direction.FORWARD);
-        outtakeArm.setPosition(p3);
-        outtakeArm.setDirection(b3? Servo.Direction.REVERSE: Servo.Direction.FORWARD);
-        outtakePivot.setPosition(p4);
-        outtakePivot.setDirection(b4? Servo.Direction.REVERSE: Servo.Direction.FORWARD);
+        robotHardware.setServoPos(Names.intakeArm, p1);
+        robotHardware.setServoPos(Names.intakePivot, p2);
+        robotHardware.setServoPos(Names.door, p3);
+        robotHardware.setServoPos(Names.outtakeArm, p4);
+        robotHardware.setServoPos(Names.outtakePivot, p5);
+        robotHardware.setServoPos(Names.clawPivot, p6);
+        robotHardware.setServoPos(Names.claw, p7);
     }
 }
