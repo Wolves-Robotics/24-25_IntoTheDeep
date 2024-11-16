@@ -4,11 +4,17 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.ScheduleCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
+import org.firstinspires.ftc.teamcode.teleop.commands.intakeZero;
 import org.firstinspires.ftc.teamcode.teleop.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.teleop.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.teleop.subsystems.OuttakeSubsystem;
@@ -38,6 +44,23 @@ public class TestTeleop extends CommandOpMode {
 
         gamepadEx1 = new GamepadEx(gamepad1);
         gamepadEx2 = new GamepadEx(gamepad2);
+
+        gamepadEx1.getGamepadButton(GamepadKeys.Button.X)
+                .whenPressed(intakeSubsystem.setDown());
+
+        gamepadEx1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(new SequentialCommandGroup(
+                        new intakeZero(intakeSubsystem),
+                        intakeSubsystem.setPlace().withTimeout(200),
+                        intakeSubsystem.openDoor().withTimeout(250),
+                        intakeSubsystem.closeDoor()
+                ));
+
+        gamepadEx2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
+                .whenPressed(outtakeSubsystem.grab());
+
+//        gamepadEx2.getGamepadButton(GamepadKeys.Button.LEFT_STICK_BUTTON)
+//                .whenPressed();
     }
 
     @Override
@@ -47,6 +70,7 @@ public class TestTeleop extends CommandOpMode {
                 gamepadEx1.getLeftY(),
                 gamepadEx1.getRightX(),
                 true));
+
         multiTelem.update();
     }
 }

@@ -59,4 +59,9 @@ public class DriveSubsystem extends BaseSubsystem {
 
     @Override
     protected void runPeriotic() {}
+
+    @Override
+    public void updateTelemetry() {
+
+    }
 }

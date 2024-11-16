@@ -42,7 +42,7 @@ public class RobotHardware extends Thread {
 
     private static class ServoClass {
         ServoImplEx servo;
-        double pos = 0d;
+        double currentPos = 0d;
 
         public ServoClass(Names name, boolean isReverse) {
             servo = hardwareMap.get(ServoImplEx.class, nameHashMap.get(name));
@@ -60,8 +60,6 @@ public class RobotHardware extends Thread {
         setHardwareMap();
 
         setImu();
-
-        servoInit();
     }
 
     public RobotHardware(HardwareMap _hardwareMap) {
@@ -131,14 +129,16 @@ public class RobotHardware extends Thread {
         imu.resetYaw();
     }
 
-    private void servoInit() {
-        setServoPos(Names.door, 0);
-        setServoPos(Names.intakeArm, 0.08);
-        setServoPos(Names.intakePivot, 0);
-        setServoPos(Names.outtakeArm, 0.02);
-        setServoPos(Names.outtakePivot, 0);
-        setServoPos(Names.clawPivot, 0.5);
-        setServoPos(Names.claw, 0);
+    public void servoInit() {
+        for (int i=0;i<10;i++) {
+            setServoPos(Names.door, 0);
+            setServoPos(Names.intakeArm, 0.08);
+            setServoPos(Names.intakePivot, 0);
+            setServoPos(Names.outtakeArm, 0.02);
+            setServoPos(Names.outtakePivot, 0.06);
+            setServoPos(Names.clawPivot, 0.08);
+            setServoPos(Names.claw, 0);
+        }
     }
 
     @Override
@@ -164,7 +164,7 @@ public class RobotHardware extends Thread {
     }
     private void updateServoPosition() {
         for (ServoClass servoClass: servoClassMap.values()) {
-            servoClass.pos = servoClass.servo.getPosition();
+            servoClass.currentPos = servoClass.servo.getPosition();
         }
     }
 
@@ -172,7 +172,7 @@ public class RobotHardware extends Thread {
         return motorClassMap.get(nameHashMap.get(name)).pos;
     }
     public double getServoPos(Names name) {
-        return servoClassMap.get(nameHashMap.get(name)).pos;
+        return servoClassMap.get(nameHashMap.get(name)).currentPos;
     }
 
     public YawPitchRollAngles getImuAngles() {

@@ -17,6 +17,8 @@ abstract public class BaseSubsystem extends SubsystemBase {
 
     abstract protected void runPeriotic();
 
+    abstract public void updateTelemetry();
+
     @Override
     public void periodic() {
         runPeriotic();

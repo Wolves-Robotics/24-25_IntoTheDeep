@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.hardware.Names;
 @Config
 public class IntakeSubsystem extends BaseSubsystem {
     PIDController controller, secondaryController;
-    public static double p1 = 0, i1 = 0, d1 = 0, p2 = 0, i2 = 0, d2 = 0;
-    public static int target = 0, maxTarget = 4000;
+    private double p1 = 0, i1 = 0, d1 = 0, p2 = 0, i2 = 0, d2 = 0;
+    private int target = 0, maxTarget = 4000;
 
     public IntakeSubsystem(RobotHardware _robotHardware, MultipleTelemetry _telemetry) {
         super(_robotHardware, _telemetry);
@@ -22,44 +22,41 @@ public class IntakeSubsystem extends BaseSubsystem {
         secondaryController = new PIDController(p2, i2, d2);
     }
 
-    public InstantCommand toZero() {
-        return new InstantCommand(() -> target=0);
+    public void targetZero() {
+        target = 0;
     }
 
-    public InstantCommand increaseTarget() {
-        return new InstantCommand(() -> target=100/50);
+    public int getPos() {
+        return robotHardware.getMotorPos(Names.intakeExtendo);
     }
 
-    public InstantCommand decreaseTarget() {
-        return new InstantCommand(() -> target=100/50);
+    public InstantCommand setDown() {
+        return new InstantCommand(() -> {
+            robotHardware.setServoPos(Names.intakeArm, 0.7);
+            robotHardware.setServoPos(Names.intakePivot, 0.3);
+        });
     }
 
-    public InstantCommand runIntakeMotor() {
-        return new InstantCommand(() -> robotHardware.setMotorPower(Names.slurp, 1));
+    public InstantCommand setUp() {
+        return new InstantCommand(() -> {
+            robotHardware.setServoPos(Names.intakeArm, 0.015);
+            robotHardware.setServoPos(Names.intakePivot, 0);
+        });
     }
 
-    public InstantCommand stopIntakeMotor() {
-        return new InstantCommand(() -> robotHardware.setMotorPower(Names.slurp, 0));
+    public InstantCommand setPlace() {
+        return new InstantCommand(() -> {
+            robotHardware.setServoPos(Names.intakeArm, 0.08);
+            robotHardware.setServoPos(Names.intakePivot, 0);
+        });
     }
 
-    public InstantCommand openColorServo() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.door, 1));
+    public InstantCommand openDoor() {
+        return new InstantCommand(() -> robotHardware.setServoPos(Names.door, 0.4));
     }
 
-    public InstantCommand closeColorServo() {
+    public InstantCommand closeDoor() {
         return new InstantCommand(() -> robotHardware.setServoPos(Names.door, 0));
-    }
-
-    public InstantCommand lowerArmPitch() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.intakeArm, 1));
-    }
-
-    public InstantCommand raiseArmPitch() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.intakeArm, 0));
-    }
-
-    public SequentialCommandGroup resetIntake() {
-        return new SequentialCommandGroup(new ParallelCommandGroup(raiseArmPitch(), stopIntakeMotor()), toZero());
     }
 
     @Override
@@ -77,5 +74,10 @@ public class IntakeSubsystem extends BaseSubsystem {
         robotHardware.setMotorPower(Names.intakeExtendo, power);
         telemetry.addData("Intake pos", armPos);
         telemetry.addData("Intake target", target);
+    }
+
+    @Override
+    public void updateTelemetry() {
+
     }
 }

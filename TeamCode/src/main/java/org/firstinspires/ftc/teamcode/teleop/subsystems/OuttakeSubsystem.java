@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.hardware.Names;
@@ -13,54 +14,25 @@ public class OuttakeSubsystem extends BaseSubsystem {
     PIDFController controller;
     public static double p = 0, i = 0, d = 0, f = 0;
     public static int target = 0;
+    private boolean grab = false;
 
     public OuttakeSubsystem(RobotHardware _robotHardware, MultipleTelemetry _telemetry) {
         super(_robotHardware, _telemetry);
         controller = new PIDFController(p, i, d, f);
+        register();
     }
 
-    public InstantCommand toZero() {
-        return new InstantCommand(() -> target=0);
-    }
-
-    public InstantCommand bucket1() {
-        return new InstantCommand(() -> target=300);
-    }
-
-    public InstantCommand bucket2() {
-        return new InstantCommand(() -> target=500);
-    }
-
-    public InstantCommand lowChamber() {
-        return new InstantCommand(() -> target=200);
-    }
-
-    public InstantCommand highChamber() {
-        return new InstantCommand(() -> target=400);
-    }
-
-    public InstantCommand openClaw() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.claw, 1));
-    }
-
-    public InstantCommand closeClaw() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.claw, 0));
-    }
-
-    public InstantCommand clawLeft() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawPivot, 0));
-    }
-
-    public InstantCommand clawMid() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawPivot, 0.5));
-    }
-
-    public InstantCommand clawRight() {
-        return new InstantCommand(() -> robotHardware.setServoPos(Names.clawPivot, 1));
+    public InstantCommand grab() {
+        return new InstantCommand(() -> {
+            grab = !grab;
+            if (grab) robotHardware.setServoPos(Names.claw ,0.2);
+            else robotHardware.setServoPos(Names.claw, 0);
+        });
     }
 
     @Override
     protected void runPeriotic() {
+        controller.setPIDF(p, i, d, f);
         int armPos = (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake)) / 2;
         double power = controller.calculate(armPos, target);
 
@@ -68,5 +40,9 @@ public class OuttakeSubsystem extends BaseSubsystem {
         robotHardware.setMotorPower(Names.rightOuttake, power);
         telemetry.addData("Outtake pos", armPos);
         telemetry.addData("Outtake target", target);
+    }
+
+    @Override
+    public void updateTelemetry() {
     }
 }

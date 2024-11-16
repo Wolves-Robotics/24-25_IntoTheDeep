@@ -1,31 +1,52 @@
 package org.firstinspires.ftc.teamcode.teleop.singleThings;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
-import org.firstinspires.ftc.teamcode.teleop.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.teleop.subsystems.OuttakeSubsystem;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp
-public class PIDshit extends CommandOpMode {
-    private MultipleTelemetry multipleTelemetry;
-    private RobotHardware robotHardware;
-    private IntakeSubsystem intakeSubsystem;
-    private OuttakeSubsystem outtakeSubsystem;
+@Config
+public class PIDshit extends OpMode {
+    DcMotor leftOuttake, rightOuttake, intake;
+    public static double p = 0, i = 0, d = 0, f =0;
+    private final double ticksPerDeg = 760/180.;
+    public static int target = 0;
+    PIDController controller;
+    MultipleTelemetry multipleTelemetry;
+
 
     @Override
-    public void initialize() {
+    public void init() {
         multipleTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        robotHardware = new RobotHardware(hardwareMap);
-        intakeSubsystem = new IntakeSubsystem(robotHardware, multipleTelemetry);
-        outtakeSubsystem = new OuttakeSubsystem(robotHardware, multipleTelemetry);
+        controller = new PIDController(p, i, d);
+        leftOuttake = hardwareMap.get(DcMotor.class, "leftOuttake");
+        rightOuttake = hardwareMap.get(DcMotor.class, "rightOuttake");
+        intake = hardwareMap.get(DcMotor.class, "intakeExtendo");
+        rightOuttake.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
-    public void run() {
+    public void loop() {
+        controller.setPID(p, i, d);
+        int armPos = (leftOuttake.getCurrentPosition() + rightOuttake.getCurrentPosition())/2;
+//        int armPos = intake.getCurrentPosition();
+        double pow = controller.calculate(armPos, target);
+        double ff = Math.cos(Math.toRadians(target / ticksPerDeg)) * f;
+        double power = pow + ff;
 
+        leftOuttake.setPower(power);
+        rightOuttake.setPower(power);
+//        intake.setPower(power);
+        multipleTelemetry.addData("Outtake pos", armPos);
+        multipleTelemetry.addData("Outtake target", target);
+        multipleTelemetry.addData("Outtake ff", ff);
+        multipleTelemetry.addData("Outtake power", pow);
+        multipleTelemetry.update();
     }
 }

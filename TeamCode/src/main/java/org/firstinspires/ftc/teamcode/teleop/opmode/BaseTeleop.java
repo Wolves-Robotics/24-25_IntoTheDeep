@@ -8,7 +8,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.teleop.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.teleop.subsystems.HandoffSubsystem;
 import org.firstinspires.ftc.teamcode.teleop.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.teleop.subsystems.OuttakeSubsystem;
 
@@ -19,7 +18,6 @@ abstract public class BaseTeleop extends CommandOpMode {
     protected DriveSubsystem driveSubsystem;
     protected IntakeSubsystem intakeSubsystem;
     protected OuttakeSubsystem outtakeSubsystem;
-    protected HandoffSubsystem handoffSubsystem;
 
     abstract protected void setDefaultDrive();
 
@@ -36,8 +34,6 @@ abstract public class BaseTeleop extends CommandOpMode {
         driveSubsystem = new DriveSubsystem(robotHardware, multiTelem);
         intakeSubsystem = new IntakeSubsystem(robotHardware, multiTelem);
         outtakeSubsystem = new OuttakeSubsystem(robotHardware, multiTelem);
-        handoffSubsystem = new HandoffSubsystem(robotHardware, multiTelem,
-                                                intakeSubsystem, outtakeSubsystem);
 
         CommandScheduler.getInstance().reset();
 
