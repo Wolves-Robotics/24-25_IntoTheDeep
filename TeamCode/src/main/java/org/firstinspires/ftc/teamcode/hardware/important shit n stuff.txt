@@ -61,3 +61,10 @@ Servo info
         claw
             open 0
             close 0.2
+
+Subsystem info
+    Outtake subsystem
+        Max tick 1940
+
+    Intake subsystem
+        Max tick 400
