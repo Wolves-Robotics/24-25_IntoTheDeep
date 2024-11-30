@@ -86,13 +86,13 @@ public class RobotHardware extends Thread {
         nameHashMap.put(Names.intakeExtendo, "intakeExtendo");
         nameHashMap.put(Names.slurp, "slurp");
 
-        nameHashMap.put(Names.door, "door");
-        nameHashMap.put(Names.intakePivot, "intakePivot");
+        nameHashMap.put(Names.door, "IDK1");
+        nameHashMap.put(Names.intakePivot, "IDK2");
         nameHashMap.put(Names.intakeArm, "intakeArm");
         nameHashMap.put(Names.outtakeArm, "outtakeArm");
-        nameHashMap.put(Names.outtakePivot, "outtakePivot");
+        nameHashMap.put(Names.outtakePivot, "IDK4");
         nameHashMap.put(Names.clawPivot, "clawPivot");
-        nameHashMap.put(Names.claw, "claw");
+        nameHashMap.put(Names.claw, "IDK3");
 
         nameHashMap.put(Names.colorLeft, "colorLeft");
         nameHashMap.put(Names.colorMid, "colorMid");
