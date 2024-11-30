@@ -15,7 +15,7 @@ public class BasicTele extends OpMode {
     private PIDController intakePID, outtakePID;
     private ElapsedTime clawTime;
     private boolean grab=false, manualIntake=false;
-    private double ip=0.014, ii=0.15, id=0.00081, op=0.04, oi=0.015, od=0.0005, of=0.05;
+    private double ip=0.014, ii=0.15, id=0.00081, op=0.015, oi=0.03, od=0.00045, of=0.05;
     private double iTarget=0, oTarget=0;
 
     @Override

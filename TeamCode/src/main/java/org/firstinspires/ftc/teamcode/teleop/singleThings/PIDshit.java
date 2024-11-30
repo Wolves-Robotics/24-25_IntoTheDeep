@@ -28,7 +28,7 @@ public class PIDshit extends OpMode {
         leftOuttake = hardwareMap.get(DcMotor.class, "leftOuttake");
         rightOuttake = hardwareMap.get(DcMotor.class, "rightOuttake");
         intake = hardwareMap.get(DcMotor.class, "intakeExtendo");
-        rightOuttake.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftOuttake.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
