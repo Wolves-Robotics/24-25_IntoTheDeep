@@ -7,9 +7,9 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
-import org.firstinspires.ftc.teamcode.teleop.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.teleop.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.teleop.subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.OuttakeSubsystem;
 
 abstract public class BaseTeleop extends CommandOpMode {
     protected MultipleTelemetry multiTelem;

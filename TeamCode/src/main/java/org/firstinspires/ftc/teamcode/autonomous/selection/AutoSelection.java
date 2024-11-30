@@ -20,7 +20,7 @@ public class AutoSelection extends Thread {
     public AutoSelection(Gamepad _gamepad1) {
         enumMaps = new EnumMaps();
         color = Color.RED;
-        startPos = StartPos.RIGHT;
+        startPos = StartPos.specimen;
         switchNumber = 0;
         timeOffset = 0;
         elapsedTime = new ElapsedTime();
@@ -85,10 +85,10 @@ public class AutoSelection extends Thread {
                 }
                 break;
             case 1:
-                if (startPos == StartPos.LEFT) {
-                    startPos = StartPos.RIGHT;
+                if (startPos == StartPos.sample) {
+                    startPos = StartPos.specimen;
                 } else {
-                    startPos = StartPos.LEFT;
+                    startPos = StartPos.sample;
                 }
                 break;
         }

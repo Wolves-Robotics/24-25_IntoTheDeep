@@ -28,7 +28,7 @@ public class EnumMaps {
 
     private void setStartPosMap() {
         startPosMap = new HashMap<>();
-        startPosMap.put(StartPos.LEFT, "Left");
-        startPosMap.put(StartPos.RIGHT, "Right");
+        startPosMap.put(StartPos.sample, "Left");
+        startPosMap.put(StartPos.specimen, "Right");
     }
 }

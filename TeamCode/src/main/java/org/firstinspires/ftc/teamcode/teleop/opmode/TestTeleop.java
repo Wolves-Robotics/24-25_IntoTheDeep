@@ -4,10 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.ScheduleCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -15,9 +11,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.teleop.commands.intakeZero;
-import org.firstinspires.ftc.teamcode.teleop.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.teleop.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.teleop.subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.OuttakeSubsystem;
 
 @TeleOp
 public class TestTeleop extends CommandOpMode {

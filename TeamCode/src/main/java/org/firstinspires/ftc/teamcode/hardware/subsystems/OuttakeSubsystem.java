@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.teleop.subsystems;
+package org.firstinspires.ftc.teamcode.hardware.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.controller.PIDFController;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.hardware.Names;
@@ -32,17 +31,22 @@ public class OuttakeSubsystem extends BaseSubsystem {
 
     @Override
     protected void runPeriotic() {
+    }
+
+    @Override
+    public void updateTelemetry() {
+        telemetry.addData("Outtake pos", (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake)) / 2);
+        telemetry.addData("Outtake target", target);
+    }
+
+    public void updatePID() {
         controller.setPIDF(p, i, d, f);
         int armPos = (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake)) / 2;
         double power = controller.calculate(armPos, target);
 
         robotHardware.setMotorPower(Names.leftOuttake, power);
         robotHardware.setMotorPower(Names.rightOuttake, power);
-        telemetry.addData("Outtake pos", armPos);
-        telemetry.addData("Outtake target", target);
     }
 
-    @Override
-    public void updateTelemetry() {
-    }
+    public void setTarget(int num) {target = num;}
 }
