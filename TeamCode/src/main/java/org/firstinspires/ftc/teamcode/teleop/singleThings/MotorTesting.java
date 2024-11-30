@@ -42,13 +42,26 @@ public class MotorTesting extends OpMode {
         telemetry.update();
         robotHardware.setMotorPower(Names.slurp,gamepad1.right_trigger - gamepad1.left_trigger);
 
-        if (gamepad1.a) robotHardware.setMotorPower(Names.leftOuttake, 0.25);
-        else robotHardware.setMotorPower(Names.leftOuttake, 0);
-        if (gamepad1.b) robotHardware.setMotorPower(Names.rightOuttake, 0.25);
-        else robotHardware.setMotorPower(Names.rightOuttake, 0);
-        if (gamepad1.x) robotHardware.setMotorPower(Names.intakeExtendo, 1);
-        else if(gamepad1.y) robotHardware.setMotorPower(Names.intakeExtendo, -1);
-        else robotHardware.setMotorPower(Names.intakeExtendo, 0);
+        if (gamepad1.y) {
+            robotHardware.setMotorPower(Names.leftOuttake, 1);
+            robotHardware.setMotorPower(Names.rightOuttake, 1);
+        }
+        if(gamepad1.a){
+            robotHardware.setMotorPower(Names.leftOuttake, -1);
+            robotHardware.setMotorPower(Names.rightOuttake  , -1);
+        }
+        if (gamepad1.b){
+            robotHardware.setMotorPower(Names.rightOuttake, 0.25);
+            robotHardware.setMotorPower(Names.leftOuttake, 0.25);
+        }
+        if (gamepad1.x){
+            robotHardware.setMotorPower(Names.rightOuttake, 0);
+            robotHardware.setMotorPower(Names.leftOuttake, 0);
+        }
+
+//        if (gamepad1.x) robotHardware.setMotorPower(Names.intakeExtendo, 1);
+//        else if(gamepad1.y) robotHardware.setMotorPower(Names.intakeExtendo, -1);
+//        else robotHardware.setMotorPower(Names.intakeExtendo, 0);
         if(gamepad1.dpad_down){
             robotHardware.setServoPos(Names.intakeArm, 0.73);
             robotHardware.setServoPos(Names.intakePivot, 0.3);
