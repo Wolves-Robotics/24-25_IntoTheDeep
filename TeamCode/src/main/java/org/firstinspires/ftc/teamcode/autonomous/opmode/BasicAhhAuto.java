@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous.opmode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.Names;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
 @Autonomous
+@Config
 public class BasicAhhAuto extends OpMode {
     private RobotHardware robotHardware;
     private PIDController intakePID, outtakePID;
@@ -16,13 +18,17 @@ public class BasicAhhAuto extends OpMode {
     private double iTarget=0, oTarget=0;
     private ElapsedTime elapsedTime;
     private Auto auto;
+    public static int startOuttake=300, endOuttake=0;
+    public static double forwardTime=1., pauseTime=0.5, backwardTime=0.2, placeTime=0.2,
+                            forwardMove=-0.7, backwardMove = 0.2;
 
     public enum Auto {
         Start,
         Forward,
         Pause,
         Backwards,
-        Place
+        Place,
+        Done
     }
 
     @Override
@@ -50,9 +56,9 @@ public class BasicAhhAuto extends OpMode {
         robotHardware.setServoPos(Names.intakePivot, 0);
         robotHardware.setServoPos(Names.outtakeArm, 0.4);
         robotHardware.setServoPos(Names.outtakePivot, 0.6);
-        robotHardware.setServoPos(Names.clawPivot, 1);
+        robotHardware.setServoPos(Names.clawPivot, 0.78);
         robotHardware.setServoPos(Names.claw, 0.2);
-        oTarget = 300;
+        oTarget = startOuttake;
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -64,38 +70,43 @@ public class BasicAhhAuto extends OpMode {
     public void loop() {
         switch (auto) {
             case Start:
-                move(0, -0.7, 0);
+                move(0, forwardMove, 0);
+                robotHardware.setServoPos(Names.intakePivot, 0);
                 elapsedTime.reset();
                 auto = Auto.Forward;
                 break;
             case Forward:
-                if (elapsedTime.seconds() > 1) {
+                if (elapsedTime.seconds() > forwardTime) {
                     move(0, 0, 0);
                     elapsedTime.reset();
                     auto = Auto.Pause;
                 }
                 break;
             case Pause:
-                if (elapsedTime.seconds() > 0.5) {
-                    move(0, 0.2, 0);
+                if (elapsedTime.seconds() > pauseTime) {
+                    move(0, backwardMove, 0);
                     elapsedTime.reset();
                     auto = Auto.Backwards;
                 }
                 break;
             case Backwards:
-                if (elapsedTime.seconds() > 0.2) {
+                if (elapsedTime.seconds() > backwardTime) {
                     move(0, 0, 0);
-                    oTarget = 0;
+                    oTarget = endOuttake;
                     elapsedTime.reset();
                     auto = Auto.Place;
                 }
                 break;
             case Place:
-                if (elapsedTime.seconds() > 0.1) {
+                if (elapsedTime.seconds() > placeTime) {
                     robotHardware.setServoPos(Names.claw, 0);
+                    oTarget = 50;
                     robotHardware.servoInit();
                     robotHardware.setServoPos(Names.intakeArm, 0.6);
+                    auto = Auto.Done;
                 }
+                break;
+            case Done:
                 break;
             default:
                 break;

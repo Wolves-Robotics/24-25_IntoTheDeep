@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.subsystems;
+package org.firstinspires.ftc.teamcode.hardware.subsystems;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.SubsystemBase;

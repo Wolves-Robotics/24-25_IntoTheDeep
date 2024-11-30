@@ -2,8 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.teleop.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.teleop.subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.hardware.subsystems.IntakeSubsystem;
 
 public class intakeZero extends CommandBase {
     private IntakeSubsystem intakeSubsystem;

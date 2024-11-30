@@ -1,10 +1,8 @@
-package org.firstinspires.ftc.teamcode.teleop.subsystems;
+package org.firstinspires.ftc.teamcode.hardware.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.controller.PIDController;
 
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
@@ -13,8 +11,8 @@ import org.firstinspires.ftc.teamcode.hardware.Names;
 @Config
 public class IntakeSubsystem extends BaseSubsystem {
     PIDController controller, secondaryController;
-    private double p1 = 0, i1 = 0, d1 = 0, p2 = 0, i2 = 0, d2 = 0;
-    private int target = 0, maxTarget = 4000;
+    public static double p1 = 0, i1 = 0, d1 = 0, p2 = 0, i2 = 0, d2 = 0;
+    public static int target = 0, maxTarget = 500;
 
     public IntakeSubsystem(RobotHardware _robotHardware, MultipleTelemetry _telemetry) {
         super(_robotHardware, _telemetry);
@@ -61,6 +59,16 @@ public class IntakeSubsystem extends BaseSubsystem {
 
     @Override
     protected void runPeriotic() {
+        updatePID();
+    }
+
+    @Override
+    public void updateTelemetry() {
+        telemetry.addData("Intake pos", robotHardware.getMotorPos(Names.intakeExtendo));
+        telemetry.addData("Intake target", target);
+    }
+
+    public void updatePID() {
         controller.setPID(p1, i1, d1);
         secondaryController.setPID(p2, i2, d2);
 
@@ -72,12 +80,5 @@ public class IntakeSubsystem extends BaseSubsystem {
                 secondaryController.calculate(armPos, target);
 
         robotHardware.setMotorPower(Names.intakeExtendo, power);
-        telemetry.addData("Intake pos", armPos);
-        telemetry.addData("Intake target", target);
-    }
-
-    @Override
-    public void updateTelemetry() {
-
     }
 }

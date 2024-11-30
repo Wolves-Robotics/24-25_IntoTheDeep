@@ -44,16 +44,16 @@ public class BasicTele extends OpMode {
             manualIntake = true;
         }
         if (gamepad1.x) {
-            robotHardware.setServoPos(Names.intakeArm, 0.7);
-            robotHardware.setServoPos(Names.intakePivot, 0.3);
+            robotHardware.setServoPos(Names.intakeArm, 0.845);
+            robotHardware.setServoPos(Names.intakePivot, 0.27  );
             robotHardware.setMotorPower(Names.slurp, 1);
         }
         if (gamepad1.b){
             robotHardware.setMotorPower(Names.slurp, 0);
             iTarget = 0;
-            robotHardware.setServoPos(Names.intakeArm, 0);
-            robotHardware.setServoPos(Names.intakePivot, 0.02);
-            oTarget = 75;
+            robotHardware.setServoPos(Names.intakeArm, 0.145);
+            robotHardware.setServoPos(Names.intakePivot, 0.01);
+            oTarget = 100;
         }
         if (gamepad1.left_bumper) robotHardware.setMotorPower(Names.slurp, -1);
 
@@ -69,6 +69,7 @@ public class BasicTele extends OpMode {
         if(gamepad2.right_stick_button) {
             robotHardware.setServoPos(Names.outtakeArm, 0.06);
             robotHardware.setServoPos(Names.outtakePivot, 0.08);
+            robotHardware.setServoPos(Names.clawPivot, 0.2);
             oTarget = 0;
         }
         if(gamepad2.left_stick_button) {
@@ -78,8 +79,8 @@ public class BasicTele extends OpMode {
 
         if (gamepad2.y) oTarget = 720;
         if (gamepad2.a) oTarget = 0;
-        if (gamepad2.dpad_left) robotHardware.setServoPos(Names.clawPivot, 0.5);
-        if (gamepad2.dpad_right) robotHardware.setServoPos(Names.clawPivot, 1);
+        if (gamepad2.dpad_left) robotHardware.setServoPos(Names.clawPivot, 0.2);
+        if (gamepad2.dpad_right) robotHardware.setServoPos(Names.clawPivot, 0.78);
 
         double x = gamepad1.right_trigger - gamepad1.left_trigger;
         double y = -gamepad1.left_stick_y;
@@ -114,7 +115,6 @@ public class BasicTele extends OpMode {
         deltaTime = getRuntime();
         resetRuntime();
 
-        telemetry.addData("intake target", iTarget);
         telemetry.addData("delta time", deltaTime);
         telemetry.update();
     }
