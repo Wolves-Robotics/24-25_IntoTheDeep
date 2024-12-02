@@ -8,10 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.hardware.Names;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 
-import java.util.jar.Attributes;
-
 @TeleOp
-public class BasicTele extends OpMode {
+public class MyTeleKota extends OpMode {
     private RobotHardware robotHardware;
     private double deltaTime = 0;
     private PIDController intakePID, outtakePID;
@@ -96,7 +94,7 @@ public class BasicTele extends OpMode {
         if (gamepad2.dpad_left) robotHardware.setServoPos(Names.clawPivot, 0.2);
         if (gamepad2.dpad_right) robotHardware.setServoPos(Names.clawPivot, 0.78);
 
-        double x = gamepad1.right_trigger - gamepad1.left_trigger;
+        double x = gamepad1.left_stick_x;
         double y = -gamepad1.left_stick_y;
         double rot = gamepad1.right_stick_x;
 

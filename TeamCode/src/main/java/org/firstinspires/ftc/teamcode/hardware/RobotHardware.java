@@ -105,19 +105,19 @@ public class RobotHardware extends Thread {
         motorClassMap.put("frontRight", new MotorClass(Names.frontRight, false));
         motorClassMap.put("backLeft", new MotorClass(Names.backLeft, true));
         motorClassMap.put("backRight", new MotorClass(Names.backRight, false));
-        motorClassMap.put("leftOuttake", new MotorClass(Names.leftOuttake, false));
-        motorClassMap.put("rightOuttake", new MotorClass(Names.rightOuttake, true));
+        motorClassMap.put("leftOuttake", new MotorClass(Names.leftOuttake, true));
+        motorClassMap.put("rightOuttake", new MotorClass(Names.rightOuttake, false));
         motorClassMap.put("intakeExtendo", new MotorClass(Names.intakeExtendo, false));
         motorClassMap.put("slurp", new MotorClass(Names.slurp, false));
 
         servoClassMap = new HashMap<>();
-        servoClassMap.put("door", new ServoClass(Names.door, false));
-        servoClassMap.put("intakePivot", new ServoClass(Names.intakePivot, false));
+        servoClassMap.put("IDK1", new ServoClass(Names.door, false));
+        servoClassMap.put("IDK2", new ServoClass(Names.intakePivot, false));
         servoClassMap.put("intakeArm", new ServoClass(Names.intakeArm, false));
         servoClassMap.put("outtakeArm", new ServoClass(Names.outtakeArm, false));
-        servoClassMap.put("outtakePivot", new ServoClass(Names.outtakePivot, false));
+        servoClassMap.put("IDK4", new ServoClass(Names.outtakePivot, false));
         servoClassMap.put("clawPivot", new ServoClass(Names.clawPivot, false));
-        servoClassMap.put("claw", new ServoClass(Names.claw, false));
+        servoClassMap.put("IDK3", new ServoClass(Names.claw, false));
     }
 
     private void setImu() {
@@ -131,13 +131,13 @@ public class RobotHardware extends Thread {
 
     public void servoInit() {
         for (int i=0;i<10;i++) {
-            setServoPos(Names.door, 0);
+            setServoPos(Names.door, 0.7);
             setServoPos(Names.intakeArm, 0.135);
-            setServoPos(Names.intakePivot, 0.01);
-            setServoPos(Names.outtakeArm, 0.06);
-            setServoPos(Names.outtakePivot, 0.08);
+            setServoPos(Names.intakePivot, 0.19);
+            setServoPos(Names.outtakeArm, 0.1);
+            setServoPos(Names.outtakePivot, 0.15);
             setServoPos(Names.clawPivot, 0.2);
-            setServoPos(Names.claw, 0);
+            setServoPos(Names.claw, 0.3);
         }
     }
 
@@ -185,6 +185,9 @@ public class RobotHardware extends Thread {
     }
     public void setServoPos(Names name, double pos) {
         servoClassMap.get(nameHashMap.get(name)).servo.setPosition(pos);
+    }
+    public void resetMotorPos(Names name) {
+        motorClassMap.get(nameHashMap.get(name)).motor.setTargetPosition(0);
     }
 
     private void lynxModuleUpdate() {

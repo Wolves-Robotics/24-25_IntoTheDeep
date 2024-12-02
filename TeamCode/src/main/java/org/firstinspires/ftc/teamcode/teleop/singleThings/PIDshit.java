@@ -34,7 +34,7 @@ public class PIDshit extends OpMode {
     @Override
     public void loop() {
         controller.setPID(p, i, d);
-        int armPos = (leftOuttake.getCurrentPosition() + rightOuttake.getCurrentPosition())/2;
+        int armPos = (leftOuttake.getCurrentPosition() + rightOuttake.getCurrentPosition())/2 -3;
 //        int armPos = intake.getCurrentPosition();
         double pow = controller.calculate(armPos, target);
         double ff = Math.cos(Math.toRadians(target / ticksPerDeg)) * f;
