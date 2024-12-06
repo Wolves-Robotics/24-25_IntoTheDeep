@@ -41,6 +41,7 @@ public class BasicTele extends OpMode {
     }
     @Override
     public void loop() {
+        //COMMANDS
         if (gamepad1.a) {
             robotHardware.setMotorPower(Names.intakeExtendo, -1);
             manualIntake = true;
@@ -95,7 +96,7 @@ public class BasicTele extends OpMode {
         if (gamepad2.a) oTarget = 0;
         if (gamepad2.dpad_left) robotHardware.setServoPos(Names.clawPivot, 0.2);
         if (gamepad2.dpad_right) robotHardware.setServoPos(Names.clawPivot, 0.78);
-
+        //DRIVING
         double x = gamepad1.right_trigger - gamepad1.left_trigger;
         double y = -gamepad1.left_stick_y;
         double rot = gamepad1.right_stick_x;
@@ -110,20 +111,20 @@ public class BasicTele extends OpMode {
         robotHardware.setMotorPower(Names.frontRight, frontRightPower);
         robotHardware.setMotorPower(Names.backLeft, backLeftPower);
         robotHardware.setMotorPower(Names.backRight, backRightPower);
-
+        //PID STUFF
         iTarget = Math.max(Math.min(iTarget, 400), 0);
 
         int iArmPos = robotHardware.getMotorPos(Names.intakeExtendo);
-        int oArmPos = (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake)) / 2;
-
+        int oArmPos = (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake)) / 2 -3;
         if (manualIntake) {
             iTarget = iArmPos;
             manualIntake = false;
         }
         else robotHardware.setMotorPower(Names.intakeExtendo, intakePID.calculate(iArmPos, iTarget));
-        double oPower = outtakePID.calculate(oArmPos, oTarget) + ff;
-        robotHardware.setMotorPower(Names.leftOuttake, oPower);
-        robotHardware.setMotorPower(Names.rightOuttake, oPower);
+        double oPow = outtakePID.calculate(oArmPos, oTarget);
+        double power = oPow + ff;
+        robotHardware.setMotorPower(Names.leftOuttake, power);
+        robotHardware.setMotorPower(Names.rightOuttake, power);
 
         deltaTime = getRuntime();
         resetRuntime();

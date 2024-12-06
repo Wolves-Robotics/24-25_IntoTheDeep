@@ -169,7 +169,7 @@ public class RobotHardware extends Thread {
     }
 
     public int getMotorPos(Names name) {
-        return motorClassMap.get(nameHashMap.get(name)).pos;
+        return motorClassMap.get(nameHashMap.get(name)).motor.getCurrentPosition();
     }
     public double getServoPos(Names name) {
         return servoClassMap.get(nameHashMap.get(name)).currentPos;

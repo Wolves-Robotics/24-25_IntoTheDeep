@@ -14,9 +14,9 @@ public class OnePlayerTele extends OpMode {
     private double deltaTime = 0;
     private PIDController intakePID, outtakePID;
     private ElapsedTime clawTime;
-    private boolean grab=false, manualIntake=false; 
+    private boolean grab=false, manualIntake=false;
     private final double ticksPerDeg = 760/180.;
-    private double ip=0.014, ii=0.15, id=0.00081, op=0.016, oi=0, od=0.00022 , of=0.05;
+    private double ip=0.014, ii=0.15, id=0.00081, op=0.015, oi=0, od=0.00022 , of=0.05;
     private double iTarget=0, oTarget=0;
     double ff = Math.cos(Math.toRadians(oTarget / ticksPerDeg)) * of;
 
@@ -43,10 +43,6 @@ public class OnePlayerTele extends OpMode {
             robotHardware.setMotorPower(Names.intakeExtendo, -1);
             manualIntake = true;
         }
-        else if (gamepad1.y) {
-            robotHardware.setMotorPower(Names.intakeExtendo, 1);
-            manualIntake = true;
-        }
         if (gamepad1.x) {
             robotHardware.setServoPos(Names.intakeArm, 0.89);
             robotHardware.setServoPos(Names.intakePivot, 0.6  );
@@ -61,7 +57,10 @@ public class OnePlayerTele extends OpMode {
                robotHardware.setServoPos(Names.door, 0.5);
             }
         }
-        if (gamepad1.left_bumper) robotHardware.setMotorPower(Names.slurp, -1);
+        if (gamepad1.left_bumper) {
+            robotHardware.setMotorPower(Names.intakeExtendo, 1);
+            manualIntake = true;
+        }
 
         if(gamepad1.right_bumper && clawTime.seconds() > 0.25) {
             clawTime.reset();
@@ -86,7 +85,7 @@ public class OnePlayerTele extends OpMode {
             robotHardware.setServoPos(Names.door, 0.7);
         }
 
-        if (gamepad1.dpad_up){
+        if (gamepad1.y){
             oTarget = 1940;
             robotHardware.setServoPos(Names.outtakeArm, 0.45);
             robotHardware.setServoPos(Names.outtakePivot, 0.4);
