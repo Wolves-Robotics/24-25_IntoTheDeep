@@ -66,6 +66,7 @@ public class TurnTuner extends OpMode {
         Drawing.drawPoseHistory(dashboardPoseTracker, "#4CAF50");
         Drawing.drawRobot(poseUpdater.getPose(), "#4CAF50");
         Drawing.sendPacket();
+
         telemetryA.update();
     }
 }

@@ -13,36 +13,26 @@ import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 @Config
 @TeleOp
 public class ServoTesting extends OpMode {
-    public static double p1=0, p2=0, p3=0, p4=0.05, p5=0, p6=0.5, p7=0;
+    public static double p1=0, p2=0, p3=0, p4=0, p5=0, p6=0, p7=0, p8=0, p9=0, p10=0, p11=0;
     private RobotHardware robotHardware;
-    private Servo IDK1 = null;
-    private Servo IDK2 = null;
-    private Servo IDK3 = null;
-    private Servo IDK4 = null;
-    private Servo outtakeArm = null;
-    private Servo intakeArm = null;
-    private DcMotor suck = null;
 
     @Override
     public void init() {
-        IDK1 = hardwareMap.get(Servo.class, "IDK1");
-        IDK2 = hardwareMap.get(Servo.class, "IDK2");
-        IDK3 = hardwareMap.get(Servo.class, "IDK3");
-        IDK4 = hardwareMap.get(Servo.class, "IDK4");
-        outtakeArm = hardwareMap.get(Servo.class, "outtakeArm");
-        intakeArm = hardwareMap.get(Servo.class, "intakeArm");
-        suck = hardwareMap.get(DcMotor.class, "slurp");
+        robotHardware = new RobotHardware(hardwareMap);
     }
 
     @Override
     public void loop() {
-        IDK1.setPosition(p1);
-        IDK2.setPosition(p2);
-        IDK3.setPosition(p3);
-        IDK4.setPosition(p4);
-        outtakeArm.setPosition(p5);
-        intakeArm.setPosition(p6);
-        suck.setPower(p7);
-
+        robotHardware.setMotorPower(Names.frontLeft, p1);
+        robotHardware.setMotorPower(Names.backLeft, p2);
+        robotHardware.setMotorPower(Names.frontRight, p3);
+        robotHardware.setMotorPower(Names.backRight, p4);
+        robotHardware.setServoPos(Names.door, p5);
+        robotHardware.setServoPos(Names.intakePivot, p6);
+        robotHardware.setServoPos(Names.intakeArm, p7);
+        robotHardware.setServoPos(Names.outtakeArm, p8);
+        robotHardware.setServoPos(Names.outtakePivot, p9);
+        robotHardware.setServoPos(Names.clawPivot, p10);
+        robotHardware.setServoPos(Names.claw, p11);
     }
 }

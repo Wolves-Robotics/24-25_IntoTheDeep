@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.follower.Follower;
 
 /**
  * This is the StraightBackAndForth autonomous OpMode. It runs the robot in a specified distance
@@ -46,13 +46,12 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void init() {
         follower = new Follower(hardwareMap);
+        follower.resetIMU();
 
         forwards = new Path(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(DISTANCE,0, Point.CARTESIAN)));
         forwards.setConstantHeadingInterpolation(0);
         backwards = new Path(new BezierLine(new Point(DISTANCE,0, Point.CARTESIAN), new Point(0,0, Point.CARTESIAN)));
         backwards.setConstantHeadingInterpolation(0);
-
-        follower.followPath(forwards);
 
         telemetryA = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetryA.addLine("This will run the robot in a straight line going " + DISTANCE
@@ -68,6 +67,7 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void loop() {
         follower.update();
+        telemetryA.addData("busy", follower.isBusy());
         if (!follower.isBusy()) {
             if (forward) {
                 forward = false;
@@ -79,6 +79,7 @@ public class StraightBackAndForth extends OpMode {
         }
 
         telemetryA.addData("going forward", forward);
+        telemetryA.update();
         follower.telemetryDebug(telemetryA);
     }
 }

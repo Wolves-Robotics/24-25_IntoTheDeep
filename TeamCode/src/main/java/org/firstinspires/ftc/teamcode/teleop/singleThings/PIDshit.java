@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Config
 public class PIDshit extends OpMode {
     DcMotor leftOuttake, rightOuttake, intake;
-    public static double p = 0, i = 0, d = 0, f =0;
+    public static double p = 0.015, i = 0, d = 0.00022, f =0.05;
     private final double ticksPerDeg = 760/180.;
     public static int target = 0;
     PIDController controller;
@@ -37,15 +37,14 @@ public class PIDshit extends OpMode {
         int armPos = (leftOuttake.getCurrentPosition() + rightOuttake.getCurrentPosition())/2 -3;
 //        int armPos = intake.getCurrentPosition();
         double pow = controller.calculate(armPos, target);
-        double ff = Math.cos(Math.toRadians(target / ticksPerDeg)) * f;
-        double power = pow + ff;
+        double power = pow + f;
 
         leftOuttake.setPower(power);
         rightOuttake.setPower(power);
 //        intake.setPower(power);
         multipleTelemetry.addData("Outtake pos", armPos);
         multipleTelemetry.addData("Outtake target", target);
-        multipleTelemetry.addData("Outtake ff", ff);
+        multipleTelemetry.addData("Outtake ff", f);
         multipleTelemetry.addData("Outtake power", pow);
         multipleTelemetry.update();
     }

@@ -4,6 +4,7 @@ import org.firstinspires.ftc.teamcode.autonomous.collections.StartPos;
 import org.firstinspires.ftc.teamcode.autonomous.paths.parking.samplePark;
 import org.firstinspires.ftc.teamcode.autonomous.paths.samples.firstSample.sample1ToBucket;
 import org.firstinspires.ftc.teamcode.autonomous.paths.samples.firstSample.toSample1;
+import org.firstinspires.ftc.teamcode.autonomous.paths.samples.initSample;
 import org.firstinspires.ftc.teamcode.autonomous.paths.samples.secondSample.sample2ToBucket;
 import org.firstinspires.ftc.teamcode.autonomous.paths.samples.secondSample.toSample2;
 import org.firstinspires.ftc.teamcode.autonomous.paths.samples.thirdSample.sample3ToBucket;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.pathGeneration.Pat
 
 public class PathGen {
     private Path
-            firstSpecimenPath,
+            firstSpecimenPath, initSamplePath,
             toSample1Path, sample1ToBucketPath,
             toSample2Path, sample2ToBucketPath,
             toSample3Path, sample3ToBucketPath,
@@ -21,6 +22,7 @@ public class PathGen {
 
     public void generate(StartPos startPos) {
         firstSpecimenPath = toPlace.getPath(startPos);
+        initSamplePath = initSample.getPath();
 
         toSample1Path = toSample1.getPath();
         sample1ToBucketPath = sample1ToBucket.getPath();
@@ -33,6 +35,8 @@ public class PathGen {
     }
 
     public Path getFirstSpecimenPath() {return firstSpecimenPath;}
+
+    public Path getInitSamplePath() {return initSamplePath;}
 
     public Path getToSample1Path() {return toSample1Path;}
     public Path getSample1ToBucketPath() {return sample1ToBucketPath;}

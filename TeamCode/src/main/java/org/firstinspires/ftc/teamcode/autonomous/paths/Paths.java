@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.autonomous.collections.PathEnum;
 import org.firstinspires.ftc.teamcode.autonomous.collections.ScoreSpecimen;
 import org.firstinspires.ftc.teamcode.autonomous.collections.StartPos;
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.autonomous.selection.AutoSelection;
-import org.firstinspires.ftc.teamcode.hardware.Names;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.OuttakeSubsystem;
@@ -26,8 +26,9 @@ public class Paths extends Thread {
     private Color color;
     private StartPos startPos;
     private double timeOffset;
-    private Follower follower;
+    public Follower follower;
     private boolean start = true;
+    private boolean running = false;
 
     public Paths(HardwareMap hardwareMap,
                  RobotHardware _robotHardware,
@@ -37,9 +38,10 @@ public class Paths extends Thread {
         intakeSubsystem = _intakeSubsystem;
         outtakeSubsystem = _outtakeSubsystem;
         pathGen = new PathGen();
-        pathEnum = PathEnum.park;
+        pathEnum = PathEnum.scoreInitSample;
         scoreSpecimen = ScoreSpecimen.forward;
         follower = new Follower(hardwareMap);
+        follower.setStartingPose(new Pose(7.256, 111.910, Math.toRadians(-90)));
     }
 
     @Override
@@ -48,34 +50,30 @@ public class Paths extends Thread {
         while (!Thread.currentThread().isInterrupted()) {
             follower.update();
             switch (pathEnum) {
-                case scoreSpecimen:
+                case scoreInitSample:
                     switch (scoreSpecimen) {
                         case forward:
                             caseThingie(
-                                    () -> {
-                                        outtakeSubsystem.setTarget(300);
-                                        follower.followPath(pathGen.getFirstSpecimenPath());
-                                    },
+                                    () -> follower.followPath(pathGen.getInitSamplePath(), true),
                                     () -> follower.atParametricEnd(),
-                                    () -> scoreSpecimen = ScoreSpecimen.place
-                            );
+                                    () -> pathEnum = PathEnum.getSample1);
                             break;
                         case place:
-                            caseThingie(
-                                    () -> outtakeSubsystem.setTarget(250),
-                                    () -> robotHardware.getMotorPos(Names.leftOuttake) < 300,
-                                    () -> {
-                                        outtakeSubsystem.setTarget(100);
-                                        robotHardware.setServoPos(Names.claw, 0);
-                                        pathEnum = PathEnum.getSample1;
-                                    }
-                            );
                             break;
                     }
                     break;
-                case scoreSample:
-                    break;
                 case getSample1:
+//                    caseThingie(
+//                            () -> follower.followPath(pathGen.getToSample1Path()),
+//                            () -> follower.atParametricEnd(),
+//                            () -> pathEnum = PathEnum.scoreSample1);
+                    break;
+                case scoreSample1:
+//                    caseThingie(
+//                            () -> follower.followPath(pathGen.getSample1ToBucketPath()),
+//                            () -> follower.atParametricEnd(),
+//                            () -> pathEnum = PathEnum.getSample2
+//                    );
                     break;
                 case getSample2:
                     break;
@@ -84,9 +82,9 @@ public class Paths extends Thread {
                 case park:
                     break;
             }
+            intakeSubsystem.updatePID();
+            outtakeSubsystem.updatePID();
         }
-        intakeSubsystem.updatePID();
-        outtakeSubsystem.updatePID();
     }
 
     private void caseThingie(Runnable startSup, BooleanSupplier endCond, Runnable endSup) {
@@ -101,7 +99,9 @@ public class Paths extends Thread {
     }
 
     public void updateTelemetry(Telemetry telemetry) {
-
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
     }
 
     public void setVars(AutoSelection selection) {

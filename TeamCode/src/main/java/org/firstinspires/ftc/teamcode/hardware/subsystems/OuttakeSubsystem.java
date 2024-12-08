@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.Names;
 @Config
 public class OuttakeSubsystem extends BaseSubsystem {
     PIDFController controller;
-    public static double p = 0, i = 0, d = 0, f = 0;
+    public static double p = 0.015, i = 0, d = 0.0002, f = 0.05;
     public static int target = 0;
     private boolean grab = false;
 

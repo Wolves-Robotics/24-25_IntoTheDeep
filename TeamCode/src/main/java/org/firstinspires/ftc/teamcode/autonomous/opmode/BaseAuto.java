@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.autonomous.paths.Paths;
+import org.firstinspires.ftc.teamcode.autonomous.paths.samples.initSample;
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.autonomous.selection.AutoSelection;
 import org.firstinspires.ftc.teamcode.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.hardware.subsystems.IntakeSubsystem;
@@ -30,6 +32,7 @@ public class BaseAuto extends OpMode {
         autoSelection = new AutoSelection(gamepad1);
         autoSelection.start();
         paths = new Paths(hardwareMap, robotHardware, intakeSubsystem, outtakeSubsystem);
+
     }
 
     @Override
@@ -41,6 +44,7 @@ public class BaseAuto extends OpMode {
     @Override
     public void start() {
         paths.setVars(autoSelection);
+
         autoSelection.interrupt();
         paths.start();
     }

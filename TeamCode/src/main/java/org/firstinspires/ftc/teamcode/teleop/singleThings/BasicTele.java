@@ -21,6 +21,7 @@ public class BasicTele extends OpMode {
     private double ip=0.014, ii=0.15, id=0.00081, op=0.015, oi=0, od=0.0002, of=0.05;
     private double iTarget=0, oTarget=0;
     double ff = Math.cos(Math.toRadians(oTarget / ticksPerDeg)) * of;
+    double drivePower = 1;
 
     @Override
     public void init() {
@@ -54,19 +55,52 @@ public class BasicTele extends OpMode {
             robotHardware.setServoPos(Names.intakeArm, 0.89);
             robotHardware.setServoPos(Names.intakePivot, 0.6  );
             robotHardware.setMotorPower(Names.slurp, 1);
+            robotHardware.setServoPos(Names.door, 0.7);
         }
         if (gamepad1.b){
             robotHardware.setMotorPower(Names.slurp, 0);
             iTarget = 0;
             robotHardware.setServoPos(Names.intakeArm, 0.1);
             robotHardware.setServoPos(Names.intakePivot, 0.19);
+            if (robotHardware.getMotorPos(Names.intakeExtendo) == 0);{
+                robotHardware.setServoPos(Names.door, 0.5);
+            }
+        }
+        if(gamepad1.dpad_right){
+            oTarget = 0;
+            drivePower = 0.5;
+            robotHardware.setServoPos(Names.outtakeArm, 0.74);
+            robotHardware.setServoPos(Names.outtakePivot, 0.29);
+            robotHardware.setServoPos(Names.intakeArm, 0.3);
+            robotHardware.setServoPos(Names.intakePivot, 0.2);
+        }
+        if(gamepad1.dpad_left){
+            oTarget = 600;
+            drivePower = 1;
+            robotHardware.setServoPos(Names.outtakeArm, 0.74);
+            robotHardware.setServoPos(Names.outtakePivot, 0.29);
+            robotHardware.setServoPos(Names.intakeArm, 0.3);
+            robotHardware.setServoPos(Names.intakePivot, 0.2);
+        }
+        if(gamepad1.dpad_up){
+            oTarget = 1300;
+            drivePower = 0.5;
+            robotHardware.setServoPos(Names.outtakeArm, 0.76);
+            robotHardware.setServoPos(Names.outtakePivot, 0.35);
+            robotHardware.setServoPos(Names.intakeArm, 0.3);
+            robotHardware.setServoPos(Names.intakePivot, 0.2);
+        }
+        if(gamepad1.dpad_down){
+            oTarget = 0;
+            drivePower = 1;
+            robotHardware.setServoPos(Names.outtakeArm, 0.76);
+            robotHardware.setServoPos(Names.outtakePivot, 0.35);
+            robotHardware.setServoPos(Names.intakeArm, 0.3);
+            robotHardware.setServoPos(Names.intakePivot, 0.2);
         }
         if (gamepad1.left_bumper) robotHardware.setMotorPower(Names.slurp, -1);
 
-        if(gamepad1.right_bumper) robotHardware.setServoPos(Names.door, 0.5);
-        else robotHardware.setServoPos(Names.door, 0.7);
-
-        if(gamepad2.right_bumper && clawTime.seconds() > 0.25) {
+        if((gamepad1.right_bumper || gamepad2.right_bumper) && clawTime.seconds() > 0.25) {
             clawTime.reset();
             grab = !grab;
             if (grab) robotHardware.setServoPos(Names.claw ,0);
@@ -101,7 +135,7 @@ public class BasicTele extends OpMode {
         double y = -gamepad1.left_stick_y;
         double rot = gamepad1.right_stick_x;
 
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rot), 1);
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rot), 1) * (1/drivePower);
         double frontLeftPower = (y + x + rot) / denominator;
         double backLeftPower = (y - x + rot) / denominator;
         double frontRightPower = (y - x - rot) / denominator;

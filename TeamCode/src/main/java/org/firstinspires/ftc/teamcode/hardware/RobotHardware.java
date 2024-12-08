@@ -101,23 +101,23 @@ public class RobotHardware extends Thread {
 
     private void setHardwareMap() {
         motorClassMap = new HashMap<>();
-        motorClassMap.put("frontLeft", new MotorClass(Names.frontLeft, true));
-        motorClassMap.put("frontRight", new MotorClass(Names.frontRight, false));
-        motorClassMap.put("backLeft", new MotorClass(Names.backLeft, true));
-        motorClassMap.put("backRight", new MotorClass(Names.backRight, false));
-        motorClassMap.put("leftOuttake", new MotorClass(Names.leftOuttake, true));
-        motorClassMap.put("rightOuttake", new MotorClass(Names.rightOuttake, false));
-        motorClassMap.put("intakeExtendo", new MotorClass(Names.intakeExtendo, false));
-        motorClassMap.put("slurp", new MotorClass(Names.slurp, false));
+        motorClassMap.put(nameHashMap.get(Names.frontLeft), new MotorClass(Names.frontLeft, true));
+        motorClassMap.put(nameHashMap.get(Names.frontRight), new MotorClass(Names.frontRight, false));
+        motorClassMap.put(nameHashMap.get(Names.backLeft), new MotorClass(Names.backLeft, true));
+        motorClassMap.put(nameHashMap.get(Names.backRight), new MotorClass(Names.backRight, false));
+        motorClassMap.put(nameHashMap.get(Names.leftOuttake), new MotorClass(Names.leftOuttake, true));
+        motorClassMap.put(nameHashMap.get(Names.rightOuttake), new MotorClass(Names.rightOuttake, false));
+        motorClassMap.put(nameHashMap.get(Names.intakeExtendo), new MotorClass(Names.intakeExtendo, false));
+        motorClassMap.put(nameHashMap.get(Names.slurp), new MotorClass(Names.slurp, false));
 
         servoClassMap = new HashMap<>();
-        servoClassMap.put("IDK1", new ServoClass(Names.door, false));
-        servoClassMap.put("IDK2", new ServoClass(Names.intakePivot, false));
-        servoClassMap.put("intakeArm", new ServoClass(Names.intakeArm, false));
-        servoClassMap.put("outtakeArm", new ServoClass(Names.outtakeArm, false));
-        servoClassMap.put("IDK4", new ServoClass(Names.outtakePivot, false));
-        servoClassMap.put("clawPivot", new ServoClass(Names.clawPivot, false));
-        servoClassMap.put("IDK3", new ServoClass(Names.claw, false));
+        servoClassMap.put(nameHashMap.get(Names.door), new ServoClass(Names.door, false));
+        servoClassMap.put(nameHashMap.get(Names.intakePivot), new ServoClass(Names.intakePivot, false));
+        servoClassMap.put(nameHashMap.get(Names.intakeArm), new ServoClass(Names.intakeArm, false));
+        servoClassMap.put(nameHashMap.get(Names.outtakeArm), new ServoClass(Names.outtakeArm, false));
+        servoClassMap.put(nameHashMap.get(Names.outtakePivot), new ServoClass(Names.outtakePivot, false));
+        servoClassMap.put(nameHashMap.get(Names.clawPivot), new ServoClass(Names.clawPivot, false));
+        servoClassMap.put(nameHashMap.get(Names.claw), new ServoClass(Names.claw, false));
     }
 
     private void setImu() {

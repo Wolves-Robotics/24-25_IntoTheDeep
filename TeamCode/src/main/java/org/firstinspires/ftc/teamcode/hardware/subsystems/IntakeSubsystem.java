@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.Names;
 @Config
 public class IntakeSubsystem extends BaseSubsystem {
     PIDController controller, secondaryController;
-    public static double p1 = 0, i1 = 0, d1 = 0, p2 = 0, i2 = 0, d2 = 0;
+    public static double p1 = 0.014, i1 = 0.15, d1 = 0.00081, p2 = 0, i2 = 0, d2 = 0;
     public static int target = 0, maxTarget = 500;
 
     public IntakeSubsystem(RobotHardware _robotHardware, MultipleTelemetry _telemetry) {

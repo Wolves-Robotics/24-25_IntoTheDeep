@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.util.DashboardPoseTracker;
 import org.firstinspires.ftc.teamcode.autonomous.pedroPathing.util.Drawing;
@@ -50,6 +51,7 @@ public class LocalizationTest extends OpMode {
     @Override
     public void init() {
         poseUpdater = new PoseUpdater(hardwareMap);
+        poseUpdater.resetIMU();
 
         dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
 
