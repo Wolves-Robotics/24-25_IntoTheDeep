@@ -1,24 +1,6 @@
 package org.firstinspires.ftc.teamcode.utils;
 
 public class Constants {
-    public enum Names {
-        frontLeft,
-        frontRight,
-        backLeft,
-        backRight,
-        leftOuttake,
-        rightOuttake,
-        intakeExtendo,
-        slurp,
-        door,
-        intakePivot,
-        intakeArm,
-        outtakeArm,
-        outtakePivot,
-        clawPivot,
-        claw,
-    }
-
     public static String getStringName(Names name) {
         switch (name) {
             case frontLeft: return      "frontLeft";
@@ -35,9 +17,13 @@ public class Constants {
             case intakeArm: return      "intakeArm";
             case outtakeArm: return     "outtakeArm";
             case outtakePivot: return   "IDK4";
-            case clawPivot: return      "clawPivot";
             case claw: return           "IDK3";
             default: return "";
         }
     }
+    public static final double ip = 0.018, ii = 0.175, id = 0.0009;
+    public static final double op = 0.005, oi = 0.15, od = 0.00012, of = 0.05;
+
+    public static final int intakeMinTarget = 0, intakeMaxTarget = 400;
+    public static final int outtakeMinTarget = 0, outtakeMaxTarget = 1940;
 }

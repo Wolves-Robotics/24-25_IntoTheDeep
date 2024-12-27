@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utils;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -10,8 +11,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.utils.Constants.Names;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +37,6 @@ public class RobotHardware extends Thread {
         servoClassMap.put(Names.intakeArm,     new ServoClass(Names.intakeArm,     false));
         servoClassMap.put(Names.outtakeArm,    new ServoClass(Names.outtakeArm,    false));
         servoClassMap.put(Names.outtakePivot,  new ServoClass(Names.outtakePivot,  false));
-        servoClassMap.put(Names.clawPivot,     new ServoClass(Names.clawPivot,     false));
         servoClassMap.put(Names.claw,          new ServoClass(Names.claw,          false));
     }
 
@@ -102,7 +103,6 @@ public class RobotHardware extends Thread {
         setServoPos(Names.intakePivot, 0.19);
         setServoPos(Names.outtakeArm, 0.1);
         setServoPos(Names.outtakePivot, 0.15);
-        setServoPos(Names.clawPivot, 0.2);
         setServoPos(Names.claw, 0.3);
     }
 
@@ -132,6 +132,19 @@ public class RobotHardware extends Thread {
     }
     public void setServoPos(Names name, double pos) {
         servoClassMap.get(name).servo.setPosition(pos);
+    }
+
+    public void setMotorDirection(Names name, boolean reverse) {
+        motorClassMap.get(name).motor.setDirection(reverse ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+    }
+
+    public void setServoDirection(Names name, boolean reverse) {
+        servoClassMap.get(name).servo.setDirection(reverse ? Servo.Direction.REVERSE : Servo.Direction.FORWARD);
+    }
+
+    public void startPids() {
+        IntakeSubsystem.getInstance().startPid();
+        OuttakeSubsystem.getInstance().startPid();
     }
 
     private void lynxModuleUpdate() {
