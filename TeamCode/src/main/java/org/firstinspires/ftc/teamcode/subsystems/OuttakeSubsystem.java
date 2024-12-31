@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utils.Constants;
 import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
@@ -14,6 +15,7 @@ public class OuttakeSubsystem extends Thread{
     private PIDF pidf;
     private int target = 0;
     private boolean pidOn = false;
+    private double power = 0, pos;
 
     public static OuttakeSubsystem getInstance(RobotHardware robotHardware) {
         if (instance == null) {
@@ -28,7 +30,6 @@ public class OuttakeSubsystem extends Thread{
 
     private OuttakeSubsystem(RobotHardware _robotHardware) {
         robotHardware = _robotHardware;
-        clawNeutral();
         pidController = new PIDController(Constants.op, Constants.oi, Constants.od);
         pidf = new PIDF(
                 Constants.op,
@@ -82,10 +83,16 @@ public class OuttakeSubsystem extends Thread{
     public void run() {
         while (!currentThread().isInterrupted()) {
             if (pidOn) {
-                double power = pidController.calculate((robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake)) / 2., target) + Constants.of;
+                pos = (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake)) / 2.;
+                power = pidController.calculate(pos, target) + Constants.of;
                 robotHardware.setMotorPower(Names.leftOuttake, power);
                 robotHardware.setMotorPower(Names.rightOuttake, power);
             }
         }
+    }
+
+    public void updateTelemetry(Telemetry telemetry) {
+        telemetry.addData("Outtake pos", pos);
+        telemetry.addData("Outtake power", power);
     }
 }

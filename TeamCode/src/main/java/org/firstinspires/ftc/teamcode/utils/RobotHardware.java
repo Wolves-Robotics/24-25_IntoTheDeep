@@ -78,6 +78,8 @@ public class RobotHardware extends Thread {
         setHardwareMap();
 
         setImu();
+
+        servoInit();
     }
 
     private void lynxModuleInit() {
@@ -98,12 +100,12 @@ public class RobotHardware extends Thread {
     }
 
     public void servoInit() {
-        setServoPos(Names.door, 0.7);
-        setServoPos(Names.intakeArm, 0.135);
+        setServoPos(Names.intakeArm, 0.1);
         setServoPos(Names.intakePivot, 0.19);
-        setServoPos(Names.outtakeArm, 0.1);
-        setServoPos(Names.outtakePivot, 0.15);
         setServoPos(Names.claw, 0.3);
+        setServoPos(Names.outtakeArm, 0.23);
+        setServoPos(Names.outtakePivot, 0.4);
+        setServoPos(Names.door, 0.7);
     }
 
     @Override

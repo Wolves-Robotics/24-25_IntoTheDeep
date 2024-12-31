@@ -28,7 +28,6 @@ public class IntakeSubsystem extends Thread {
 
     private IntakeSubsystem(RobotHardware _robotHardware) {
         robotHardware = _robotHardware;
-        bucketNeutral();
         pidController = new PIDController(Constants.ip, Constants.ii, Constants.id);
         pid = new PIDF(
                 Constants.ip,
