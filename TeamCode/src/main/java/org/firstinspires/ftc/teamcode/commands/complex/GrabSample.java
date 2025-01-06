@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.commands.complex;
 
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.commands.intake.BucketNeutral;
 import org.firstinspires.ftc.teamcode.commands.outtake.ClawDown;
@@ -13,7 +14,8 @@ public class GrabSample extends SequentialCommandGroup {
                 new ParallelCommandGroup(
                         new BucketNeutral(),
                         new ClawDown()
-                ).withTimeout(50),
+                ),
+                new WaitCommand(50),
                 new CloseClaw()
         );
     }

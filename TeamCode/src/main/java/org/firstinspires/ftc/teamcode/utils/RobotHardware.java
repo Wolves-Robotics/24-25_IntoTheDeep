@@ -47,7 +47,6 @@ public class RobotHardware extends Thread {
     private HashMap<Names, ServoClass> servoClassMap;
 
     private IMU imu;
-    private YawPitchRollAngles imuAngles;
 
     private ElapsedTime deltaTime;
 

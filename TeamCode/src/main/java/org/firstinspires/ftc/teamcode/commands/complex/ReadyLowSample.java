@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.commands.complex;
 import com.arcrobotics.ftclib.command.ParallelRaceGroup;
 
 import org.firstinspires.ftc.teamcode.commands.outtake.ClawSample;
-import org.firstinspires.ftc.teamcode.commands.outtake.OuttakeHighSample;
+import org.firstinspires.ftc.teamcode.commands.outtake.OuttakeLowSample;
 
-public class ReadySample extends ParallelRaceGroup {
-    public ReadySample() {
+public class ReadyLowSample extends ParallelRaceGroup {
+    public ReadyLowSample() {
         super(
-                new OuttakeHighSample(),
+                new OuttakeLowSample(),
                 new ClawSample()
         );
     }

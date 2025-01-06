@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto.collections;
 
-public enum PathEnum {
+public enum SampleEnum {
     scoreInitSample,
     getSample1,
     scoreSample1,
@@ -8,5 +8,6 @@ public enum PathEnum {
     scoreSample2,
     getSample3,
     scoreSample3,
-    park
+    park,
+    done
 }

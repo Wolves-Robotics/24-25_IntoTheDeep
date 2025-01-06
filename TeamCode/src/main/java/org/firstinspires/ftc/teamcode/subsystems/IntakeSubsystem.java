@@ -57,8 +57,8 @@ public class IntakeSubsystem extends Thread {
         robotHardware.setServoPos(Names.intakeArm, 0.3);
     }
     public void bucketUp() {
-        robotHardware.setServoPos(Names.intakePivot, 0.22);
-        robotHardware.setServoPos(Names.intakeArm, 0.05);
+        robotHardware.setServoPos(Names.intakePivot, 0.18);
+        robotHardware.setServoPos(Names.intakeArm, 0.045);
     }
 
     public void doorClose() {
@@ -84,9 +84,6 @@ public class IntakeSubsystem extends Thread {
     public void startPid() {
         target = 0;
         pidOn = true;
-    }
-    public void stopPid() {
-        pidOn = false;
     }
 
 

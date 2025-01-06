@@ -55,8 +55,8 @@ public class OuttakeSubsystem extends Thread{
         robotHardware.setServoPos(Names.outtakePivot, 0.15);
     }
     public void clawNeutral() {
-        robotHardware.setServoPos(Names.outtakeArm, 0.09);
-        robotHardware.setServoPos(Names.outtakePivot, 0.15);
+        robotHardware.setServoPos(Names.outtakeArm, 0.2);
+        robotHardware.setServoPos(Names.outtakePivot, 0.1);
     }
     public void clawSample() {
         robotHardware.setServoPos(Names.outtakeArm, 0.45);
