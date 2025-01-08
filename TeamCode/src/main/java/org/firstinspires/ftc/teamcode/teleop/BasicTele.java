@@ -56,7 +56,7 @@ public class BasicTele extends OpMode {
         }
         if (gamepad1.x) {
             robotHardware.setServoPos(Names.intakePivot, 0.47);
-            robotHardware.setServoPos(Names.intakeArm, 0.76);
+            robotHardware.setServoPos(Names.intakeArm, 0.78);
             robotHardware.setMotorPower(Names.slurp, 1);
             robotHardware.setServoPos(Names.door, 0.73);
         }
