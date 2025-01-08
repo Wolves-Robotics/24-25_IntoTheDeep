@@ -73,7 +73,7 @@ public class BasicTele extends OpMode {
         }
 
         if(gamepad1.dpad_up){
-            oTarget = 1300;
+            oTarget = 1250;
             robotHardware.setServoPos(Names.outtakeArm, 0.76);
             robotHardware.setServoPos(Names.outtakePivot, 0.35);
         }
