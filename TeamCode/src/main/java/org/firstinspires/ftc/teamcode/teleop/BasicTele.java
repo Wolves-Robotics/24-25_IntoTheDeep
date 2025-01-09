@@ -4,18 +4,23 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+import org.firstinspires.ftc.teamcode.auto.collections.Color;
 import org.firstinspires.ftc.teamcode.commands.complex.IntakeRetract;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 @TeleOp
 public class BasicTele extends OpMode {
     private RobotHardware robotHardware;
+    private ColorSensor colorSensor1;
+    private RevBlinkinLedDriver lights;
     private double deltaTime = 0;
     private PIDController intakePID, outtakePID;
     private ElapsedTime clawTime;
@@ -28,6 +33,7 @@ public class BasicTele extends OpMode {
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
+        lights = hardwareMap.get(RevBlinkinLedDriver.class, "led");
         robotHardware = new RobotHardware(hardwareMap);
         robotHardware.setDaemon(true);
         robotHardware.start();
@@ -36,6 +42,7 @@ public class BasicTele extends OpMode {
         clawTime = new ElapsedTime();
         intakePID = new PIDController(ip, ii, id);
         outtakePID = new PIDController(op, oi, od);
+        colorSensor1 = hardwareMap.get(ColorSensor.class, "color1");
     }
 
     @Override
@@ -59,6 +66,7 @@ public class BasicTele extends OpMode {
             robotHardware.setServoPos(Names.intakeArm, 0.78);
             robotHardware.setMotorPower(Names.slurp, 1);
             robotHardware.setServoPos(Names.door, 0.73);
+
         }
         if (gamepad1.b){
             CommandScheduler.getInstance().schedule(new IntakeRetract());
@@ -93,6 +101,7 @@ public class BasicTele extends OpMode {
             robotHardware.setServoPos(Names.outtakePivot, 0.1);
             robotHardware.setServoPos(Names.intakeArm, 0.3);
             robotHardware.setServoPos(Names.intakePivot, 0.22);
+
             oTarget = 0;
         }
         if(gamepad2.left_stick_button) {
@@ -107,6 +116,7 @@ public class BasicTele extends OpMode {
             oTarget = 1940;
             robotHardware.setServoPos(Names.outtakeArm, 0.45);
             robotHardware.setServoPos(Names.outtakePivot, 0.4);
+            lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.AQUA);
         }
         if (gamepad2.a) oTarget = 0;
 
@@ -144,6 +154,14 @@ public class BasicTele extends OpMode {
         double power = oPow + ff;
         robotHardware.setMotorPower(Names.leftOuttake, power);
         robotHardware.setMotorPower(Names.rightOuttake, power);
+        if(colorSensor1.red() >= 150){
+            lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
+        }else if(colorSensor1.blue() >= 150){
+            lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+        }else{
+            lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_WHITE);
+        }
+
 
         deltaTime = getRuntime();
         resetRuntime();
