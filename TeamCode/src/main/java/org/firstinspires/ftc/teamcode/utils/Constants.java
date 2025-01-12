@@ -18,6 +18,13 @@ public class Constants {
             case outtakeArm: return     "outtakeArm";
             case outtakePivot: return   "IDK4";
             case claw: return           "IDK3";
+
+            case intakeColor: return    "color1";
+            case transferColor: return  "color2";
+
+            case imu: return            "imu";
+
+            case lights: return         "led";
             default: return "";
         }
     }

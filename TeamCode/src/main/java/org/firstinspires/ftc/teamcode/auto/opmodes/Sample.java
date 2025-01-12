@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.utils.Constants.oi;
 import static org.firstinspires.ftc.teamcode.utils.Constants.op;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -187,9 +188,8 @@ public class Sample extends OpMode {
                         break;
                     case forward:
                         caseThingie(
-                                () -> {iTarget = 300;
-                                    elapsedTime.reset();},
-                                () -> elapsedTime.seconds() > 0.7,
+                                () -> iTarget = 300,
+                                () -> elapsedTime.seconds() > 0.7 || robotHardware.isYellow(Names.intakeColor),
                                 () -> grabSamp = GrabSamp.retract
                         );
                         break;
@@ -205,7 +205,7 @@ public class Sample extends OpMode {
                         break;
                     case door:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 0.275,
                                 () -> {robotHardware.setServoPos(Names.door, 0.4);
                                     grabSamp = GrabSamp.ready;}
@@ -213,7 +213,7 @@ public class Sample extends OpMode {
                         break;
                     case ready:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 1.5,
                                 () -> {robotHardware.setMotorPower(Names.slurp, 0);
                                     robotHardware.setServoPos(Names.outtakeArm, 0.05);
@@ -227,7 +227,7 @@ public class Sample extends OpMode {
                         break;
                     case claw:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 0.4,
                                 () -> {robotHardware.setServoPos(Names.claw, 0);
                                     grabSamp = GrabSamp.pause;}
@@ -235,7 +235,7 @@ public class Sample extends OpMode {
                         break;
                     case pause:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 0.1,
                                 () -> {
                                     sampleEnum = SampleEnum.scoreSample1;
@@ -301,9 +301,8 @@ public class Sample extends OpMode {
                         break;
                     case forward:
                         caseThingie(
-                                () -> {iTarget = 400;
-                                    elapsedTime.reset();},
-                                () -> elapsedTime.seconds() > 1.2,
+                                () -> iTarget = 400,
+                                () -> elapsedTime.seconds() > 1.2 || robotHardware.isYellow(Names.intakeColor),
                                 () -> grabSamp = GrabSamp.retract
                         );
                         break;
@@ -319,7 +318,7 @@ public class Sample extends OpMode {
                         break;
                     case door:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 0.275,
                                 () -> {robotHardware.setServoPos(Names.door, 0.4);
                                     grabSamp = GrabSamp.ready;}
@@ -327,7 +326,7 @@ public class Sample extends OpMode {
                         break;
                     case ready:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 1.5,
                                 () -> {robotHardware.setMotorPower(Names.slurp, 0);
                                     robotHardware.setServoPos(Names.outtakeArm, 0.05);
@@ -341,7 +340,7 @@ public class Sample extends OpMode {
                         break;
                     case claw:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 0.4,
                                 () -> {robotHardware.setServoPos(Names.claw, 0);
                                     grabSamp = GrabSamp.pause;}
@@ -349,7 +348,7 @@ public class Sample extends OpMode {
                         break;
                     case pause:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 0.1,
                                 () -> {
                                     sampleEnum = SampleEnum.scoreSample2;
@@ -413,9 +412,8 @@ public class Sample extends OpMode {
                         break;
                     case forward:
                         caseThingie(
-                                () -> {iTarget = 275;
-                                    elapsedTime.reset();},
-                                () -> elapsedTime.seconds() > 1.2,
+                                () -> iTarget = 275,
+                                () -> elapsedTime.seconds() > 1.2 || robotHardware.isYellow(Names.intakeColor),
                                 () -> grabSamp = GrabSamp.retract
                         );
                         break;
@@ -430,7 +428,7 @@ public class Sample extends OpMode {
                         break;
                     case door:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 0.275,
                                 () -> {robotHardware.setServoPos(Names.door, 0.4);
                                     grabSamp = GrabSamp.ready;}
@@ -438,7 +436,7 @@ public class Sample extends OpMode {
                         break;
                     case ready:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 1.5,
                                 () -> {robotHardware.setMotorPower(Names.slurp, 0);
                                     robotHardware.setServoPos(Names.outtakeArm, 0.05);
@@ -452,7 +450,7 @@ public class Sample extends OpMode {
                         break;
                     case claw:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 0.4,
                                 () -> {robotHardware.setServoPos(Names.claw, 0);
                                     grabSamp = GrabSamp.pause;}
@@ -460,7 +458,7 @@ public class Sample extends OpMode {
                         break;
                     case pause:
                         caseThingie(
-                                () -> elapsedTime.reset(),
+                                () -> {},
                                 () -> elapsedTime.seconds() > 0.1,
                                 () -> {
                                     sampleEnum = SampleEnum.scoreSample3;
@@ -523,12 +521,18 @@ public class Sample extends OpMode {
         robotHardware.setMotorPower(Names.leftOuttake, oPower);
         robotHardware.setMotorPower(Names.rightOuttake, oPower);
 
+        if (robotHardware.isRed(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.RED);
+        else if (robotHardware.isBlue(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+        else if (robotHardware.isYellow(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.GOLD);
+        else robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_WHITE);
+
         telemetry.update();
     }
 
     private void caseThingie (Runnable startSup, BooleanSupplier endCond, Runnable endSup){
         if (start) {
             startSup.run();
+            elapsedTime.reset();
             start = false;
         }
         if (endCond.getAsBoolean()) {

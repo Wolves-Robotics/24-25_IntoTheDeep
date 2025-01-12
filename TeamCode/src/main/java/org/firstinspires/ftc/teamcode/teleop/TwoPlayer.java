@@ -38,7 +38,6 @@ public class TwoPlayer extends OpMode {
         CommandScheduler.getInstance().reset();
 
         robotHardware = new RobotHardware(hardwareMap);
-        robotHardware.start();
         IntakeSubsystem.getInstance(robotHardware);
         OuttakeSubsystem.getInstance(robotHardware);
         DriveSubsystem.getInstance(robotHardware);

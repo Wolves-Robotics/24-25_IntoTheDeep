@@ -19,8 +19,6 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 @TeleOp
 public class BasicTele extends OpMode {
     private RobotHardware robotHardware;
-    private ColorSensor colorSensor1;
-    private RevBlinkinLedDriver lights;
     private double deltaTime = 0;
     private PIDController intakePID, outtakePID;
     private ElapsedTime clawTime;
@@ -33,16 +31,12 @@ public class BasicTele extends OpMode {
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
-        lights = hardwareMap.get(RevBlinkinLedDriver.class, "led");
         robotHardware = new RobotHardware(hardwareMap);
-        robotHardware.setDaemon(true);
-        robotHardware.start();
         OuttakeSubsystem.getInstance(robotHardware);
         IntakeSubsystem.getInstance(robotHardware);
         clawTime = new ElapsedTime();
         intakePID = new PIDController(ip, ii, id);
         outtakePID = new PIDController(op, oi, od);
-        colorSensor1 = hardwareMap.get(ColorSensor.class, "color1");
     }
 
     @Override
@@ -62,8 +56,8 @@ public class BasicTele extends OpMode {
             manualIntake = true;
         }
         if (gamepad1.x) {
-            robotHardware.setServoPos(Names.intakePivot, 0.47);
-            robotHardware.setServoPos(Names.intakeArm, 0.78);
+            robotHardware.setServoPos(Names.intakePivot, 0.5);
+            robotHardware.setServoPos(Names.intakeArm, 0.765);
             robotHardware.setMotorPower(Names.slurp, 1);
             robotHardware.setServoPos(Names.door, 0.73);
 
@@ -116,7 +110,7 @@ public class BasicTele extends OpMode {
             oTarget = 1940;
             robotHardware.setServoPos(Names.outtakeArm, 0.45);
             robotHardware.setServoPos(Names.outtakePivot, 0.4);
-            lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.AQUA);
+            robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.AQUA);
         }
         if (gamepad2.a) oTarget = 0;
 
@@ -154,14 +148,11 @@ public class BasicTele extends OpMode {
         double power = oPow + ff;
         robotHardware.setMotorPower(Names.leftOuttake, power);
         robotHardware.setMotorPower(Names.rightOuttake, power);
-        if(colorSensor1.red() >= 150){
-            lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
-        }else if(colorSensor1.blue() >= 150){
-            lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
-        }else{
-            lights.setPattern(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_WHITE);
-        }
 
+        if (robotHardware.isRed(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.RED);
+        else if (robotHardware.isBlue(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+        else if (robotHardware.isYellow(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.GOLD);
+        else robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_WHITE);
 
         deltaTime = getRuntime();
         resetRuntime();

@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.utils;
 
 public enum Names {
+    imu,
+    lights,
     frontLeft,
     frontRight,
     backLeft,
@@ -15,4 +17,6 @@ public enum Names {
     outtakeArm,
     outtakePivot,
     claw,
+    intakeColor,
+    transferColor
 }

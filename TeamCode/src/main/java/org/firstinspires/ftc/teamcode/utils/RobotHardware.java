@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.utils;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,6 +39,10 @@ public class RobotHardware extends Thread {
         servoClassMap.put(Names.outtakeArm,    new ServoClass(Names.outtakeArm,    false));
         servoClassMap.put(Names.outtakePivot,  new ServoClass(Names.outtakePivot,  false));
         servoClassMap.put(Names.claw,          new ServoClass(Names.claw,          false));
+
+        colorSensorMap = new HashMap<>();
+        colorSensorMap.put(Names.intakeColor,    new ColorSensorClass(Names.intakeColor));
+        colorSensorMap.put(Names.transferColor,  new ColorSensorClass(Names.transferColor));
     }
 
     private static HardwareMap hardwareMap;
@@ -45,8 +50,12 @@ public class RobotHardware extends Thread {
 
     private HashMap<Names, MotorClass> motorClassMap;
     private HashMap<Names, ServoClass> servoClassMap;
+    private HashMap<Names, ColorSensorClass> colorSensorMap;
 
     private IMU imu;
+
+    private RevBlinkinLedDriver lights;
+    private RevBlinkinLedDriver.BlinkinPattern prevPatter;
 
     private ElapsedTime deltaTime;
 
@@ -68,6 +77,14 @@ public class RobotHardware extends Thread {
         }
     }
 
+    private static class ColorSensorClass {
+        ColorSensor colorSensor;
+
+        public ColorSensorClass(Names name) {
+            colorSensor = hardwareMap.get(ColorSensor.class, Constants.getStringName(name));
+        }
+    }
+
     public RobotHardware(HardwareMap _hardwareMap) {
         hardwareMap = _hardwareMap;
         deltaTime = new ElapsedTime();
@@ -78,7 +95,12 @@ public class RobotHardware extends Thread {
 
         setImu();
 
+        setLights();
+
         servoInit();
+
+        setDaemon(true);
+        start();
     }
 
     private void lynxModuleInit() {
@@ -90,12 +112,16 @@ public class RobotHardware extends Thread {
     }
 
     private void setImu() {
-        imu = hardwareMap.get(IMU.class, "imu");
+        imu = hardwareMap.get(IMU.class, Constants.getStringName(Names.imu));
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         imu.initialize(parameters);
         imu.resetYaw();
+    }
+
+    private void setLights() {
+        lights = hardwareMap.get(RevBlinkinLedDriver.class, Constants.getStringName(Names.lights));
     }
 
     public void servoInit() {
@@ -143,9 +169,46 @@ public class RobotHardware extends Thread {
         servoClassMap.get(name).servo.setDirection(reverse ? Servo.Direction.REVERSE : Servo.Direction.FORWARD);
     }
 
+    public boolean isRed(Names name) {
+        return  colorSensorMap.get(name).colorSensor.red() >= 150 &&
+                colorSensorMap.get(name).colorSensor.green() <= 293 &&
+                colorSensorMap.get(name).colorSensor.blue() <= 120;
+    }
+
+    public int getRed(Names name) {
+        return colorSensorMap.get(name).colorSensor.red();
+    }
+
+    public boolean isBlue(Names name) {
+        return  colorSensorMap.get(name).colorSensor.red() <= 110 &&
+                colorSensorMap.get(name).colorSensor.green() <= 220 &&
+                colorSensorMap.get(name).colorSensor.blue() >= 130;
+    }
+
+    public int getBlue(Names name) {
+        return colorSensorMap.get(name).colorSensor.blue();
+    }
+
+    public boolean isYellow(Names name) {
+        return  colorSensorMap.get(name).colorSensor.red() >= 240 &&
+                colorSensorMap.get(name).colorSensor.green() >= 294 &&
+                colorSensorMap.get(name).colorSensor.blue() <= 300;
+    }
+
+    public int getGreen(Names name) {
+        return colorSensorMap.get(name).colorSensor.green();
+    }
+
     public void startPids() {
         IntakeSubsystem.getInstance().startPid();
         OuttakeSubsystem.getInstance().startPid();
+    }
+
+    public void setLightColor(RevBlinkinLedDriver.BlinkinPattern pattern) {
+        if (pattern != prevPatter) {
+            prevPatter = pattern;
+            lights.setPattern(pattern);
+        }
     }
 
     private void lynxModuleUpdate() {
