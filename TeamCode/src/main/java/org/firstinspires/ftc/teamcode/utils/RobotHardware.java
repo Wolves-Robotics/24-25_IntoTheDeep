@@ -10,9 +10,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 
@@ -21,7 +21,7 @@ import java.util.List;
 
 @Config
 public class RobotHardware extends Thread {
-    private void setHardwareMap() {
+    private void setHardwareMaps() {
         motorClassMap = new HashMap<>();
         motorClassMap.put(Names.frontLeft,     new MotorClass(Names.frontLeft,     true));
         motorClassMap.put(Names.frontRight,    new MotorClass(Names.frontRight,    false));
@@ -45,6 +45,8 @@ public class RobotHardware extends Thread {
         colorSensorMap.put(Names.transferColor,  new ColorSensorClass(Names.transferColor));
     }
 
+    private static RobotHardware instance = null;
+
     private static HardwareMap hardwareMap;
     private List<LynxModule> allHubs;
 
@@ -56,8 +58,6 @@ public class RobotHardware extends Thread {
 
     private RevBlinkinLedDriver lights;
     private RevBlinkinLedDriver.BlinkinPattern prevPatter;
-
-    private ElapsedTime deltaTime;
 
     private static class MotorClass {
         DcMotor motor;
@@ -85,21 +85,27 @@ public class RobotHardware extends Thread {
         }
     }
 
-    public RobotHardware(HardwareMap _hardwareMap) {
+    public static void reset(HardwareMap _hardwareMap) {
+        instance = new RobotHardware(_hardwareMap);
+    }
+
+    public static RobotHardware getInstance() {
+        return instance;
+    }
+
+    private RobotHardware(HardwareMap _hardwareMap) {
         hardwareMap = _hardwareMap;
-        deltaTime = new ElapsedTime();
 
         lynxModuleInit();
 
-        setHardwareMap();
+        setHardwareMaps();
 
         setImu();
 
         setLights();
 
-        servoInit();
+        resetSubsystems();
 
-        setDaemon(true);
         start();
     }
 
@@ -133,13 +139,23 @@ public class RobotHardware extends Thread {
         setServoPos(Names.door, 0.7);
     }
 
+    private void resetSubsystems() {
+        IntakeSubsystem.reset();
+        OuttakeSubsystem.reset();
+        DriveSubsystem.reset();
+    }
+
     @Override
     public void run() {
-        while (true) {
-            deltaTime.reset();
-
+        while (!Thread.currentThread().isInterrupted()) {
             lynxModuleUpdate();
         }
+        IntakeSubsystem.getInstance().interrupt();
+        OuttakeSubsystem.getInstance().interrupt();
+    }
+
+    public HardwareMap getHardwareMap() {
+        return hardwareMap;
     }
 
     public int getMotorPos(Names name) {

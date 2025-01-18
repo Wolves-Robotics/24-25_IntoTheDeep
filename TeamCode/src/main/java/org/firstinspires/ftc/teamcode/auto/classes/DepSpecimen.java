@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.opmodes;
+package org.firstinspires.ftc.teamcode.auto.classes;
 
 import static org.firstinspires.ftc.teamcode.utils.Constants.id;
 import static org.firstinspires.ftc.teamcode.utils.Constants.ii;
@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.utils.Constants.op;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -31,7 +32,8 @@ import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 import java.util.function.BooleanSupplier;
 
 @Autonomous
-public class Specimen extends OpMode {
+@Disabled
+public class DepSpecimen extends OpMode {
     private Follower follower;
     private SpecEnum specEnum;
     private ScoreSpec scoreSpec;

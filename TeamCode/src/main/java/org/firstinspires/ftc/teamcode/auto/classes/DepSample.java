@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.opmodes;
+package org.firstinspires.ftc.teamcode.auto.classes;
 
 import static org.firstinspires.ftc.teamcode.utils.Constants.id;
 import static org.firstinspires.ftc.teamcode.utils.Constants.ii;
@@ -11,6 +11,7 @@ import static org.firstinspires.ftc.teamcode.utils.Constants.op;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -29,7 +30,8 @@ import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 import java.util.function.BooleanSupplier;
 
 @Autonomous
-public class Sample extends OpMode {
+@Disabled
+public class DepSample extends OpMode {
     private Follower follower;
     private SampleEnum sampleEnum;
     private ScoreSamp scoreSamp;
@@ -50,7 +52,7 @@ public class Sample extends OpMode {
 
     @Override
     public void init() {
-        robotHardware = new RobotHardware(hardwareMap);
+        robotHardware = RobotHardware.getInstance();
         robotHardware.setServoPos(Names.intakeArm, 0.1);
         robotHardware.setServoPos(Names.intakePivot, 0.19);
         robotHardware.setServoPos(Names.claw, 0.3);

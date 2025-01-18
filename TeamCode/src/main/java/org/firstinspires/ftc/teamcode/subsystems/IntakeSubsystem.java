@@ -12,22 +12,20 @@ public class IntakeSubsystem extends Thread {
     private RobotHardware robotHardware;
     private PIDController pidController;
     private PIDF pid;
-    private int target = 0;
-    private boolean pidOn=false;
+    private int target;
+    private boolean pidOn;
 
-    public static IntakeSubsystem getInstance(RobotHardware robotHardware) {
-        if (instance == null) {
-            instance = new IntakeSubsystem(robotHardware);
-        }
-        return instance;
+    public static void reset() {
+        instance = new IntakeSubsystem();
     }
 
     public static IntakeSubsystem getInstance() {
         return instance;
     }
 
-    private IntakeSubsystem(RobotHardware _robotHardware) {
-        robotHardware = _robotHardware;
+    private IntakeSubsystem() {
+        robotHardware = RobotHardware.getInstance();
+
         pidController = new PIDController(Constants.ip, Constants.ii, Constants.id);
         pid = new PIDF(
                 Constants.ip,
@@ -37,7 +35,10 @@ public class IntakeSubsystem extends Thread {
                 x -> robotHardware.setMotorPower(Names.intakeExtendo, x)
         );
 //        pid.start();
-        setDaemon(true);
+
+        target = 0;
+        pidOn = false;
+
         start();
     }
 

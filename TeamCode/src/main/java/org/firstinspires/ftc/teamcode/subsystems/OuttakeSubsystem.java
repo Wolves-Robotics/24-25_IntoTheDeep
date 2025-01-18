@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utils.Constants;
@@ -12,25 +13,24 @@ public class OuttakeSubsystem extends Thread{
     private static OuttakeSubsystem instance = null;
     private RobotHardware robotHardware;
     private PIDController pidController;
+    private ElapsedTime elapsedTime;
     private PIDF pidf;
-    private int target = 0;
-    private boolean pidOn = false;
-    private double power = 0, pos;
+    private int target;
+    private boolean pidOn;
+    private double power, pos;
 
-    public static OuttakeSubsystem getInstance(RobotHardware robotHardware) {
-        if (instance == null) {
-            instance = new OuttakeSubsystem(robotHardware);
-        }
-        return instance;
+    public static void reset() {
+        instance = new OuttakeSubsystem();
     }
 
     public static OuttakeSubsystem getInstance() {
         return instance;
     }
 
-    private OuttakeSubsystem(RobotHardware _robotHardware) {
-        robotHardware = _robotHardware;
+    private OuttakeSubsystem() {
+        robotHardware = RobotHardware.getInstance();
         pidController = new PIDController(Constants.op, Constants.oi, Constants.od);
+
         pidf = new PIDF(
                 Constants.op,
                 Constants.oi,
@@ -39,13 +39,20 @@ public class OuttakeSubsystem extends Thread{
                 () -> (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake))/2,
                 x -> {robotHardware.setMotorPower(Names.leftOuttake, x); robotHardware.setMotorPower(Names.rightOuttake, x);}
         );
-        setDaemon(true);
+
+        target = 0;
+        pidOn = false;
+        power = 0;
+
+        elapsedTime.reset();
+
         start();
 //        pidf.start();
     }
 
     public void setTarget(int _target) {target = Math.max(Math.min(_target, Constants.outtakeMaxTarget), Constants.outtakeMinTarget);}
     public int getTarget() {return target;}
+    public double getPos() {return pos;}
 
     public void clawOpen() {robotHardware.setServoPos(Names.claw, 0.35);}
     public void clawClose() {robotHardware.setServoPos(Names.claw, 0);}
@@ -77,6 +84,14 @@ public class OuttakeSubsystem extends Thread{
     }
     public void stopPid() {
         pidOn = false;
+    }
+
+    public void resetTimer() {
+        elapsedTime.reset();
+    }
+
+    public double getSeconds() {
+        return elapsedTime.seconds();
     }
 
     @Override

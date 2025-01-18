@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto.collections;
 
 public enum Autos {
-    FullSample,
-    SemiSample,
-    Specimen
+    fullSample,
+    semiSample,
+    specimen
 }

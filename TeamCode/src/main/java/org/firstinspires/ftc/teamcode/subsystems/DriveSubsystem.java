@@ -1,26 +1,56 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.auto.pedro.follower.Follower;
+import org.firstinspires.ftc.teamcode.auto.pedro.localization.Pose;
+import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
 public class DriveSubsystem extends Thread{
     private static DriveSubsystem instance = null;
     private RobotHardware robotHardware;
+    private Follower follower;
 
-    public static DriveSubsystem getInstance(RobotHardware robotHardware) {
-        if (instance == null) {
-            instance = new DriveSubsystem(robotHardware);
-        }
-        return instance;
+    public static void reset() {
+        instance = new DriveSubsystem();
     }
 
     public static DriveSubsystem getInstance() {
         return instance;
     }
 
-    private DriveSubsystem(RobotHardware _robotHardware) {
-        robotHardware = _robotHardware;
+    private DriveSubsystem() {
+        robotHardware = RobotHardware.getInstance();
+        start();
+    }
+
+    public void setFollower(HardwareMap hardwareMap, Pose pose) {
+        follower = new Follower(hardwareMap);
+        follower.setStartingPose(pose);
+    }
+
+    public void followPath(Path path) {
+        follower.followPath(path);
+    }
+
+    public void followPath(Path path, boolean holdEnd) {
+        follower.followPath(path, holdEnd);
+    }
+
+    public void followPath(PathChain pathChain) {
+        follower.followPath(pathChain);
+    }
+
+    public void followPath(PathChain pathChain, boolean holdEnd) {
+        follower.followPath(pathChain, holdEnd);
+    }
+
+    public boolean atParametricEnd() {
+        return follower.atParametricEnd();
     }
 
     public void drive(double x, double y, double rot, boolean robotCentric) {
@@ -53,11 +83,13 @@ public class DriveSubsystem extends Thread{
     }
 
     public void drive(double x1, double x2, double y, double rot, boolean robotCentric) {
-        drive(x1-x2, y, rot, robotCentric);
+        drive(x2-x1, y, rot, robotCentric);
     }
 
     @Override
     public void run() {
-
+        while (!Thread.currentThread().isInterrupted()) {
+            if (follower != null) follower.update();
+        }
     }
 }
