@@ -13,7 +13,7 @@ public class IntakeRetract extends SequentialCommandGroup {
         super(
                 new BucketUp(),
                 new SetIntakeTarget(0),
-                new WaitCommand(150),
+                new WaitCommand(500),
                 new SlurpStop(),
                 new WaitCommand(125),
                 new DoorOpen()
