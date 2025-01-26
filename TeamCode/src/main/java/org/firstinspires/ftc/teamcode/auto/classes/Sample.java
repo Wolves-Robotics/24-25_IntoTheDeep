@@ -1,24 +1,24 @@
 package org.firstinspires.ftc.teamcode.auto.classes;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.auto.collections.Color;
-import org.firstinspires.ftc.teamcode.auto.collections.GrabSamp;
-import org.firstinspires.ftc.teamcode.auto.collections.SampleEnum;
-import org.firstinspires.ftc.teamcode.auto.collections.ScoreSamp;
+import org.firstinspires.ftc.teamcode.auto.collections.sample.GrabSamp;
+import org.firstinspires.ftc.teamcode.auto.collections.sample.SampleEnum;
+import org.firstinspires.ftc.teamcode.auto.collections.sample.ScoreSamp;
 import org.firstinspires.ftc.teamcode.auto.pedro.localization.Pose;
 import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.commands.complex.FullTransfer;
-import org.firstinspires.ftc.teamcode.commands.complex.IntakeDown;
-import org.firstinspires.ftc.teamcode.commands.complex.IntakeRetract;
-import org.firstinspires.ftc.teamcode.commands.complex.PlaceSample;
-import org.firstinspires.ftc.teamcode.commands.complex.ReadyHighSample;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.GrabSample;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeDown;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetract;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.PlaceSample;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyHighSample;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyOuttake;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeTarget;
-import org.firstinspires.ftc.teamcode.commands.outtake.OpenClaw;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.utils.Names;
 
 public class Sample extends BaseAuto {
@@ -27,245 +27,220 @@ public class Sample extends BaseAuto {
     private GrabSamp grabSamp;
 
     private Pose
-            start,  initBucket,
-            sample1, sample1Bucket,
-            sample2, sample2Bucket,
-            sample3, sample3Bucket,
-            parkControlPoint, park;
+            startPose, initBucketPose,
+            sample1Pose, sample1BucketPose,
+            sample2Pose, sample2BucketPose,
+            sample3Pose, sample3BucketPose,
+            parkControlPose, parkPose;
 
     private Path
-            initSamplePath,
-            toSample1Path, sample1ToBucketPath,
-            toSample2Path, sample2ToBucketPath,
-            toSample3Path, sample3ToBucketPath,
-            sampleParkPath;
+            scoreSample1Path,
+            getSample2Path, scoreSample2Path,
+            getSample3Path, scoreSample3Path,
+            getSample4Path, scoreSample4Path,
+            parkPath;
 
     public Sample(Color color) {
         super(color);
-        robotHardware.servoInit();
-        driveSubsystem.setFollower(robotHardware.getHardwareMap(), new Pose());
 
-        sampleEnum = SampleEnum.scoreInitSample;
+        sampleEnum = SampleEnum.scoreSample1;
         scoreSamp = ScoreSamp.start;
         grabSamp = GrabSamp.start;
 
 
-        start = new Pose(100, 100, 0);
-        initBucket = new Pose(85, 103, Math.toRadians(32));
+        startPose = new Pose(100, 100, 0);
+        initBucketPose = new Pose(85, 103, Math.toRadians(32));
 
-        sample1 = new Pose(81, 120, Math.toRadians(60));
-        sample1Bucket = new Pose(82, 104, Math.toRadians(32));
+        sample1Pose = new Pose(81, 120, Math.toRadians(60));
+        sample1BucketPose = new Pose(82, 104, Math.toRadians(32));
 
-        sample2 = new Pose(85, 118, Math.toRadians(112));
-        sample2Bucket = new Pose(82, 104, Math.toRadians(32));
+        sample2Pose = new Pose(85, 118, Math.toRadians(112));
+        sample2BucketPose = new Pose(82, 104, Math.toRadians(32));
 
-        sample3 = new Pose(76, 117.5, Math.toRadians(109));
-        sample3Bucket = new Pose(82, 104, Math.toRadians(32));
+        sample3Pose = new Pose(76, 117.5, Math.toRadians(109));
+        sample3BucketPose = new Pose(82, 104, Math.toRadians(32));
 
-        parkControlPoint = new Pose(60, 170);
-        park = new Pose(118, 150, Math.toRadians(180));
+        parkControlPose = new Pose(60, 170);
+        parkPose = new Pose(118, 150, Math.toRadians(180));
 
 
-        initSamplePath = new Path(new BezierLine(
-                new Point(start),
-                new Point(initBucket)
+        driveSubsystem.setFollower(robotHardware.getHardwareMap(), startPose);
+
+
+        scoreSample1Path = new Path(new BezierLine(
+                new Point(startPose),
+                new Point(initBucketPose)
         ));
-        initSamplePath.setLinearHeadingInterpolation(start.getHeading(), initBucket.getHeading());
+        scoreSample1Path.setLinearHeadingInterpolation(startPose.getHeading(), initBucketPose.getHeading());
 
 
-        toSample1Path = new Path(new BezierLine(
-                new Point(initBucket),
-                new Point(sample1)
+        getSample2Path = new Path(new BezierLine(
+                new Point(initBucketPose),
+                new Point(sample1Pose)
         ));
-        toSample1Path.setLinearHeadingInterpolation(initBucket.getHeading(), sample1.getHeading());
+        getSample2Path.setLinearHeadingInterpolation(initBucketPose.getHeading(), sample1Pose.getHeading());
 
-        sample1ToBucketPath = new Path(new BezierLine(
-                new Point(sample1),
-                new Point(sample1Bucket)
+        scoreSample2Path = new Path(new BezierLine(
+                new Point(sample1Pose),
+                new Point(sample1BucketPose)
         ));
-        sample1ToBucketPath.setLinearHeadingInterpolation(sample1.getHeading(), sample1Bucket.getHeading());
+        scoreSample2Path.setLinearHeadingInterpolation(sample1Pose.getHeading(), sample1BucketPose.getHeading());
 
 
-        toSample2Path = new Path(new BezierLine(
-                new Point(sample1Bucket),
-                new Point(sample2)
+        getSample3Path = new Path(new BezierLine(
+                new Point(sample1BucketPose),
+                new Point(sample2Pose)
         ));
-        toSample2Path.setLinearHeadingInterpolation(sample1Bucket.getHeading(), sample2.getHeading());
+        getSample3Path.setLinearHeadingInterpolation(sample1BucketPose.getHeading(), sample2Pose.getHeading());
 
-        sample2ToBucketPath = new Path(new BezierLine(
-                new Point(sample2),
-                new Point(sample2Bucket)
+        scoreSample3Path = new Path(new BezierLine(
+                new Point(sample2Pose),
+                new Point(sample2BucketPose)
         ));
-        sample2ToBucketPath.setLinearHeadingInterpolation(sample2.getHeading(), sample2Bucket.getHeading());
+        scoreSample3Path.setLinearHeadingInterpolation(sample2Pose.getHeading(), sample2BucketPose.getHeading());
 
 
-        toSample3Path = new Path(new BezierLine(
-                new Point(sample2Bucket),
-                new Point(sample3)
+        getSample4Path = new Path(new BezierLine(
+                new Point(sample2BucketPose),
+                new Point(sample3Pose)
         ));
-        toSample3Path.setLinearHeadingInterpolation(sample2Bucket.getHeading(), sample3.getHeading());
+        getSample4Path.setLinearHeadingInterpolation(sample2BucketPose.getHeading(), sample3Pose.getHeading());
 
-        sample3ToBucketPath = new Path(new BezierLine(
-                new Point(sample3),
-                new Point(sample3Bucket)
+        scoreSample4Path = new Path(new BezierLine(
+                new Point(sample3Pose),
+                new Point(sample3BucketPose)
         ));
-        sample3ToBucketPath.setLinearHeadingInterpolation(sample3.getHeading(), sample3Bucket.getHeading());
+        scoreSample4Path.setLinearHeadingInterpolation(sample3Pose.getHeading(), sample3BucketPose.getHeading());
 
 
-        sampleParkPath = new Path(new BezierCurve(
-                new Point(sample3Bucket),
-                new Point(parkControlPoint),
-                new Point(park)
+        parkPath = new Path(new BezierCurve(
+                new Point(sample3BucketPose),
+                new Point(parkControlPose),
+                new Point(parkPose)
         ));
-        sampleParkPath.setLinearHeadingInterpolation(sample3Bucket.getHeading(), park.getHeading());
+        parkPath.setLinearHeadingInterpolation(sample3BucketPose.getHeading(), parkPose.getHeading());
     }
 
     @Override
     public void loop() {
         switch (sampleEnum) {
-            case scoreInitSample:
-                switch (scoreSamp) {
-                    case start:
-                        caseThingie(
-                                () -> schedule(new ReadyHighSample()),
-                                () -> outtakeSubsystem.getPos() > 600,
-                                () -> scoreSamp = ScoreSamp.move
-                        );
-                        break;
-                    case move:
-                        caseThingie(
-                                () -> driveSubsystem.followPath(initSamplePath, true),
-                                () -> driveSubsystem.atParametricEnd(),
-                                () -> scoreSamp = ScoreSamp.place
-                        );
-                        break;
-                    case place:
-                        caseThingie(
-                                () -> {schedule(new PlaceSample());
-                                    scoreSamp = ScoreSamp.start;
-                                    sampleEnum = SampleEnum.getSample1;},
-                                () -> true,
-                                () -> {}
-                        );
-                        break;
-                }
-                break;
-
-
-            case getSample1:
-                switch (grabSamp) {
-                    case start:
-                        caseThingie(
-                                () -> {driveSubsystem.followPath(toSample1Path, true);
-                                    schedule(new IntakeDown());},
-                                () -> driveSubsystem.atParametricEnd(),
-                                () -> grabSamp = GrabSamp.forward
-                        );
-                        break;
-                    case forward:
-                        caseThingie(
-                                () -> schedule(new SetIntakeTarget(300)),
-                                () -> elapsedTime.seconds() > 0.7 || robotHardware.isYellow(Names.intakeColor),
-                                () -> grabSamp = GrabSamp.retract
-                        );
-                        break;
-                    case retract:
-                        caseThingie(
-                                () -> schedule(new IntakeRetract()),
-                                () -> elapsedTime.seconds() > 0.8,
-                                () -> {sampleEnum = SampleEnum.scoreSample1;
-                                    grabSamp = GrabSamp.start;}
-                        );
-                        break;
-                }
-                break;
-
-
             case scoreSample1:
-                switch (scoreSamp) {
-                    case start:
-                        caseThingie(
-                                () -> schedule(new ReadyHighSample()),
-                                () -> outtakeSubsystem.getPos() > 600,
-                                () -> scoreSamp = ScoreSamp.move
-                        );
-                        break;
-                    case move:
-                        caseThingie(
-                                () -> driveSubsystem.followPath(sample1ToBucketPath, true),
-                                () -> driveSubsystem.atParametricEnd(),
-                                () -> scoreSamp = ScoreSamp.place
-                        );
-                        break;
-                    case place:
-                        caseThingie(
-                                () -> {schedule(new PlaceSample());
-                                    scoreSamp = ScoreSamp.start;
-                                    sampleEnum = SampleEnum.getSample2;},
-                                () -> true,
-                                () -> {}
-                        );
-                        break;
-                }
+                scoreSample(scoreSample1Path, SampleEnum.getSample2);
                 break;
 
 
             case getSample2:
-                switch (grabSamp) {
-                    case start:
-                        caseThingie(
-                                () -> {driveSubsystem.followPath(toSample2Path, true);
-                                    schedule(new IntakeDown());},
-                                () -> driveSubsystem.atParametricEnd(),
-                                () -> grabSamp = GrabSamp.forward
-                        );
-                        break;
-                    case forward:
-                        caseThingie(
-                                () -> schedule(new SetIntakeTarget(300)),
-                                () -> elapsedTime.seconds() > 0.7 || robotHardware.isYellow(Names.intakeColor),
-                                () -> grabSamp = GrabSamp.retract
-                        );
-                        break;
-                    case retract:
-                        caseThingie(
-                                () -> schedule(new IntakeRetract()),
-                                () -> OuttakeSubsystem.getInstance().getPos() > 600,
-                                () -> {sampleEnum = SampleEnum.scoreSample2;
-                                    grabSamp = GrabSamp.start;}
-                        );
-                        break;
-                }
+                getSample(getSample2Path, SampleEnum.scoreSample2);
                 break;
 
 
             case scoreSample2:
-                switch (scoreSamp) {
-                    case start:
-                        caseThingie(
-                                () -> schedule(new ReadyHighSample()),
-                                () -> outtakeSubsystem.getPos() > 600,
-                                () -> scoreSamp = ScoreSamp.move
-                        );
-                        break;
-                    case move:
-                        caseThingie(
-                                () -> driveSubsystem.followPath(sample2ToBucketPath, true),
-                                () -> driveSubsystem.atParametricEnd(),
-                                () -> scoreSamp = ScoreSamp.place
-                        );
-                        break;
-                    case place:
-                        caseThingie(
-                                () -> {schedule(new PlaceSample());
-                                    scoreSamp = ScoreSamp.start;
-                                    sampleEnum = SampleEnum.getSample3;},
-                                () -> true,
-                                () -> {}
-                        );
-                        break;
+                scoreSample(scoreSample2Path, SampleEnum.getSample3);
+                break;
+
+
+            case getSample3:
+                getSample(getSample3Path, SampleEnum.scoreSample3);
+                break;
+
+
+            case scoreSample3:
+                scoreSample(scoreSample3Path, SampleEnum.getSample4);
+                break;
+
+            case getSample4:
+                getSample(getSample4Path, SampleEnum.scoreSample4);
+                break;
+
+            case scoreSample4:
+                scoreSample(scoreSample4Path, SampleEnum.park);
+                break;
+
+            case park:
+                caseThingie(
+                        () -> driveSubsystem.followPath(parkPath),
+                        () -> driveSubsystem.atParametricEnd(),
+                        () -> sampleEnum = SampleEnum.done
+                );
+                break;
+
+            case done:
+                break;
+        }
+
+        if (robotHardware.isRed(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.RED);
+        else if (robotHardware.isBlue(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+        else if (robotHardware.isYellow(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.GOLD);
+        else robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_WHITE);
+    }
+
+    private void getSample(Path path, SampleEnum next) {
+        switch (grabSamp) {
+            case start:
+                caseThingie(
+                        () -> {driveSubsystem.followPath(path, true);
+                            schedule(new IntakeDown());},
+                        () -> driveSubsystem.atParametricEnd(),
+                        () -> grabSamp = GrabSamp.forward
+                );
+                break;
+
+            case forward:
+                caseThingie(
+                        () -> schedule(new SetIntakeTarget(300)),
+                        () -> elapsedTime.seconds() > 0.7 || robotHardware.isYellow(Names.intakeColor),
+                        () -> grabSamp = GrabSamp.retract
+                );
+                break;
+
+            case retract:
+                caseThingie(
+                        () -> schedule(new IntakeRetract()),
+                        () -> elapsedTime.seconds() > 1.5,
+                        () -> {grabSamp = GrabSamp.start;
+                            sampleEnum = next;}
+                );
+                break;
+        }
+    }
+
+    private void scoreSample(Path path, SampleEnum next) {
+        switch (scoreSamp) {
+            case start:
+                caseThingie(
+                        () -> schedule(new GrabSample().withTimeout(50).andThen(new ReadyHighSample())),
+                        () -> outtakeSubsystem.getPos() > 600,
+                        () -> scoreSamp = ScoreSamp.move
+                );
+                if (elapsedTime.seconds() > 0.25 && robotHardware.isYellow(Names.transferColor)) {
+                    scoreSamp = ScoreSamp.recorrect;
                 }
                 break;
+
+            case move:
+                caseThingie(
+                        () -> driveSubsystem.followPath(path, true),
+                        () -> driveSubsystem.atParametricEnd(),
+                        () -> scoreSamp = ScoreSamp.place
+                );
+                break;
+
+            case place:
+                caseThingie(
+                        () -> {schedule(new PlaceSample());
+                            scoreSamp = ScoreSamp.start;
+                            sampleEnum = next;},
+                        () -> true,
+                        () -> {}
+                );
+                break;
+
+            case recorrect:
+                caseThingie(
+                        () -> schedule(new ReadyOuttake()),
+                        () -> elapsedTime.seconds() > 0.5,
+                        () -> scoreSamp = ScoreSamp.start
+                );
         }
     }
 

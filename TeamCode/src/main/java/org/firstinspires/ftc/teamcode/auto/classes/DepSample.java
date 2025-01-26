@@ -15,9 +15,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.auto.collections.GrabSamp;
-import org.firstinspires.ftc.teamcode.auto.collections.SampleEnum;
-import org.firstinspires.ftc.teamcode.auto.collections.ScoreSamp;
+import org.firstinspires.ftc.teamcode.auto.collections.sample.GrabSamp;
+import org.firstinspires.ftc.teamcode.auto.collections.sample.SampleEnum;
+import org.firstinspires.ftc.teamcode.auto.collections.sample.ScoreSamp;
 import org.firstinspires.ftc.teamcode.auto.pedro.follower.Follower;
 import org.firstinspires.ftc.teamcode.auto.pedro.localization.Pose;
 import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.BezierCurve;
@@ -67,7 +67,7 @@ public class DepSample extends OpMode {
         intakePID = new PIDController(ip, ii, id);
         outtakePID = new PIDController(op, oi, od);
 
-        sampleEnum = SampleEnum.scoreInitSample;
+        sampleEnum = SampleEnum.scoreSample1;
         scoreSamp = ScoreSamp.start;
         grabSamp = GrabSamp.start;
     }
@@ -134,7 +134,7 @@ public class DepSample extends OpMode {
     public void loop() {
         follower.update();
         switch (sampleEnum) {
-            case scoreInitSample:
+            case scoreSample1:
                 switch (scoreSamp) {
                     case start:
                         caseThingie(
@@ -166,7 +166,7 @@ public class DepSample extends OpMode {
                             robotHardware.setServoPos(Names.intakeArm, 0.3);
                             oTarget = 0;
                             scoreSamp = ScoreSamp.start;
-                            sampleEnum = SampleEnum.getSample1;
+                            sampleEnum = SampleEnum.getSample2;
                         }
                         break;
                 }
@@ -175,7 +175,7 @@ public class DepSample extends OpMode {
 
 
 
-            case getSample1:
+            case getSample2:
                 telemetry.addData("time", elapsedTime.seconds());
                 switch (grabSamp) {
                     case start:
@@ -240,7 +240,7 @@ public class DepSample extends OpMode {
                                 () -> {},
                                 () -> elapsedTime.seconds() > 0.1,
                                 () -> {
-                                    sampleEnum = SampleEnum.scoreSample1;
+                                    sampleEnum = SampleEnum.scoreSample2;
                                     grabSamp = GrabSamp.start;}
                         );
                         break;
@@ -250,7 +250,7 @@ public class DepSample extends OpMode {
 
 
 
-            case scoreSample1:
+            case scoreSample2:
                 switch (scoreSamp) {
                     case start:
                         caseThingie(
@@ -281,14 +281,14 @@ public class DepSample extends OpMode {
                             robotHardware.setServoPos(Names.intakeArm, 0.3);
                             oTarget = 0;
                             scoreSamp = ScoreSamp.start;
-                            sampleEnum = SampleEnum.getSample2;
+                            sampleEnum = SampleEnum.getSample3;
                         }
                         break;
                 }
                 break;
 
 
-            case getSample2:
+            case getSample3:
                 telemetry.addData("time", elapsedTime.seconds());
                 switch (grabSamp) {
                     case start:
@@ -353,7 +353,7 @@ public class DepSample extends OpMode {
                                 () -> {},
                                 () -> elapsedTime.seconds() > 0.1,
                                 () -> {
-                                    sampleEnum = SampleEnum.scoreSample2;
+                                    sampleEnum = SampleEnum.scoreSample3;
                                     grabSamp = GrabSamp.start;}
                         );
                         break;
@@ -361,7 +361,7 @@ public class DepSample extends OpMode {
                 break;
 
 
-            case scoreSample2:
+            case scoreSample3:
                 switch (scoreSamp) {
                     case start:
                         caseThingie(
@@ -392,14 +392,14 @@ public class DepSample extends OpMode {
                             robotHardware.setServoPos(Names.intakeArm, 0.3);
                             oTarget = 0;
                             scoreSamp = ScoreSamp.start;
-                            sampleEnum = SampleEnum.getSample3;
+                            sampleEnum = SampleEnum.getSample4;
                         }
                         break;
                 }
                 break;
 
 
-            case getSample3:
+            case getSample4:
                 telemetry.addData("time", elapsedTime.seconds());
                 switch (grabSamp) {
                     case start:
@@ -463,7 +463,7 @@ public class DepSample extends OpMode {
                                 () -> {},
                                 () -> elapsedTime.seconds() > 0.1,
                                 () -> {
-                                    sampleEnum = SampleEnum.scoreSample3;
+                                    sampleEnum = SampleEnum.scoreSample4;
                                     grabSamp = GrabSamp.start;}
                         );
                         break;
@@ -471,7 +471,7 @@ public class DepSample extends OpMode {
                 break;
 
 
-            case scoreSample3:
+            case scoreSample4:
                 switch (scoreSamp) {
                     case start:
                         caseThingie(

@@ -44,7 +44,7 @@ public class OuttakeSubsystem extends Thread{
         pidOn = false;
         power = 0;
 
-        elapsedTime.reset();
+        elapsedTime = new ElapsedTime();
 
         start();
 //        pidf.start();

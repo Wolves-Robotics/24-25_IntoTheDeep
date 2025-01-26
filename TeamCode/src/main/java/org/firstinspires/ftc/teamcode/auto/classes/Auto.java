@@ -18,6 +18,7 @@ public class Auto extends OpMode {
     @Override
     public void init() {
         RobotHardware.reset(hardwareMap);
+        RobotHardware.getInstance().servoInit();
         autoSelection = new AutoSelection(gamepad1);
     }
 

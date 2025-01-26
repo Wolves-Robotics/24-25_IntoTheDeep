@@ -31,7 +31,8 @@ public class MotorTesting extends OpMode {
             slurpPower = 0;
     @Override
     public void init() {
-        robotHardware = new RobotHardware(hardwareMap);
+        RobotHardware.reset(hardwareMap);
+        robotHardware = RobotHardware.getInstance();
         robotHardware.start();
     }
 

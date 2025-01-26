@@ -25,7 +25,8 @@ public class PidTesting extends OpMode {
 
     @Override
     public void init() {
-        robotHardware = new RobotHardware(hardwareMap);
+        RobotHardware.reset(hardwareMap);
+        robotHardware = RobotHardware.getInstance();
         robotHardware.start();
         robotHardware.setServoPos(Names.intakeArm, 0);
         robotHardware.setServoPos(Names.intakePivot, 0);

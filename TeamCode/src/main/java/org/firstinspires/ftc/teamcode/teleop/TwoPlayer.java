@@ -7,19 +7,19 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commands.complex.GrabSample;
-import org.firstinspires.ftc.teamcode.commands.complex.IntakeDown;
-import org.firstinspires.ftc.teamcode.commands.complex.IntakeRetract;
-import org.firstinspires.ftc.teamcode.commands.complex.ReadyHighSample;
-import org.firstinspires.ftc.teamcode.commands.complex.ReadyLowSample;
-import org.firstinspires.ftc.teamcode.commands.complex.ReadySpecimenGrab;
-import org.firstinspires.ftc.teamcode.commands.complex.ReadySpecimenPlace;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.GrabSample;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeDown;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetract;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyHighSample;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyLowSample;
+import org.firstinspires.ftc.teamcode.commands.complex.specimen.ReadySpecimenGrab;
+import org.firstinspires.ftc.teamcode.commands.complex.specimen.ReadySpecimenPlace;
 import org.firstinspires.ftc.teamcode.commands.drive.Drive;
 import org.firstinspires.ftc.teamcode.commands.intake.ManualBackward;
 import org.firstinspires.ftc.teamcode.commands.intake.ManualForward;
 import org.firstinspires.ftc.teamcode.commands.intake.SlurpBackward;
 import org.firstinspires.ftc.teamcode.commands.intake.SlurpForward;
-import org.firstinspires.ftc.teamcode.commands.intake.StopManual;
+import org.firstinspires.ftc.teamcode.commands.intake.ManualStop;
 import org.firstinspires.ftc.teamcode.commands.outtake.CloseClaw;
 import org.firstinspires.ftc.teamcode.commands.outtake.OpenClaw;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
@@ -46,11 +46,11 @@ public class TwoPlayer extends OpMode {
 
         gamepadEx1.getGamepadButton(GamepadKeys.Button.A)
                 .whenPressed(new ManualBackward())
-                .whenReleased(new StopManual());
+                .whenReleased(new ManualStop());
 
         gamepadEx1.getGamepadButton(GamepadKeys.Button.Y)
                 .whenPressed(new ManualForward())
-                .whenReleased(new StopManual());
+                .whenReleased(new ManualStop());
 
         gamepadEx1.getGamepadButton(GamepadKeys.Button.X)
                 .whenPressed(new IntakeDown());

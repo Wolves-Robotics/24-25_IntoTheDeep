@@ -14,11 +14,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.auto.collections.JailSpec;
-import org.firstinspires.ftc.teamcode.auto.collections.ParkBot;
-import org.firstinspires.ftc.teamcode.auto.collections.ReadySpec;
-import org.firstinspires.ftc.teamcode.auto.collections.ScoreSpec;
-import org.firstinspires.ftc.teamcode.auto.collections.SpecEnum;
+import org.firstinspires.ftc.teamcode.auto.collections.specimen.JailSpec;
+import org.firstinspires.ftc.teamcode.auto.collections.specimen.ReadySpec;
+import org.firstinspires.ftc.teamcode.auto.collections.specimen.ScoreSpec;
+import org.firstinspires.ftc.teamcode.auto.collections.specimen.SpecEnum;
 import org.firstinspires.ftc.teamcode.auto.pedro.follower.Follower;
 import org.firstinspires.ftc.teamcode.auto.pedro.localization.Pose;
 import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.BezierCurve;
@@ -39,7 +38,6 @@ public class DepSpecimen extends OpMode {
     private ScoreSpec scoreSpec;
     private JailSpec jailSpec;
     private ReadySpec readySpec;
-    private ParkBot parkBot;
     private RobotHardware robotHardware;
     private ElapsedTime elapsedTime;
     private boolean start = true;
@@ -48,7 +46,7 @@ public class DepSpecimen extends OpMode {
             jailSpec2Path, jailSpec3Path,
             readySpec2Path, score2Path,
             readySpec3Path, score3Path,
-            scoreToJail, scoreStrafe, park, score4, idle;
+            scoreToJail, scoreStrafe, park, score4;
 
 
     private PIDController intakePID, outtakePID;
@@ -58,7 +56,7 @@ public class DepSpecimen extends OpMode {
 
     @Override
     public void init() {
-        robotHardware = new RobotHardware(hardwareMap);
+        robotHardware = RobotHardware.getInstance();
         robotHardware.setServoPos(Names.intakeArm, 0.1);
         robotHardware.setServoPos(Names.intakePivot, 0.19);
         robotHardware.setServoPos(Names.claw, 0.3);
@@ -77,7 +75,6 @@ public class DepSpecimen extends OpMode {
         scoreSpec = ScoreSpec.move;
         jailSpec = JailSpec.move;
         readySpec = ReadySpec.move;
-        parkBot = ParkBot.move;
     }
 
     @Override
@@ -197,24 +194,6 @@ public class DepSpecimen extends OpMode {
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
                 .build();
-        idle = new PathBuilder()
-                .addPath(
-                        // Line 10
-                        new BezierLine(
-                                new Point(129.697, 114.318, Point.CARTESIAN),
-                                new Point(110.500, 81.894, Point.CARTESIAN)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
-                .addPath(
-                        // Line 11
-                        new BezierLine(
-                                new Point(110.500, 81.894, Point.CARTESIAN),
-                                new Point(108, 82.055 + 14, Point.CARTESIAN)
-                        )
-                )
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
         scoreStrafe = new PathBuilder()
                 .addPath(
                         // Line 12
@@ -263,13 +242,13 @@ public class DepSpecimen extends OpMode {
                                     robotHardware.setServoPos(Names.outtakeArm, 0.74);
                                     robotHardware.setServoPos(Names.outtakePivot, 0.29);
                                     scoreSpec = ScoreSpec.move;
-                                    specEnum = SpecEnum.jail1;}
+                                    specEnum = SpecEnum.jail2;}
                         );
                         break;
                 }
                 break;
 
-            case jail1:
+            case jail2:
                 switch (jailSpec) {
                     case move:
                         caseThingie(
@@ -288,14 +267,14 @@ public class DepSpecimen extends OpMode {
                                 () -> follower.atParametricEnd(),
                                 () -> {
                                     jailSpec = JailSpec.move;
-                                    specEnum = SpecEnum.jail2;
+                                    specEnum = SpecEnum.jail3;
                                 }
                         );
                         break;
                 }
                 break;
 
-            case jail2:
+            case jail3:
                 switch (jailSpec) {
                     case move:
                         caseThingie(
@@ -505,7 +484,6 @@ public class DepSpecimen extends OpMode {
                 break;
             case park:
                 caseThingie(
-
                         () -> follower.followPath(park),
                         () -> follower.atParametricEnd(),
                         () -> {}

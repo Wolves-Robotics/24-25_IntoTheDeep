@@ -4,12 +4,10 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-import org.firstinspires.ftc.teamcode.auto.collections.Color;
-import org.firstinspires.ftc.teamcode.commands.complex.IntakeRetract;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetract;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.utils.Names;
@@ -31,9 +29,8 @@ public class BasicTele extends OpMode {
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
-        robotHardware = new RobotHardware(hardwareMap);
-        OuttakeSubsystem.getInstance(robotHardware);
-        IntakeSubsystem.getInstance(robotHardware);
+        RobotHardware.reset(hardwareMap);
+        robotHardware = RobotHardware.getInstance();
         clawTime = new ElapsedTime();
         intakePID = new PIDController(ip, ii, id);
         outtakePID = new PIDController(op, oi, od);
@@ -84,7 +81,7 @@ public class BasicTele extends OpMode {
         }
         if (gamepad1.left_bumper) robotHardware.setMotorPower(Names.slurp, -1);
 
-        if((gamepad1.right_bumper || gamepad2.right_bumper) && clawTime.seconds() > 0.25) {
+        if((gamepad1.right_bumper || gamepad2.right_bumper) && clawTime.seconds() > 0.2) {
             clawTime.reset();
             grab = !grab;
             if (grab) robotHardware.setServoPos(Names.claw ,0);

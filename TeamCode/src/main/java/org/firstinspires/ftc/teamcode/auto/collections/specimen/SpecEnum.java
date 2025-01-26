@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.auto.collections;
+package org.firstinspires.ftc.teamcode.auto.collections.specimen;
 
 public enum SpecEnum {
     score1,
-    jail1,
     jail2,
     jail3,
+    jail4,
     ready2,
     score2,
     ready3,
@@ -13,5 +13,6 @@ public enum SpecEnum {
     score4,
     ready5,
     score5,
-    park
+    park,
+    done
 }

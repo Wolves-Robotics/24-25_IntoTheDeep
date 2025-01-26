@@ -19,7 +19,8 @@ public class ColorSensorTest extends OpMode {
                 totalGreen = 0, numGreen = 0, highestGreen = -999, lowestGreen = 999;
     @Override
     public void init() {
-        robotHardware = new RobotHardware(hardwareMap);
+        RobotHardware.reset(hardwareMap);
+        robotHardware = RobotHardware.getInstance();
         colorSensor = Names.intakeColor;
         lights = hardwareMap.get(RevBlinkinLedDriver.class, "led");
     }

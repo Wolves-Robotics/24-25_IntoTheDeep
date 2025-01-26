@@ -142,7 +142,7 @@ public class RobotHardware extends Thread {
     private void resetSubsystems() {
         IntakeSubsystem.reset();
         OuttakeSubsystem.reset();
-        DriveSubsystem.reset();
+//        DriveSubsystem.reset();
     }
 
     @Override
@@ -187,7 +187,7 @@ public class RobotHardware extends Thread {
 
     public boolean isRed(Names name) {
         return  colorSensorMap.get(name).colorSensor.red() >= 150 &&
-                colorSensorMap.get(name).colorSensor.green() <= 293 &&
+                colorSensorMap.get(name).colorSensor.green() <= 285 &&
                 colorSensorMap.get(name).colorSensor.blue() <= 120;
     }
 
@@ -207,7 +207,7 @@ public class RobotHardware extends Thread {
 
     public boolean isYellow(Names name) {
         return  colorSensorMap.get(name).colorSensor.red() >= 240 &&
-                colorSensorMap.get(name).colorSensor.green() >= 294 &&
+                colorSensorMap.get(name).colorSensor.green() >= 300 &&
                 colorSensorMap.get(name).colorSensor.blue() <= 300;
     }
 
@@ -216,8 +216,8 @@ public class RobotHardware extends Thread {
     }
 
     public void startPids() {
-        IntakeSubsystem.getInstance().startPid();
-        OuttakeSubsystem.getInstance().startPid();
+//        IntakeSubsystem.getInstance().startPid();
+//        OuttakeSubsystem.getInstance().startPid();
     }
 
     public void setLightColor(RevBlinkinLedDriver.BlinkinPattern pattern) {

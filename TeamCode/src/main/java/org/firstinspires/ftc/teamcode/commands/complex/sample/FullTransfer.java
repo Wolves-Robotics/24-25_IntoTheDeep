@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.commands.complex;
+package org.firstinspires.ftc.teamcode.commands.complex.sample;
 
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;

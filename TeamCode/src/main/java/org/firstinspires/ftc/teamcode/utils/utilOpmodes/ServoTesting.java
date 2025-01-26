@@ -29,7 +29,8 @@ public class ServoTesting extends OpMode {
 
     @Override
     public void init() {
-        robotHardware = new RobotHardware(hardwareMap);
+        RobotHardware.reset(hardwareMap);
+        robotHardware = RobotHardware.getInstance();
         robotHardware.start();
     }
 
