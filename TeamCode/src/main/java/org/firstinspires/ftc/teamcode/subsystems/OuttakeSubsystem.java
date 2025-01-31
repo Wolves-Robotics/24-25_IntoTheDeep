@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.utils.utilClasses.PIDF;
 
 public class OuttakeSubsystem extends Thread{
     private static OuttakeSubsystem instance = null;
-    private RobotHardware robotHardware;
     private PIDController pidController;
     private ElapsedTime elapsedTime;
     private PIDF pidf;
@@ -28,17 +27,16 @@ public class OuttakeSubsystem extends Thread{
     }
 
     private OuttakeSubsystem() {
-        robotHardware = RobotHardware.getInstance();
         pidController = new PIDController(Constants.op, Constants.oi, Constants.od);
 
-        pidf = new PIDF(
-                Constants.op,
-                Constants.oi,
-                Constants.od,
-                Constants.of,
-                () -> (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake))/2,
-                x -> {robotHardware.setMotorPower(Names.leftOuttake, x); robotHardware.setMotorPower(Names.rightOuttake, x);}
-        );
+//        pidf = new PIDF(
+//                Constants.op,
+//                Constants.oi,
+//                Constants.od,
+//                Constants.of,
+//                () -> (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake))/2,
+//                x -> {robotHardware.setMotorPower(Names.leftOuttake, x); robotHardware.setMotorPower(Names.rightOuttake, x);}
+//        );
 
         target = 0;
         pidOn = false;
@@ -54,28 +52,28 @@ public class OuttakeSubsystem extends Thread{
     public int getTarget() {return target;}
     public double getPos() {return pos;}
 
-    public void clawOpen() {robotHardware.setServoPos(Names.claw, 0.35);}
-    public void clawClose() {robotHardware.setServoPos(Names.claw, 0);}
+    public void clawOpen() {RobotHardware.getInstance().setServoPos(Names.claw, 0.35);}
+    public void clawClose() {RobotHardware.getInstance().setServoPos(Names.claw, 0);}
 
     public void clawDown() {
-        robotHardware.setServoPos(Names.outtakeArm, 0.05);
-        robotHardware.setServoPos(Names.outtakePivot, 0.15);
+        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.05);
+        RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.15);
     }
     public void clawNeutral() {
-        robotHardware.setServoPos(Names.outtakeArm, 0.2);
-        robotHardware.setServoPos(Names.outtakePivot, 0.1);
+        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.2);
+        RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.1);
     }
     public void clawSample() {
-        robotHardware.setServoPos(Names.outtakeArm, 0.45);
-        robotHardware.setServoPos(Names.outtakePivot, 0.4);
+        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.45);
+        RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.4);
     }
     public void clawSpecimenGrab() {
-        robotHardware.setServoPos(Names.outtakeArm, 0.74);
-        robotHardware.setServoPos(Names.outtakePivot, 0.29);
+        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.74);
+        RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.29);
     }
     public void clawSpecimenPlace() {
-        robotHardware.setServoPos(Names.outtakeArm, 0.76);
-        robotHardware.setServoPos(Names.outtakePivot, 0.35);
+        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
+        RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
     }
 
     public void startPid() {
@@ -98,15 +96,16 @@ public class OuttakeSubsystem extends Thread{
     public void run() {
         while (!currentThread().isInterrupted()) {
             if (pidOn) {
-                pos = (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake)) / 2.;
+                pos = (RobotHardware.getInstance().getMotorPos(Names.leftOuttake) + RobotHardware.getInstance().getMotorPos(Names.rightOuttake)) / 2.;
                 power = pidController.calculate(pos, target) + Constants.of;
-                robotHardware.setMotorPower(Names.leftOuttake, power);
-                robotHardware.setMotorPower(Names.rightOuttake, power);
+                RobotHardware.getInstance().setMotorPower(Names.leftOuttake, power);
+                RobotHardware.getInstance().setMotorPower(Names.rightOuttake, power);
             }
         }
     }
 
     public void updateTelemetry(Telemetry telemetry) {
+        telemetry.addData("Outtake target", target);
         telemetry.addData("Outtake pos", pos);
         telemetry.addData("Outtake power", power);
     }

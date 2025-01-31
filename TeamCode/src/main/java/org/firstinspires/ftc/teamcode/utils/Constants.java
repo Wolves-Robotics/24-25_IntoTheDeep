@@ -29,7 +29,7 @@ public class Constants {
         }
     }
     public static final double ip = 0.018, ii = 0.175, id = 0.0009;
-    public static final double op = 0.005, oi = 0.15, od = 0.00012, of = 0.05;
+    public static final double op = 0.005, oi = 0.19, od = 0.00012, of = 0.05;
 
     public static final int intakeMinTarget = 0, intakeMaxTarget = 400;
     public static final int outtakeMinTarget = 0, outtakeMaxTarget = 1940;

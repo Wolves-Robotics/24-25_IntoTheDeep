@@ -1,5 +1,10 @@
 package org.firstinspires.ftc.teamcode.auto.classes;
 
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.Point;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -7,19 +12,18 @@ import org.firstinspires.ftc.teamcode.auto.collections.Color;
 import org.firstinspires.ftc.teamcode.auto.collections.sample.GrabSamp;
 import org.firstinspires.ftc.teamcode.auto.collections.sample.SampleEnum;
 import org.firstinspires.ftc.teamcode.auto.collections.sample.ScoreSamp;
-import org.firstinspires.ftc.teamcode.auto.pedro.localization.Pose;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.GrabSample;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeDown;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetract;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetractAndGrab;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.PlaceSample;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyHighSample;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyOuttake;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeTarget;
+import org.firstinspires.ftc.teamcode.commands.outtake.ClawSample;
+import org.firstinspires.ftc.teamcode.commands.outtake.SetOuttakeTarget;
 import org.firstinspires.ftc.teamcode.utils.Names;
+import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
 public class Sample extends BaseAuto {
     private SampleEnum sampleEnum;
@@ -49,19 +53,19 @@ public class Sample extends BaseAuto {
 
 
         startPose = new Pose(100, 100, 0);
-        initBucketPose = new Pose(85, 103, Math.toRadians(32));
+        initBucketPose = new Pose(83.25, 106, Math.toRadians(45));
 
-        sample1Pose = new Pose(81, 120, Math.toRadians(60));
-        sample1BucketPose = new Pose(82, 104, Math.toRadians(32));
+        sample1Pose = new Pose(79.25, 119, Math.toRadians(60));
+        sample1BucketPose = new Pose(80, 109.5, Math.toRadians(45));
 
-        sample2Pose = new Pose(85, 118, Math.toRadians(112));
-        sample2BucketPose = new Pose(82, 104, Math.toRadians(32));
+        sample2Pose = new Pose(86, 118, Math.toRadians(107));
+        sample2BucketPose = new Pose(82, 109, Math.toRadians(45));
 
-        sample3Pose = new Pose(76, 117.5, Math.toRadians(109));
+        sample3Pose = new Pose(77, 117.5, Math.toRadians(102));
         sample3BucketPose = new Pose(82, 104, Math.toRadians(32));
 
         parkControlPose = new Pose(60, 170);
-        parkPose = new Pose(118, 150, Math.toRadians(180));
+        parkPose = new Pose(114.7, 150, Math.toRadians(180));
 
 
         driveSubsystem.setFollower(robotHardware.getHardwareMap(), startPose);
@@ -119,6 +123,8 @@ public class Sample extends BaseAuto {
                 new Point(parkPose)
         ));
         parkPath.setLinearHeadingInterpolation(sample3BucketPose.getHeading(), parkPose.getHeading());
+
+        start();
     }
 
     @Override
@@ -147,7 +153,7 @@ public class Sample extends BaseAuto {
             case scoreSample3:
                 scoreSample(scoreSample3Path, SampleEnum.getSample4);
                 break;
-
+//
             case getSample4:
                 getSample(getSample4Path, SampleEnum.scoreSample4);
                 break;
@@ -158,9 +164,11 @@ public class Sample extends BaseAuto {
 
             case park:
                 caseThingie(
-                        () -> driveSubsystem.followPath(parkPath),
+                        () ->driveSubsystem.followPath(parkPath, true),
                         () -> driveSubsystem.atParametricEnd(),
-                        () -> sampleEnum = SampleEnum.done
+                        () -> {sampleEnum = SampleEnum.done;
+                        schedule(new SetOuttakeTarget(450));
+                        schedule(new ClawSample());}
                 );
                 break;
 
@@ -168,10 +176,7 @@ public class Sample extends BaseAuto {
                 break;
         }
 
-        if (robotHardware.isRed(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.RED);
-        else if (robotHardware.isBlue(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
-        else if (robotHardware.isYellow(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.GOLD);
-        else robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_WHITE);
+//        RobotHardware.getInstance().updateLeds(Names.intakeColor);
     }
 
     private void getSample(Path path, SampleEnum next) {
@@ -187,16 +192,16 @@ public class Sample extends BaseAuto {
 
             case forward:
                 caseThingie(
-                        () -> schedule(new SetIntakeTarget(300)),
-                        () -> elapsedTime.seconds() > 0.7 || robotHardware.isYellow(Names.intakeColor),
+                        () -> schedule(new SetIntakeTarget(350)),
+                        () -> elapsedTime.seconds() > 0.7 || RobotHardware.getInstance().isYellow(Names.intakeColor),
                         () -> grabSamp = GrabSamp.retract
                 );
                 break;
 
             case retract:
                 caseThingie(
-                        () -> schedule(new IntakeRetract()),
-                        () -> elapsedTime.seconds() > 1.5,
+                        () -> schedule(new IntakeRetractAndGrab()),
+                        () -> elapsedTime.seconds() > 1.9,
                         () -> {grabSamp = GrabSamp.start;
                             sampleEnum = next;}
                 );
@@ -208,13 +213,13 @@ public class Sample extends BaseAuto {
         switch (scoreSamp) {
             case start:
                 caseThingie(
-                        () -> schedule(new GrabSample().withTimeout(50).andThen(new ReadyHighSample())),
+                        () -> schedule(new ReadyHighSample()),
                         () -> outtakeSubsystem.getPos() > 600,
                         () -> scoreSamp = ScoreSamp.move
                 );
-                if (elapsedTime.seconds() > 0.25 && robotHardware.isYellow(Names.transferColor)) {
-                    scoreSamp = ScoreSamp.recorrect;
-                }
+//                if (elapsedTime.seconds() > 0.25 && RobotHardware.getInstance().isYellow(Names.transferColor)) {
+//                    scoreSamp = ScoreSamp.recorrect;
+//                }
                 break;
 
             case move:
@@ -234,13 +239,6 @@ public class Sample extends BaseAuto {
                         () -> {}
                 );
                 break;
-
-            case recorrect:
-                caseThingie(
-                        () -> schedule(new ReadyOuttake()),
-                        () -> elapsedTime.seconds() > 0.5,
-                        () -> scoreSamp = ScoreSamp.start
-                );
         }
     }
 

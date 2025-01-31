@@ -4,10 +4,10 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 
-public class OuttakeHighSpecimen extends InstantCommand {
-    public OuttakeHighSpecimen() {
+public class SetOuttakeTarget extends InstantCommand {
+    public SetOuttakeTarget(int target) {
         super(
-                () -> OuttakeSubsystem.getInstance().setTarget(1050)
+                () -> OuttakeSubsystem.getInstance().setTarget(target)
         );
     }
 }

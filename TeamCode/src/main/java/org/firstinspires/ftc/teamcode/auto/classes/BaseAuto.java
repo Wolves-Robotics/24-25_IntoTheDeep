@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode.auto.classes;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.pedropathing.localization.PoseUpdater;
+import com.pedropathing.util.DashboardPoseTracker;
+import com.pedropathing.util.Drawing;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -14,11 +18,13 @@ import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 import java.util.function.BooleanSupplier;
 
 abstract public class BaseAuto extends Thread{
-    protected CommandScheduler commandScheduler;
+
     protected RobotHardware robotHardware;
     protected DriveSubsystem driveSubsystem;
     protected IntakeSubsystem intakeSubsystem;
     protected OuttakeSubsystem outtakeSubsystem;
+
+    protected MultipleTelemetry telemetryA;
 
     protected Color color;
 
@@ -27,7 +33,6 @@ abstract public class BaseAuto extends Thread{
 
     protected BaseAuto(Color _color) {
         CommandScheduler.getInstance().reset();
-        commandScheduler = CommandScheduler.getInstance();
 
         robotHardware = RobotHardware.getInstance();
         driveSubsystem = DriveSubsystem.getInstance();
@@ -38,15 +43,13 @@ abstract public class BaseAuto extends Thread{
 
         elapsedTime = new ElapsedTime();
         start = true;
-
-        start();
     }
 
     @Override
     final public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             loop();
-            commandScheduler.run();
+            CommandScheduler.getInstance().run();
         }
     }
 
@@ -55,7 +58,7 @@ abstract public class BaseAuto extends Thread{
     abstract public void updateTelemetry(Telemetry telemetry);
 
     protected void schedule(Command command) {
-        commandScheduler.schedule(command);
+        CommandScheduler.getInstance().schedule(command);
     }
 
     protected void caseThingie (Runnable startSup, BooleanSupplier endCond, Runnable endSup){

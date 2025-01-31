@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+import org.firstinspires.ftc.teamcode.commands.complex.sample.GrabSample;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetract;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
@@ -53,8 +54,8 @@ public class BasicTele extends OpMode {
             manualIntake = true;
         }
         if (gamepad1.x) {
-            robotHardware.setServoPos(Names.intakePivot, 0.5);
-            robotHardware.setServoPos(Names.intakeArm, 0.765);
+            robotHardware.setServoPos(Names.intakePivot, 0.48);
+            robotHardware.setServoPos(Names.intakeArm, 0.73);
             robotHardware.setMotorPower(Names.slurp, 1);
             robotHardware.setServoPos(Names.door, 0.73);
 
@@ -96,11 +97,8 @@ public class BasicTele extends OpMode {
             oTarget = 0;
         }
         if(gamepad2.left_stick_button) {
-            robotHardware.setServoPos(Names.outtakeArm, 0.05);
-            robotHardware.setServoPos(Names.outtakePivot, 0.15);
-            robotHardware.setServoPos(Names.intakeArm, 0.3);
-            robotHardware.setServoPos(Names.intakePivot, 0.22);
-            robotHardware.setServoPos(Names.claw, 0.35);
+            CommandScheduler.getInstance().schedule(new GrabSample());
+            grab = true;
         }
 
         if (gamepad2.y){

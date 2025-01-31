@@ -10,7 +10,7 @@ public class PlaceSample extends SequentialCommandGroup {
     public PlaceSample() {
         super(
                 new OpenClaw(),
-                new WaitCommand(100),
+                new WaitCommand(125),
                 new ReadyOuttake()
         );
     }

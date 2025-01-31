@@ -9,6 +9,12 @@ import static org.firstinspires.ftc.teamcode.utils.Constants.oi;
 import static org.firstinspires.ftc.teamcode.utils.Constants.op;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.Point;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -18,12 +24,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.auto.collections.sample.GrabSamp;
 import org.firstinspires.ftc.teamcode.auto.collections.sample.SampleEnum;
 import org.firstinspires.ftc.teamcode.auto.collections.sample.ScoreSamp;
-import org.firstinspires.ftc.teamcode.auto.pedro.follower.Follower;
-import org.firstinspires.ftc.teamcode.auto.pedro.localization.Pose;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 

@@ -142,7 +142,7 @@ public class RobotHardware extends Thread {
     private void resetSubsystems() {
         IntakeSubsystem.reset();
         OuttakeSubsystem.reset();
-//        DriveSubsystem.reset();
+        DriveSubsystem.reset();
     }
 
     @Override
@@ -152,6 +152,7 @@ public class RobotHardware extends Thread {
         }
         IntakeSubsystem.getInstance().interrupt();
         OuttakeSubsystem.getInstance().interrupt();
+        DriveSubsystem.getInstance().interrupt();
     }
 
     public HardwareMap getHardwareMap() {
@@ -216,8 +217,8 @@ public class RobotHardware extends Thread {
     }
 
     public void startPids() {
-//        IntakeSubsystem.getInstance().startPid();
-//        OuttakeSubsystem.getInstance().startPid();
+        IntakeSubsystem.getInstance().startPid();
+        OuttakeSubsystem.getInstance().startPid();
     }
 
     public void setLightColor(RevBlinkinLedDriver.BlinkinPattern pattern) {
@@ -225,6 +226,13 @@ public class RobotHardware extends Thread {
             prevPatter = pattern;
             lights.setPattern(pattern);
         }
+    }
+
+    public void updateLeds(Names names) {
+        if (isRed(names)) setLightColor(RevBlinkinLedDriver.BlinkinPattern.RED);
+        else if (isBlue(names)) setLightColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+        else if (isYellow(names)) setLightColor(RevBlinkinLedDriver.BlinkinPattern.GOLD);
+        else setLightColor(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_WHITE);
     }
 
     private void lynxModuleUpdate() {

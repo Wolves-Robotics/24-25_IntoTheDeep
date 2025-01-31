@@ -1,18 +1,21 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.Path;
+import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.auto.pedro.follower.Follower;
-import org.firstinspires.ftc.teamcode.auto.pedro.localization.Pose;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.PathChain;
+import org.firstinspires.ftc.teamcode.auto.pedro.constants.FConstants;
+import org.firstinspires.ftc.teamcode.auto.pedro.constants.LConstants;
 import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
 public class DriveSubsystem extends Thread{
     private static DriveSubsystem instance = null;
-    private RobotHardware robotHardware;
     private Follower follower;
 
     public static void reset() {
@@ -24,11 +27,14 @@ public class DriveSubsystem extends Thread{
     }
 
     private DriveSubsystem() {
-        robotHardware = RobotHardware.getInstance();
+
+        follower = null;
+
         start();
     }
 
     public void setFollower(HardwareMap hardwareMap, Pose pose) {
+        Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(pose);
     }
@@ -49,6 +55,10 @@ public class DriveSubsystem extends Thread{
         follower.followPath(pathChain, holdEnd);
     }
 
+    public void telemetryDebug(Telemetry telemetry) {
+        follower.telemetryDebug(telemetry);
+    }
+
     public boolean atParametricEnd() {
         return follower.atParametricEnd();
     }
@@ -61,12 +71,12 @@ public class DriveSubsystem extends Thread{
             double frontRightPower = (y - x - rot) / denominator;
             double backRightPower = (y + x - rot) / denominator;
 
-            robotHardware.setMotorPower(Names.frontLeft, frontLeftPower);
-            robotHardware.setMotorPower(Names.frontRight, frontRightPower);
-            robotHardware.setMotorPower(Names.backLeft, backLeftPower);
-            robotHardware.setMotorPower(Names.backRight, backRightPower);
-        } else {
-            double botHeading = robotHardware.getImuAngles().getYaw(AngleUnit.RADIANS);
+            RobotHardware.getInstance().setMotorPower(Names.frontLeft, frontLeftPower);
+            RobotHardware.getInstance().setMotorPower(Names.frontRight, frontRightPower);
+            RobotHardware.getInstance().setMotorPower(Names.backLeft, backLeftPower);
+            RobotHardware.getInstance().setMotorPower(Names.backRight, backRightPower);
+        } else { // Field centric
+            double botHeading = RobotHardware.getInstance().getImuAngles().getYaw(AngleUnit.RADIANS);
             double rotX = (x * Math.cos(-botHeading) - y * Math.sin(-botHeading)) *1.1;
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rot), 1);
@@ -75,10 +85,10 @@ public class DriveSubsystem extends Thread{
             double frontRightPower = (rotY - rotX - rot) / denominator;
             double backRightPower = (rotY + rotX - rot) / denominator;
 
-            robotHardware.setMotorPower(Names.frontLeft, frontLeftPower);
-            robotHardware.setMotorPower(Names.frontRight, frontRightPower);
-            robotHardware.setMotorPower(Names.backLeft, backLeftPower);
-            robotHardware.setMotorPower(Names.backRight, backRightPower);
+            RobotHardware.getInstance().setMotorPower(Names.frontLeft, frontLeftPower);
+            RobotHardware.getInstance().setMotorPower(Names.frontRight, frontRightPower);
+            RobotHardware.getInstance().setMotorPower(Names.backLeft, backLeftPower);
+            RobotHardware.getInstance().setMotorPower(Names.backRight, backRightPower);
         }
     }
 

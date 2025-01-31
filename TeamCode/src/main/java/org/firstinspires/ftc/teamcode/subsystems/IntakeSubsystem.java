@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.utils.utilClasses.PIDF;
 
 public class IntakeSubsystem extends Thread {
     private static IntakeSubsystem instance = null;
-    private RobotHardware robotHardware;
     private PIDController pidController;
     private PIDF pid;
     private int target;
@@ -24,17 +23,7 @@ public class IntakeSubsystem extends Thread {
     }
 
     private IntakeSubsystem() {
-        robotHardware = RobotHardware.getInstance();
-
         pidController = new PIDController(Constants.ip, Constants.ii, Constants.id);
-        pid = new PIDF(
-                Constants.ip,
-                Constants.ii,
-                Constants.id,
-                () -> robotHardware.getMotorPos(Names.intakeExtendo),
-                x -> robotHardware.setMotorPower(Names.intakeExtendo, x)
-        );
-//        pid.start();
 
         target = 0;
         pidOn = false;
@@ -45,41 +34,41 @@ public class IntakeSubsystem extends Thread {
     public void setTarget(int _target) {target = Math.max(Math.min(_target, Constants.intakeMaxTarget), Constants.intakeMinTarget);}
     public int getTarget() {return target;}
 
-    public void slurpForward() {robotHardware.setMotorPower(Names.slurp, 1);}
-    public void slurpBackward() {robotHardware.setMotorPower(Names.slurp, -1);}
-    public void slurpStop() {robotHardware.setMotorPower(Names.slurp, 0);}
+    public void slurpForward() {RobotHardware.getInstance().setMotorPower(Names.slurp, 1);}
+    public void slurpBackward() {RobotHardware.getInstance().setMotorPower(Names.slurp, -0.75);}
+    public void slurpStop() {RobotHardware.getInstance().setMotorPower(Names.slurp, 0);}
 
     public void bucketDown() {
-        robotHardware.setServoPos(Names.intakePivot, 0.45);
-        robotHardware.setServoPos(Names.intakeArm, 0.73);
+        RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.48);
+        RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.73);
     }
     public void bucketNeutral() {
-        robotHardware.setServoPos(Names.intakePivot, 0.22);
-        robotHardware.setServoPos(Names.intakeArm, 0.3);
+        RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.22);
+        RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.3);
     }
     public void bucketUp() {
-        robotHardware.setServoPos(Names.intakePivot, 0.16);
-        robotHardware.setServoPos(Names.intakeArm, 0);
+        RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.2);
+        RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.04);
     }
 
     public void doorClose() {
-        robotHardware.setServoPos(Names.door, 0.73);
+        RobotHardware.getInstance().setServoPos(Names.door, 0.73);
     }
     public void doorOpen() {
-        robotHardware.setServoPos(Names.door, 0.5);
+        RobotHardware.getInstance().setServoPos(Names.door, 0.5);
     }
 
     public void manualForward() {
         pidOn = false;
-        robotHardware.setMotorPower(Names.intakeExtendo, 1);
+        RobotHardware.getInstance().setMotorPower(Names.intakeExtendo, 1);
     }
     public void manualBackward() {
         pidOn = false;
-        robotHardware.setMotorPower(Names.intakeExtendo, -1);
+        RobotHardware.getInstance().setMotorPower(Names.intakeExtendo, -1);
     }
     public void stopManual() {
         pidOn = true;
-        target = robotHardware.getMotorPos(Names.intakeExtendo);
+        target = RobotHardware.getInstance().getMotorPos(Names.intakeExtendo);
     }
 
     public void startPid() {
@@ -92,8 +81,8 @@ public class IntakeSubsystem extends Thread {
     public void run() {
         while (!currentThread().isInterrupted()) {
             if (pidOn) {
-                double power = pidController.calculate(robotHardware.getMotorPos(Names.intakeExtendo), target);
-                robotHardware.setMotorPower(Names.intakeExtendo, power);
+                double power = pidController.calculate(RobotHardware.getInstance().getMotorPos(Names.intakeExtendo), target);
+                RobotHardware.getInstance().setMotorPower(Names.intakeExtendo, power);
             }
         }
     }

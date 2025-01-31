@@ -9,6 +9,13 @@ import static org.firstinspires.ftc.teamcode.utils.Constants.oi;
 import static org.firstinspires.ftc.teamcode.utils.Constants.op;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
+import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.PathBuilder;
+import com.pedropathing.pathgen.PathChain;
+import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -18,20 +25,15 @@ import org.firstinspires.ftc.teamcode.auto.collections.specimen.JailSpec;
 import org.firstinspires.ftc.teamcode.auto.collections.specimen.ReadySpec;
 import org.firstinspires.ftc.teamcode.auto.collections.specimen.ScoreSpec;
 import org.firstinspires.ftc.teamcode.auto.collections.specimen.SpecEnum;
-import org.firstinspires.ftc.teamcode.auto.pedro.follower.Follower;
-import org.firstinspires.ftc.teamcode.auto.pedro.localization.Pose;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.PathBuilder;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.auto.pedro.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.auto.pedro.constants.FConstants;
+import org.firstinspires.ftc.teamcode.auto.pedro.constants.LConstants;
+import org.firstinspires.ftc.teamcode.utils.Constants;
 import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
 import java.util.function.BooleanSupplier;
 
 @Autonomous
-@Disabled
 public class DepSpecimen extends OpMode {
     private Follower follower;
     private SpecEnum specEnum;
@@ -56,6 +58,8 @@ public class DepSpecimen extends OpMode {
 
     @Override
     public void init() {
+        com.pedropathing.util.Constants.setConstants(FConstants.class, LConstants.class);
+        RobotHardware.reset(hardwareMap);
         robotHardware = RobotHardware.getInstance();
         robotHardware.setServoPos(Names.intakeArm, 0.1);
         robotHardware.setServoPos(Names.intakePivot, 0.19);
@@ -139,15 +143,16 @@ public class DepSpecimen extends OpMode {
                                 new Point(114.5, 113.673, Point.CARTESIAN)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(177))
                 .addPath(
                         // Line 9
                         new BezierLine(
                                 new Point(114.049, 113, Point.CARTESIAN),
-                                new Point(129.700, 113, Point.CARTESIAN)
+                                new Point(128, 113, Point.CARTESIAN)
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(177))
+                .setZeroPowerAccelerationMultiplier(2)
                 .build();
         score2Path = new PathBuilder()
                 .addPath(
@@ -226,8 +231,8 @@ public class DepSpecimen extends OpMode {
                     case move:
                         caseThingie(
                                 () -> {follower.followPath(initSpecPath, true);
-                                    robotHardware.setServoPos(Names.outtakeArm, 0.76);
-                                    robotHardware.setServoPos(Names.outtakePivot, 0.35);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
                                     oTarget = 1350;},
                                 () -> follower.atParametricEnd(),
                                 () -> scoreSpec = ScoreSpec.down
@@ -325,8 +330,8 @@ public class DepSpecimen extends OpMode {
                                     elapsedTime.reset();},
                                 () -> elapsedTime.seconds() > 0.4,
                                 () -> {
-                                    robotHardware.setServoPos(Names.outtakeArm, 0.76);
-                                    robotHardware.setServoPos(Names.outtakePivot, 0.35);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
                                     readySpec = ReadySpec.move;
                                     specEnum = SpecEnum.score2;
                                 }
@@ -384,8 +389,8 @@ public class DepSpecimen extends OpMode {
                                     elapsedTime.reset();},
                                 () -> elapsedTime.seconds() > 0.4,
                                 () -> {
-                                    robotHardware.setServoPos(Names.outtakeArm, 0.76);
-                                    robotHardware.setServoPos(Names.outtakePivot, 0.35);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
                                     readySpec = ReadySpec.move;
                                     specEnum = SpecEnum.score3;
                                 }
@@ -442,8 +447,8 @@ public class DepSpecimen extends OpMode {
                                     elapsedTime.reset();},
                                 () -> elapsedTime.seconds() > 0.4,
                                 () -> {
-                                    robotHardware.setServoPos(Names.outtakeArm, 0.76);
-                                    robotHardware.setServoPos(Names.outtakePivot, 0.35);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
                                     readySpec = ReadySpec.move;
                                     specEnum = SpecEnum.score4;
                                 }
