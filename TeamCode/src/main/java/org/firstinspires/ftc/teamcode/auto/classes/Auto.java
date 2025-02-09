@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
 import java.util.function.BooleanSupplier;
 
-@Autonomous(preselectTeleOp = "BasicTele")
+@Autonomous(preselectTeleOp = "SoloKota")
 public class Auto extends OpMode {
     private AutoSelection autoSelection;
     private BaseAuto auto;

@@ -13,7 +13,7 @@ public class GrabSample extends SequentialCommandGroup {
         super(
                 new BucketNeutral(),
                 new ClawDown(),
-                new WaitCommand(50),
+                new WaitCommand(100),
                 new CloseClaw()
         );
     }

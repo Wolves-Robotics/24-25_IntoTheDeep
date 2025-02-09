@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.collections.sample;
+package org.firstinspires.ftc.teamcode.collections.auto.sample;
 
 public enum SampleEnum {
     scoreSample1,

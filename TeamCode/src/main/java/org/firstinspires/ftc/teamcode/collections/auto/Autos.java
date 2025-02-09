@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.collections;
+package org.firstinspires.ftc.teamcode.collections.auto;
 
 public enum Autos {
     fullSample,

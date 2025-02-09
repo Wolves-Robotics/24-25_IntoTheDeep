@@ -21,9 +21,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.auto.collections.sample.GrabSamp;
-import org.firstinspires.ftc.teamcode.auto.collections.sample.SampleEnum;
-import org.firstinspires.ftc.teamcode.auto.collections.sample.ScoreSamp;
+import org.firstinspires.ftc.teamcode.collections.auto.sample.GrabSamp;
+import org.firstinspires.ftc.teamcode.collections.auto.sample.SampleEnum;
+import org.firstinspires.ftc.teamcode.collections.auto.sample.ScoreSamp;
 import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 

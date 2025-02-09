@@ -17,17 +17,15 @@ import com.pedropathing.pathgen.PathBuilder;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.auto.collections.specimen.JailSpec;
-import org.firstinspires.ftc.teamcode.auto.collections.specimen.ReadySpec;
-import org.firstinspires.ftc.teamcode.auto.collections.specimen.ScoreSpec;
-import org.firstinspires.ftc.teamcode.auto.collections.specimen.SpecEnum;
+import org.firstinspires.ftc.teamcode.collections.auto.specimen.JailSpec;
+import org.firstinspires.ftc.teamcode.collections.auto.specimen.ReadySpec;
+import org.firstinspires.ftc.teamcode.collections.auto.specimen.ScoreSpec;
+import org.firstinspires.ftc.teamcode.collections.auto.specimen.SpecEnum;
 import org.firstinspires.ftc.teamcode.auto.pedro.constants.FConstants;
 import org.firstinspires.ftc.teamcode.auto.pedro.constants.LConstants;
-import org.firstinspires.ftc.teamcode.utils.Constants;
 import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 

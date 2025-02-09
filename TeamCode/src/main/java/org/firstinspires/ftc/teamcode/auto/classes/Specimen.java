@@ -1,5 +1,14 @@
 package org.firstinspires.ftc.teamcode.auto.classes;
 
+import static org.firstinspires.ftc.teamcode.utils.Constants.id;
+import static org.firstinspires.ftc.teamcode.utils.Constants.ii;
+import static org.firstinspires.ftc.teamcode.utils.Constants.ip;
+import static org.firstinspires.ftc.teamcode.utils.Constants.od;
+import static org.firstinspires.ftc.teamcode.utils.Constants.of;
+import static org.firstinspires.ftc.teamcode.utils.Constants.oi;
+import static org.firstinspires.ftc.teamcode.utils.Constants.op;
+
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
@@ -8,354 +17,472 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.auto.collections.Color;
-import org.firstinspires.ftc.teamcode.auto.collections.specimen.JailSpec;
-import org.firstinspires.ftc.teamcode.auto.collections.specimen.ReadySpec;
-import org.firstinspires.ftc.teamcode.auto.collections.specimen.ScoreSpec;
-import org.firstinspires.ftc.teamcode.auto.collections.specimen.SpecEnum;
-import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeDown;
-import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetract;
-import org.firstinspires.ftc.teamcode.commands.complex.sample.SlurpExpel;
-import org.firstinspires.ftc.teamcode.commands.complex.specimen.PlaceSpec;
-import org.firstinspires.ftc.teamcode.commands.complex.specimen.ReadySpecimenGrab;
-import org.firstinspires.ftc.teamcode.commands.complex.specimen.ReadySpecimenPlace;
-import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeTarget;
-import org.firstinspires.ftc.teamcode.commands.outtake.CloseClaw;
+import org.firstinspires.ftc.teamcode.collections.Color;
+import org.firstinspires.ftc.teamcode.collections.auto.specimen.JailSpec;
+import org.firstinspires.ftc.teamcode.collections.auto.specimen.ReadySpec;
+import org.firstinspires.ftc.teamcode.collections.auto.specimen.ScoreSpec;
+import org.firstinspires.ftc.teamcode.collections.auto.specimen.SpecEnum;
 import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
 public class Specimen extends BaseAuto {
     private SpecEnum specEnum;
+    private ScoreSpec scoreSpec;
     private JailSpec jailSpec;
     private ReadySpec readySpec;
-    private ScoreSpec scoreSpec;
-
-    private Pose
-            startPose, score1Pose,
-            sample2Control1Pose, sample2Pose, jailSample2Pose,
-            sample3Pose, jailSample3Pose,
-            sample4Pose, jailSample4Pose,
-            readySpec2Control1Pose, readySpec2Pose,
-            scoreSpec2Control1Pose, scoreSpec2Pose,
-            readySpec3Control1Pose, readySpec3Control2Pose, readySpec3Pose,
-            scoreSpec3Control1Pose, scoreSpec3Pose,
-            readySpec4Control1Pose, readySpec4Control2Pose, readySpec4Pose,
-            scoreSpec4Control1Pose, scoreSpec4Pose,
-            readySpec5Control1Pose, readySpec5Control2Pose, readySpec5Pose,
-            scoreSpec5Control1Pose, scoreSpec5Pose,
-            parkControl1Pose, parkPose;
 
     private PathChain
-            scoreSpec1Path,
-            getSample2Path, jailSample2Path,
-            getSample3Path, jailSample3Path,
-            getSample4Path, jailSample4Path,
-            readySpec2Path, scoreSpec2Path,
-            readySpec3Path, scoreSpec3Path,
-            readySpec4Path, scoreSpec4Path,
-            readySpec5Path, scoreSpec5Path,
-            parkPath;
+            initSpecPath, jailSpec1Path,
+            jailSpec2Path, jailSpec3Path,
+            readySpec2Path, score2Path,
+            readySpec3Path, score3Path,
+            scoreToJail, scoreStrafe, park, score4;
+
+
+    private PIDController intakePID, outtakePID;
+    private double iTarget=0, oTarget=0;
+    private int iArmPos, oArmPos;
 
     public Specimen(Color color) {
         super(color);
+
+        robotHardware.setServoPos(Names.intakeArm, 0.1);
+        robotHardware.setServoPos(Names.intakePivot, 0.19);
+        robotHardware.setServoPos(Names.claw, 0.3);
+        robotHardware.setServoPos(Names.outtakeArm, 0.23);
+        robotHardware.setServoPos(Names.outtakePivot, 0.4);
+        robotHardware.setServoPos(Names.door, 0.7);
+
+        driveSubsystem.setFollower(robotHardware.getHardwareMap(), new Pose(135, 80, 0));
+
+
+        intakePID = new PIDController(ip, ii, id);
+        outtakePID = new PIDController(op, oi, od);
 
         specEnum = SpecEnum.score1;
         scoreSpec = ScoreSpec.move;
         jailSpec = JailSpec.move;
         readySpec = ReadySpec.move;
+    }
 
-        startPose = new Pose(135, 80, 0);
-        score1Pose = new Pose(110.5, 81, 0);
+    @Override
+    public void start() {
+        initSpecPath = new PathBuilder()
+                // Line 1
+                .addPath(new BezierLine(
+                        new Point(135, 80, Point.CARTESIAN),
+                        new Point(108.1, 80, Point.CARTESIAN)
+                ))
+                .setConstantHeadingInterpolation(0).build();
 
-        sample2Control1Pose = new Pose(125, 80);
-        sample2Pose = new Pose(106, 100, Math.toRadians(155));
-        jailSample2Pose = new Pose(120, 102, Math.toRadians(60));
-
-        sample3Pose = new Pose(107, 106, Math.toRadians(100));
-        jailSample3Pose = new Pose(116, 107, Math.toRadians(80));
-
-        sample4Pose = new Pose(107, 114, Math.toRadians(100));
-        jailSample4Pose = new Pose(116, 99, Math.toRadians(80));
-
-        readySpec2Control1Pose = new Pose(95, 110);
-        readySpec2Pose = new Pose(129, 113, Math.toRadians(180));
-
-        scoreSpec2Control1Pose = new Pose(135, 70);
-        scoreSpec2Pose = new Pose(110, 78);
-
-        readySpec3Control1Pose = new Pose(130, 93);
-        readySpec3Control2Pose = new Pose(77, 115);
-        readySpec3Pose = new Pose(129, 113, Math.toRadians(180));
-
-        scoreSpec3Control1Pose = new Pose(135, 67);
-        scoreSpec3Pose = new Pose(110, 75);
-
-        readySpec4Control1Pose = new Pose(130, 93);
-        readySpec4Control2Pose = new Pose(77, 115);
-        readySpec4Pose = new Pose(129, 113, Math.toRadians(180));
-
-        scoreSpec4Control1Pose = new Pose(135, 64);
-        scoreSpec4Pose = new Pose(110, 72);
-
-        readySpec5Control1Pose = new Pose(130, 93);
-        readySpec5Control2Pose = new Pose(77, 115);
-        readySpec5Pose = new Pose(129, 113, Math.toRadians(180));
-
-        scoreSpec5Control1Pose = new Pose(135, 61);
-        scoreSpec5Pose = new Pose(110, 69);
-
-        parkControl1Pose = new Pose(107, 74);
-        parkPose = new Pose(133, 121, Math.toRadians(0));
-
-
-        driveSubsystem.setFollower(robotHardware.getHardwareMap(), startPose);
-
-
-        scoreSpec1Path = new PathBuilder()
-                .addPath(new BezierLine(new Point(startPose), new Point(score1Pose)))
-                .setLinearHeadingInterpolation(startPose.getHeading(), score1Pose.getHeading())
+        jailSpec1Path = new PathBuilder()
+                // Line 2
+                .addPath(new BezierCurve(
+                        new Point(108, 80, Point.CARTESIAN),
+                        new Point(135, 80, Point.CARTESIAN),
+                        new Point(106, 102, Point.CARTESIAN)
+                ))
+                .setTangentHeadingInterpolation()
+                // Line 3
+                .addPath(new BezierCurve(
+                        new Point(106, 102, Point.CARTESIAN),
+                        new Point(113, 98, Point.CARTESIAN),
+                        new Point(120, 102, Point.CARTESIAN)
+                ))
+                .setLinearHeadingInterpolation(Math.toRadians(143), Math.toRadians(60))
                 .build();
 
-        getSample2Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(score1Pose), new Point(sample2Control1Pose), new Point(sample2Pose)))
-                .setLinearHeadingInterpolation(score1Pose.getHeading(), sample2Pose.getHeading())
-                .build();
-
-        jailSample2Path = new PathBuilder()
-                .addPath(new BezierLine(new Point(sample2Pose), new Point(jailSample2Pose)))
-                .setLinearHeadingInterpolation(sample2Pose.getHeading(), jailSample2Pose.getHeading())
-                .build();
-
-        getSample3Path = new PathBuilder()
-                .addPath(new BezierLine(new Point(jailSample2Pose), new Point(sample3Pose)))
-                .setLinearHeadingInterpolation(jailSample2Pose.getHeading(), sample3Pose.getHeading())
-                .build();
-
-        jailSample3Path = new PathBuilder()
-                .addPath(new BezierLine(new Point(sample3Pose), new Point(jailSample3Pose)))
-                .setLinearHeadingInterpolation(sample3Pose.getHeading(), jailSample3Pose.getHeading())
-                .build();
-        
-        getSample4Path = new PathBuilder()
-                .addPath(new BezierLine(new Point(jailSample3Pose), new Point(sample4Pose)))
-                .setLinearHeadingInterpolation(jailSample3Pose.getHeading(), sample4Pose.getHeading())
-                .build();
-
-        jailSample4Path = new PathBuilder()
-                .addPath(new BezierLine(new Point(sample4Pose), new Point(jailSample4Pose)))
-                .setLinearHeadingInterpolation(sample4Pose.getHeading(), jailSample4Pose.getHeading())
+        jailSpec2Path = new PathBuilder()
+                // Line 4
+                .addPath(new BezierCurve(
+                                new Point(120, 102, Point.CARTESIAN),
+                                new Point(106, 95, Point.CARTESIAN),
+                                new Point(107, 114, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(60), Math.toRadians(165))
+                // Line 5
+                .addPath(new BezierCurve(
+                                new Point(107, 114, Point.CARTESIAN),
+                                new Point(113, 109, Point.CARTESIAN),
+                                new Point(120, 113, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(165), Math.toRadians(60))
                 .build();
 
         readySpec2Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(jailSample4Pose), new Point(readySpec2Control1Pose), new Point(readySpec2Pose)))
-                .setLinearHeadingInterpolation(jailSample4Pose.getHeading(), readySpec2Pose.getHeading())
-                .setZeroPowerAccelerationMultiplier(8)
+                .addPath(
+                        // Line 8
+                        new BezierCurve(
+                                new Point(133.407, 120.287, Point.CARTESIAN),
+                                new Point(125.000, 113.250, Point.CARTESIAN),
+                                new Point(114.5, 113.673, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(177))
+                .addPath(
+                        // Line 9
+                        new BezierLine(
+                                new Point(114.049, 113, Point.CARTESIAN),
+                                new Point(128, 113, Point.CARTESIAN)
+                        )
+                )
+                .setConstantHeadingInterpolation(Math.toRadians(177))
+                .setZeroPowerAccelerationMultiplier(2)
                 .build();
-
-        scoreSpec2Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(readySpec2Pose), new Point(scoreSpec2Control1Pose), new Point(scoreSpec2Pose)))
-                .setLinearHeadingInterpolation(readySpec2Pose.getHeading(), scoreSpec2Pose.getHeading())
+        score2Path = new PathBuilder()
+                .addPath(
+                        // Line 10
+                        new BezierCurve(
+                                new Point(129.519, 114.479, Point.CARTESIAN),
+                                new Point(135.000, 70.000, Point.CARTESIAN),
+                                new Point(110.000, 78.000, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
                 .build();
-
         readySpec3Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(scoreSpec2Pose), new Point(readySpec3Control1Pose), new Point(readySpec3Control2Pose), new Point(readySpec3Pose)))
-                .setLinearHeadingInterpolation(scoreSpec2Pose.getHeading(), readySpec3Pose.getHeading())
-                .setZeroPowerAccelerationMultiplier(8)
+                .addPath(
+                        // Line 11
+                        new BezierCurve(
+                                new Point(108.000, 78.000, Point.CARTESIAN),
+                                new Point(130.000, 93.000, Point.CARTESIAN),
+                                new Point(77.000, 115.000, Point.CARTESIAN),
+                                new Point(129.700, 114.000, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(183))
                 .build();
-
-        scoreSpec3Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(readySpec3Pose), new Point(scoreSpec3Control1Pose), new Point(scoreSpec3Pose)))
-                .setLinearHeadingInterpolation(readySpec3Pose.getHeading(), scoreSpec3Pose.getHeading())
+        score3Path = new PathBuilder()
+                .addPath(
+                        // Line 10
+                        new BezierCurve(
+                                new Point(130.019, 114.479, Point.CARTESIAN),
+                                new Point(135.000, 80.000, Point.CARTESIAN),
+                                new Point(110.000, 73.000, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
                 .build();
-
-        readySpec4Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(scoreSpec3Pose), new Point(readySpec4Control1Pose), new Point(readySpec4Control2Pose), new Point(readySpec4Pose)))
-                .setLinearHeadingInterpolation(scoreSpec3Pose.getHeading(), readySpec4Pose.getHeading())
-                .setZeroPowerAccelerationMultiplier(8)
+        score4 = new PathBuilder()
+                .addPath(
+                        // Line 10
+                        new BezierCurve(
+                                new Point(130.019, 114.479, Point.CARTESIAN),
+                                new Point(140.000, 60.000, Point.CARTESIAN),
+                                new Point(110.000, 70.000, Point.CARTESIAN)
+                        )
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(0))
                 .build();
-
-        scoreSpec4Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(readySpec4Pose), new Point(scoreSpec4Control1Pose), new Point(scoreSpec4Pose)))
-                .setLinearHeadingInterpolation(readySpec4Pose.getHeading(), scoreSpec4Pose.getHeading())
+        scoreStrafe = new PathBuilder()
+                .addPath(
+                        // Line 12
+                        new BezierLine(
+                                new Point(108.565, 81.087, Point.CARTESIAN),
+                                new Point(107.919, 74.635, Point.CARTESIAN)
+                        )
+                )
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
-
-        readySpec5Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(scoreSpec4Pose), new Point(readySpec5Control1Pose), new Point(readySpec5Control2Pose), new Point(readySpec5Pose)))
-                .setLinearHeadingInterpolation(scoreSpec4Pose.getHeading(), readySpec5Pose.getHeading())
-                .setZeroPowerAccelerationMultiplier(8)
+        park = new PathBuilder()
+                .addPath(
+                        // Line 13
+                        new BezierLine(
+                                new Point(107.919, 74.635, Point.CARTESIAN),
+                                new Point(133.407, 121.739, Point.CARTESIAN)
+                        )
+                )
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
-
-        scoreSpec5Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(readySpec5Pose), new Point(scoreSpec5Control1Pose), new Point(scoreSpec5Pose)))
-                .setLinearHeadingInterpolation(readySpec5Pose.getHeading(), scoreSpec5Pose.getHeading())
-                .build();
-
-        parkPath = new PathBuilder()
-                .addPath(new BezierCurve(new Point(scoreSpec5Pose), new Point(parkControl1Pose), new Point(parkPose)))
-                .setLinearHeadingInterpolation(scoreSpec5Pose.getHeading(), parkPose.getHeading())
-                .build();
-
-        start();
     }
 
     @Override
     public void loop() {
         switch (specEnum) {
             case score1:
-                score(scoreSpec1Path, SpecEnum.jail2);
+                switch (scoreSpec) {
+                    case move:
+                        caseThingie(
+                                () -> {driveSubsystem.followPath(initSpecPath, true);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
+                                    oTarget = 1350;},
+                                () -> driveSubsystem.atParametricEnd(),
+                                () -> scoreSpec = ScoreSpec.down
+                        );
+                        break;
+                    case down:
+                        caseThingie(
+                                () -> {oTarget = 0;
+                                    elapsedTime.reset();},
+                                () -> elapsedTime.seconds() > 0.75,
+                                () -> {robotHardware.setServoPos(Names.claw, 0.35);
+                                    robotHardware.setServoPos(Names.outtakeArm, 0.74);
+                                    robotHardware.setServoPos(Names.outtakePivot, 0.29);
+                                    scoreSpec = ScoreSpec.move;
+                                    specEnum = SpecEnum.jail2;}
+                        );
+                        break;
+                }
                 break;
 
             case jail2:
-                jail(getSample2Path, jailSample2Path, SpecEnum.jail3);
+                switch (jailSpec) {
+                    case move:
+                        caseThingie(
+                                () -> {driveSubsystem.followPath(jailSpec1Path, true);
+                                    elapsedTime.reset();},
+                                () -> elapsedTime.seconds() > 0.75,
+                                () -> {iTarget = 350;
+                                    robotHardware.setServoPos(Names.intakePivot, 0.61);
+                                    robotHardware.setServoPos(Names.intakeArm, 0.77);
+                                    jailSpec = JailSpec.extend;}
+                        );
+                        break;
+                    case extend:
+                        caseThingie(
+                                () -> {},
+                                () -> driveSubsystem.atParametricEnd(),
+                                () -> {
+                                    jailSpec = JailSpec.move;
+                                    specEnum = SpecEnum.jail3;
+                                }
+                        );
+                        break;
+                }
                 break;
 
             case jail3:
-                jail(getSample3Path, jailSample3Path, SpecEnum.ready2);
-                break;
-
-            case jail4:
-                jail(getSample4Path, jailSample4Path, SpecEnum.ready2);
+                switch (jailSpec) {
+                    case move:
+                        caseThingie(
+                                () -> {
+                                    driveSubsystem.followPath(jailSpec2Path, true);
+                                    elapsedTime.reset();
+                                    iTarget = 0;
+                                },
+                                () -> elapsedTime.seconds() > 0.9,
+                                () -> {
+                                    iTarget = 350;
+                                    jailSpec = JailSpec.extend;
+                                }
+                        );
+                        break;
+                    case extend:
+                        caseThingie(
+                                () -> {
+                                },
+                                () -> driveSubsystem.atParametricEnd(),
+                                () -> {
+                                    jailSpec = JailSpec.move;
+                                    specEnum = SpecEnum.ready2;
+                                }
+                        );
+                        break;
+                }
                 break;
 
             case ready2:
-                ready(readySpec2Path, SpecEnum.score2);
+                switch (readySpec) {
+                    case move:
+                        caseThingie(
+                                () -> {
+                                    driveSubsystem.followPath(readySpec2Path, true);
+                                    iTarget = 0;
+                                    robotHardware.setServoPos(Names.intakePivot, 0.22);
+                                    robotHardware.setServoPos(Names.intakeArm, 0.045);
+                                    elapsedTime.reset();
+                                },
+                                () -> elapsedTime.seconds() > 2.8,
+                                () -> readySpec = ReadySpec.grab
+                        );
+                        break;
+                    case grab:
+                        caseThingie(
+                                () -> {robotHardware.setServoPos(Names.claw, 0);
+                                    elapsedTime.reset();},
+                                () -> elapsedTime.seconds() > 0.4,
+                                () -> {
+                                    RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
+                                    readySpec = ReadySpec.move;
+                                    specEnum = SpecEnum.score2;
+                                }
+                        );
+                        break;
+                }
                 break;
 
             case score2:
-                ready(scoreSpec2Path, SpecEnum.ready3);
+                switch (scoreSpec){
+                    case move:
+                        caseThingie(
+                                () ->{
+                                    oTarget = 1350;
+                                    driveSubsystem.followPath(score2Path, true);
+                                },
+                                () -> driveSubsystem.atParametricEnd(),
+                                () -> scoreSpec = ScoreSpec.down
+                        );
+                        break;
+                    case down:
+                        caseThingie(
+                                () -> {oTarget = 0;
+                                    elapsedTime.reset();},
+                                () -> elapsedTime.seconds() > 0.75,
+                                () -> {
+
+                                    robotHardware.setServoPos(Names.claw, 0.35);
+                                    robotHardware.setServoPos(Names.outtakeArm, 0.74);
+                                    robotHardware.setServoPos(Names.outtakePivot, 0.29);
+                                    scoreSpec = ScoreSpec.move;
+                                    specEnum = SpecEnum.ready3;
+
+                                }
+                        );
+                        break;
+                }
                 break;
 
             case ready3:
-                ready(readySpec3Path, SpecEnum.score3);
+                switch (readySpec) {
+                    case move:
+                        caseThingie(
+                                () -> {
+                                    driveSubsystem.followPath(readySpec3Path, true);
+                                    elapsedTime.reset();
+                                },
+                                () -> elapsedTime.seconds() > 2.8,
+                                () -> readySpec = ReadySpec.grab
+                        );
+                        break;
+                    case grab:
+                        caseThingie(
+                                () -> {robotHardware.setServoPos(Names.claw, 0);
+                                    elapsedTime.reset();},
+                                () -> elapsedTime.seconds() > 0.4,
+                                () -> {
+                                    RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
+                                    readySpec = ReadySpec.move;
+                                    specEnum = SpecEnum.score3;
+                                }
+                        );
+                        break;
+                }
                 break;
 
             case score3:
-                ready(scoreSpec3Path, SpecEnum.ready4);
-                break;
+                switch (scoreSpec){
+                    case move:
+                        caseThingie(
+                                () ->{
+                                    oTarget = 1350;
+                                    driveSubsystem.followPath(score3Path, true);
+                                },
+                                () -> driveSubsystem.atParametricEnd(),
+                                () -> scoreSpec = ScoreSpec.down
+                        );
+                        break;
+                    case down:
+                        caseThingie(
+                                () -> {oTarget = 0;
 
+                                    elapsedTime.reset();},
+                                () -> elapsedTime.seconds() > 0.75,
+                                () -> {
+                                    robotHardware.setServoPos(Names.claw, 0.35);
+                                    robotHardware.setServoPos(Names.outtakeArm, 0.74);
+                                    robotHardware.setServoPos(Names.outtakePivot, 0.29);
+                                    scoreSpec = ScoreSpec.move;
+                                    specEnum = SpecEnum.ready4;
+
+                                }
+                        );
+                        break;
+                }
+                break;
             case ready4:
-                ready(readySpec4Path, SpecEnum.score4);
+                switch (readySpec) {
+                    case move:
+                        caseThingie(
+                                () -> {
+                                    driveSubsystem.followPath(readySpec3Path, true);
+                                    elapsedTime.reset();
+                                },
+                                () -> elapsedTime.seconds() > 2.8,
+                                () -> readySpec = ReadySpec.grab
+                        );
+                        break;
+                    case grab:
+                        caseThingie(
+                                () -> {robotHardware.setServoPos(Names.claw, 0);
+                                    elapsedTime.reset();},
+                                () -> elapsedTime.seconds() > 0.4,
+                                () -> {
+                                    RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
+                                    RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
+                                    readySpec = ReadySpec.move;
+                                    specEnum = SpecEnum.score4;
+                                }
+                        );
+                        break;
+                }
                 break;
 
             case score4:
-                ready(scoreSpec4Path, SpecEnum.park);
-                break;
+                switch (scoreSpec){
+                    case move:
+                        caseThingie(
+                                () ->{
+                                    oTarget = 1350;
+                                    driveSubsystem.followPath(score4, true);
+                                },
+                                () -> driveSubsystem.atParametricEnd(),
+                                () -> scoreSpec = ScoreSpec.down
+                        );
+                        break;
+                    case down:
+                        caseThingie(
+                                () -> {oTarget = 0;
 
-            case ready5:
-                ready(readySpec5Path, SpecEnum.score5);
-                break;
+                                    elapsedTime.reset();},
+                                () -> elapsedTime.seconds() > 0.75,
+                                () -> {
+                                    robotHardware.setServoPos(Names.claw, 0.35);
+                                    robotHardware.setServoPos(Names.outtakeArm, 0.74);
+                                    robotHardware.setServoPos(Names.outtakePivot, 0.29);
+                                    scoreSpec = ScoreSpec.move;
+                                    specEnum = SpecEnum.park;
 
-            case score5:
-                ready(scoreSpec5Path, SpecEnum.park);
+                                }
+                        );
+                        break;
+                }
                 break;
-
             case park:
                 caseThingie(
-                        () -> driveSubsystem.followPath(parkPath, true),
+                        () -> driveSubsystem.followPath(park),
                         () -> driveSubsystem.atParametricEnd(),
-                        () -> specEnum = SpecEnum.done
+                        () -> {}
                 );
-                break;
 
-            case done:
-                break;
         }
-    }
 
-    protected void ready(PathChain path, SpecEnum next) {
-        switch (readySpec) {
-            case move:
-                caseThingie(
-                        () -> {
-                            driveSubsystem.followPath(path, true);
-                            schedule(new IntakeRetract());
-                            schedule(new ReadySpecimenGrab());
-                        },
-                        () -> driveSubsystem.atParametricEnd() ,
-                        () -> readySpec = ReadySpec.grab
-                );
-                break;
-            case grab:
-                caseThingie(
-                        () -> schedule(new CloseClaw()),
-                        () -> elapsedTime.seconds() > 0.4,
-                        () -> {
-                            readySpec = ReadySpec.move;
-                            specEnum = next;
-                        }
-                );
-                break;
-        }
-    }
+        iArmPos = robotHardware.getMotorPos(Names.intakeExtendo);
+        robotHardware.setMotorPower(Names.intakeExtendo, intakePID.calculate(iArmPos, iTarget));
 
-    protected void jail(PathChain path1, PathChain path2, SpecEnum next) {
-        switch (jailSpec) {
-            case move:
-                caseThingie(
-                        () -> {driveSubsystem.followPath(path1, true);
-                            schedule(new SetIntakeTarget(350));},
-                        () -> elapsedTime.seconds() > 1,
-                        () -> {robotHardware.setServoPos(Names.intakePivot, 0.61);
-                            robotHardware.setServoPos(Names.intakeArm, 0.77);
-                            jailSpec = JailSpec.extend;}
-                );
-                break;
-            case extend:
-                caseThingie(
-                        () -> {},
-                        () -> driveSubsystem.atParametricEnd(),
-                        () -> jailSpec = JailSpec.jail
-                );
-                break;
+        oArmPos = (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake)) / 2;
+        double oPower = outtakePID.calculate(oArmPos, oTarget) + of;
+        robotHardware.setMotorPower(Names.leftOuttake, oPower);
+        robotHardware.setMotorPower(Names.rightOuttake, oPower);
 
-            case jail:
-                caseThingie(
-                        () -> driveSubsystem.followPath(path2, true),
-                        () -> driveSubsystem.atParametricEnd(),
-                        () -> {schedule(new SetIntakeTarget(0));
-                            jailSpec = JailSpec.move;
-                            specEnum = next;}
-                );
-                break;
-        }
-    }
-
-    protected void score(PathChain path, SpecEnum next) {
-        switch (scoreSpec) {
-            case move:
-                caseThingie(
-                        () -> {
-                            driveSubsystem.followPath(path, true);
-                            schedule(new ReadySpecimenPlace());
-                        },
-                        () -> driveSubsystem.atParametricEnd(),
-                        () -> {schedule(new PlaceSpec());
-                            scoreSpec = ScoreSpec.move;
-                            specEnum = next;}
-                );
-                break;
-        }
     }
 
     @Override
     public void updateTelemetry(Telemetry telemetry) {
-        telemetry.addData("Spec enum",
-                specEnum == SpecEnum.score1 ? "score 1" :
-                specEnum == SpecEnum.jail2  ? "jail 2"  :
-                specEnum == SpecEnum.jail3  ? "jail 3"  :
-                specEnum == SpecEnum.jail4  ? "jail 4"  :
-                specEnum == SpecEnum.ready2 ? "ready 2" :
-                specEnum == SpecEnum.score2 ? "score 2" :
-                specEnum == SpecEnum.ready3 ? "ready 3" :
-                specEnum == SpecEnum.score3 ? "score 3" :
-                specEnum == SpecEnum.ready4 ? "ready 4" :
-                specEnum == SpecEnum.score4 ? "score 4" :
-                specEnum == SpecEnum.ready5 ? "ready 5" :
-                specEnum == SpecEnum.score5 ? "score 5" :
-                specEnum == SpecEnum.park ? "park" : "done");
 
-        telemetry.addData("jail enum",
-                jailSpec == JailSpec.move ? "move" :
-                jailSpec == JailSpec.intake ? "intake" : "jail");
     }
 }

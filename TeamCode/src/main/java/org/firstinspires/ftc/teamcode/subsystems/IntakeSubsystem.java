@@ -48,11 +48,11 @@ public class IntakeSubsystem extends Thread {
     }
     public void bucketUp() {
         RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.2);
-        RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.04);
+        RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.01);
     }
 
     public void doorClose() {
-        RobotHardware.getInstance().setServoPos(Names.door, 0.73);
+        RobotHardware.getInstance().setServoPos(Names.door, 0.76);
     }
     public void doorOpen() {
         RobotHardware.getInstance().setServoPos(Names.door, 0.5);

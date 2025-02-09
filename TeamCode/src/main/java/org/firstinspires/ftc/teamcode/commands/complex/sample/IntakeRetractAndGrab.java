@@ -18,7 +18,7 @@ public class IntakeRetractAndGrab extends SequentialCommandGroup {
                 ,new SetIntakeTarget(0)
                 ,new WaitCommand(500)
                 ,new SlurpStop()
-                ,new WaitCommand(75)
+                ,new WaitCommand(50)
                 ,new DoorOpen()
                 ,new WaitCommand(800)
                 ,new BucketNeutral()

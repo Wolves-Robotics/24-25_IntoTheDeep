@@ -5,20 +5,16 @@ import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.Point;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.auto.collections.Color;
-import org.firstinspires.ftc.teamcode.auto.collections.sample.GrabSamp;
-import org.firstinspires.ftc.teamcode.auto.collections.sample.SampleEnum;
-import org.firstinspires.ftc.teamcode.auto.collections.sample.ScoreSamp;
-import org.firstinspires.ftc.teamcode.commands.complex.sample.GrabSample;
+import org.firstinspires.ftc.teamcode.collections.Color;
+import org.firstinspires.ftc.teamcode.collections.auto.sample.GrabSamp;
+import org.firstinspires.ftc.teamcode.collections.auto.sample.SampleEnum;
+import org.firstinspires.ftc.teamcode.collections.auto.sample.ScoreSamp;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeDown;
-import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetract;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetractAndGrab;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.PlaceSample;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyHighSample;
-import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyOuttake;
 import org.firstinspires.ftc.teamcode.commands.intake.SetIntakeTarget;
 import org.firstinspires.ftc.teamcode.commands.outtake.ClawSample;
 import org.firstinspires.ftc.teamcode.commands.outtake.SetOuttakeTarget;
@@ -44,8 +40,8 @@ public class Sample extends BaseAuto {
             getSample4Path, scoreSample4Path,
             parkPath;
 
-    public Sample(Color color) {
-        super(color);
+    protected Sample(Color _color) {
+        super(_color);
 
         sampleEnum = SampleEnum.scoreSample1;
         scoreSamp = ScoreSamp.start;
@@ -55,13 +51,13 @@ public class Sample extends BaseAuto {
         startPose = new Pose(100, 100, 0);
         initBucketPose = new Pose(83.25, 106, Math.toRadians(45));
 
-        sample1Pose = new Pose(79.25, 119, Math.toRadians(60));
+        sample1Pose = new Pose(79.3, 119, Math.toRadians(60));
         sample1BucketPose = new Pose(80, 109.5, Math.toRadians(45));
 
-        sample2Pose = new Pose(86, 118, Math.toRadians(107));
+        sample2Pose = new Pose(85.5, 118, Math.toRadians(107));
         sample2BucketPose = new Pose(82, 109, Math.toRadians(45));
 
-        sample3Pose = new Pose(77, 117.5, Math.toRadians(102));
+        sample3Pose = new Pose(76.5, 117.5, Math.toRadians(105));
         sample3BucketPose = new Pose(82, 104, Math.toRadians(32));
 
         parkControlPose = new Pose(60, 170);
@@ -165,7 +161,7 @@ public class Sample extends BaseAuto {
             case park:
                 caseThingie(
                         () ->driveSubsystem.followPath(parkPath, true),
-                        () -> driveSubsystem.atParametricEnd(),
+                        () -> driveSubsystem.atParametricEnd() || elapsedTime.seconds() > 2.5,
                         () -> {sampleEnum = SampleEnum.done;
                         schedule(new SetOuttakeTarget(450));
                         schedule(new ClawSample());}
