@@ -1,20 +1,18 @@
 package org.firstinspires.ftc.teamcode.utils;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.teamcode.utils.collections.Names;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,22 +21,24 @@ import java.util.List;
 public class RobotHardware extends Thread {
     private void setHardwareMaps() {
         motorClassMap = new HashMap<>();
-        motorClassMap.put(Names.frontLeft,     new MotorClass(Names.frontLeft,     true));
-        motorClassMap.put(Names.frontRight,    new MotorClass(Names.frontRight,    false));
-        motorClassMap.put(Names.backLeft,      new MotorClass(Names.backLeft,      true));
-        motorClassMap.put(Names.backRight,     new MotorClass(Names.backRight,     false));
-        motorClassMap.put(Names.leftOuttake,   new MotorClass(Names.leftOuttake,   true));
-        motorClassMap.put(Names.rightOuttake,  new MotorClass(Names.rightOuttake,  false));
-        motorClassMap.put(Names.intakeExtendo, new MotorClass(Names.intakeExtendo, false));
-        motorClassMap.put(Names.slurp,         new MotorClass(Names.slurp,         false));
+        motorClassMap.put(Names.frontLeft,     new MotorClass(Names.frontLeft));
+        motorClassMap.put(Names.frontRight,    new MotorClass(Names.frontRight));
+        motorClassMap.put(Names.backLeft,      new MotorClass(Names.backLeft));
+        motorClassMap.put(Names.backRight,     new MotorClass(Names.backRight));
+        motorClassMap.put(Names.leftOuttake,   new MotorClass(Names.leftOuttake));
+        motorClassMap.put(Names.rightOuttake,  new MotorClass(Names.rightOuttake));
+        motorClassMap.put(Names.intakeExtendo, new MotorClass(Names.intakeExtendo));
+        motorClassMap.put(Names.slurp,         new MotorClass(Names.slurp));
 
         servoClassMap = new HashMap<>();
-        servoClassMap.put(Names.door,          new ServoClass(Names.door,          false));
-        servoClassMap.put(Names.intakePivot,   new ServoClass(Names.intakePivot,   false));
-        servoClassMap.put(Names.intakeArm,     new ServoClass(Names.intakeArm,     false));
-        servoClassMap.put(Names.outtakeArm,    new ServoClass(Names.outtakeArm,    false));
-        servoClassMap.put(Names.outtakePivot,  new ServoClass(Names.outtakePivot,  false));
-        servoClassMap.put(Names.claw,          new ServoClass(Names.claw,          false));
+        servoClassMap.put(Names.door,          new ServoClass(Names.door));
+        servoClassMap.put(Names.intakePivot,   new ServoClass(Names.intakePivot));
+        servoClassMap.put(Names.intakeArm,     new ServoClass(Names.intakeArm));
+        servoClassMap.put(Names.outtakeArm,    new ServoClass(Names.outtakeArm));
+        servoClassMap.put(Names.outtakePivot,  new ServoClass(Names.outtakePivot));
+        servoClassMap.put(Names.claw,          new ServoClass(Names.claw));
+        servoClassMap.put(Names.leftHang,      new ServoClass(Names.leftHang));
+        servoClassMap.put(Names.rightHang,     new ServoClass(Names.rightHang));
 
         colorSensorMap = new HashMap<>();
         colorSensorMap.put(Names.intakeColor,    new ColorSensorClass(Names.intakeColor));
@@ -54,7 +54,7 @@ public class RobotHardware extends Thread {
     private HashMap<Names, ServoClass> servoClassMap;
     private HashMap<Names, ColorSensorClass> colorSensorMap;
 
-    private IMU imu;
+    private GoBildaPinpointDriver pinpoint;
 
     private RevBlinkinLedDriver lights;
     private RevBlinkinLedDriver.BlinkinPattern prevPatter;
@@ -62,26 +62,26 @@ public class RobotHardware extends Thread {
     private static class MotorClass {
         DcMotor motor;
 
-        public MotorClass(Names name, boolean isReverse) {
+        public MotorClass(Names name) {
             motor = hardwareMap.dcMotor.get(Constants.getStringName(name));
-            if (isReverse) motor.setDirection(DcMotor.Direction.REVERSE);
+            if (Constants.getHardwareReversed(name)) motor.setDirection(DcMotor.Direction.REVERSE);
         }
     }
 
     private static class ServoClass {
         ServoImplEx servo;
 
-        public ServoClass(Names name, boolean isReverse) {
+        public ServoClass(Names name) {
             servo = hardwareMap.get(ServoImplEx.class, Constants.getStringName(name));
-            if (isReverse) servo.setDirection(Servo.Direction.REVERSE);
+            if (Constants.getHardwareReversed(name)) servo.setDirection(Servo.Direction.REVERSE);
         }
     }
 
     private static class ColorSensorClass {
-        ColorSensor colorSensor;
+        RevColorSensorV3 colorSensor;
 
         public ColorSensorClass(Names name) {
-            colorSensor = hardwareMap.get(ColorSensor.class, Constants.getStringName(name));
+            colorSensor = hardwareMap.get(RevColorSensorV3.class, Constants.getStringName(name));
         }
     }
 
@@ -96,6 +96,9 @@ public class RobotHardware extends Thread {
     private RobotHardware(HardwareMap _hardwareMap) {
         hardwareMap = _hardwareMap;
 
+        IntakeSubsystem.reset();
+        OuttakeSubsystem.reset();
+
         lynxModuleInit();
 
         setHardwareMaps();
@@ -103,8 +106,6 @@ public class RobotHardware extends Thread {
         setImu();
 
         setLights();
-
-        resetSubsystems();
 
         start();
     }
@@ -118,12 +119,9 @@ public class RobotHardware extends Thread {
     }
 
     private void setImu() {
-        imu = hardwareMap.get(IMU.class, Constants.getStringName(Names.imu));
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
-        imu.initialize(parameters);
-        imu.resetYaw();
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, Constants.getStringName(Names.pinpoint));
+        pinpoint.setOffsets(73.025, -174.498);
+        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
     }
 
     private void setLights() {
@@ -139,20 +137,12 @@ public class RobotHardware extends Thread {
         setServoPos(Names.door, 0.7);
     }
 
-    private void resetSubsystems() {
-        IntakeSubsystem.reset();
-        OuttakeSubsystem.reset();
-        DriveSubsystem.reset();
-    }
-
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             lynxModuleUpdate();
+            pinpoint.update();
         }
-        IntakeSubsystem.getInstance().interrupt();
-        OuttakeSubsystem.getInstance().interrupt();
-        DriveSubsystem.getInstance().interrupt();
     }
 
     public HardwareMap getHardwareMap() {
@@ -166,10 +156,13 @@ public class RobotHardware extends Thread {
         return servoClassMap.get(name).servo.getPosition();
     }
 
-    public YawPitchRollAngles getImuAngles() {
-        return imu.getRobotYawPitchRollAngles();
+    public double getHeading() {
+        return pinpoint.getHeading();
     }
-    public void resetImuYaw() {imu.resetYaw();}
+
+    public void resetImuYaw() {
+        pinpoint.resetPosAndIMU();
+    }
 
     public void setMotorPower(Names name, double power) {
         motorClassMap.get(name).motor.setPower(power);
@@ -182,7 +175,7 @@ public class RobotHardware extends Thread {
         motorClassMap.get(name).motor.setDirection(reverse ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
     }
 
-    public void setServoDirection(Names name, boolean reverse) {
+    public void setServoReverse(Names name, boolean reverse) {
         servoClassMap.get(name).servo.setDirection(reverse ? Servo.Direction.REVERSE : Servo.Direction.FORWARD);
     }
 
@@ -210,6 +203,7 @@ public class RobotHardware extends Thread {
         return  colorSensorMap.get(name).colorSensor.red() >= 240 &&
                 colorSensorMap.get(name).colorSensor.green() >= 300 &&
                 colorSensorMap.get(name).colorSensor.blue() <= 300;
+
     }
 
     public int getGreen(Names name) {

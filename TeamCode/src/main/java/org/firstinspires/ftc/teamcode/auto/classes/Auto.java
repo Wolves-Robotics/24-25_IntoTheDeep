@@ -6,10 +6,6 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.commands.outtake.CloseClaw;
-import org.firstinspires.ftc.teamcode.commands.outtake.OpenClaw;
-import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
@@ -37,12 +33,11 @@ public class Auto extends OpMode {
         telemetryA.update();
 
         if (gamepad1.a) {
-            CommandScheduler.getInstance().schedule(new CloseClaw());
+            OuttakeSubsystem.getInstance().setClawOpen(false);
         }
         if (gamepad1.left_bumper && gamepad1.right_bumper && gamepad1.b) {
-            CommandScheduler.getInstance().schedule(new OpenClaw());
+//            CommandScheduler.getInstance().schedule(new OpenClaw());
         }
-        CommandScheduler.getInstance().run();
     }
 
     @Override
@@ -55,23 +50,21 @@ public class Auto extends OpMode {
                 auto = new Sample(autoSelection.getColor());
                 break;
             case specimen:
-                auto = new Specimen(autoSelection.getColor());
+//                auto = new Specimen(autoSelection.getColor());
                 break;
         }
     }
 
     @Override
     public void loop() {
+
         auto.updateTelemetry(telemetryA);
-        OuttakeSubsystem.getInstance().updateTelemetry(telemetryA);
         telemetryA.update();
+        CommandScheduler.getInstance().run();
     }
 
     @Override
     public void stop() {
         RobotHardware.getInstance().interrupt();
-        if (auto != null) {
-            auto.interrupt();
-        }
     }
 }

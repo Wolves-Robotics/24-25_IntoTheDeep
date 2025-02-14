@@ -1,16 +1,16 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.utils.Constants;
-import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
-import org.firstinspires.ftc.teamcode.utils.utilClasses.PIDF;
+import org.firstinspires.ftc.teamcode.utils.collections.Names;
 
-public class IntakeSubsystem extends Thread {
+public class IntakeSubsystem extends SubsystemBase {
     private static IntakeSubsystem instance = null;
     private PIDController pidController;
-    private PIDF pid;
     private int target;
     private boolean pidOn;
 
@@ -22,21 +22,30 @@ public class IntakeSubsystem extends Thread {
         return instance;
     }
 
-    private IntakeSubsystem() {
-        pidController = new PIDController(Constants.ip, Constants.ii, Constants.id);
+    public IntakeSubsystem() {
+        super();
+        pidController = new PIDController(Constants.IP, Constants.II, Constants.ID);
 
         target = 0;
         pidOn = false;
-
-        start();
     }
 
-    public void setTarget(int _target) {target = Math.max(Math.min(_target, Constants.intakeMaxTarget), Constants.intakeMinTarget);}
-    public int getTarget() {return target;}
+    public void setTarget(int _target) {
+        target = Range.clip(_target, Constants.INTAKE_MIN_TARGET, Constants.INTAKE_MAX_TARGET);
+    }
+    public int getTarget() {
+        return target;
+    }
 
-    public void slurpForward() {RobotHardware.getInstance().setMotorPower(Names.slurp, 1);}
-    public void slurpBackward() {RobotHardware.getInstance().setMotorPower(Names.slurp, -0.75);}
-    public void slurpStop() {RobotHardware.getInstance().setMotorPower(Names.slurp, 0);}
+    public void slurpForward() {
+        RobotHardware.getInstance().setMotorPower(Names.slurp, 1);
+    }
+    public void slurpBackward() {
+        RobotHardware.getInstance().setMotorPower(Names.slurp, -0.75);
+    }
+    public void slurpStop() {
+        RobotHardware.getInstance().setMotorPower(Names.slurp, 0);
+    }
 
     public void bucketDown() {
         RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.48);
@@ -75,15 +84,15 @@ public class IntakeSubsystem extends Thread {
         target = 0;
         pidOn = true;
     }
-
+    public void stopPid() {
+        pidOn = false;
+    }
 
     @Override
-    public void run() {
-        while (!currentThread().isInterrupted()) {
-            if (pidOn) {
-                double power = pidController.calculate(RobotHardware.getInstance().getMotorPos(Names.intakeExtendo), target);
-                RobotHardware.getInstance().setMotorPower(Names.intakeExtendo, power);
-            }
+    public void periodic() {
+        if (pidOn) {
+            double power = pidController.calculate(RobotHardware.getInstance().getMotorPos(Names.intakeExtendo), target);
+            RobotHardware.getInstance().setMotorPower(Names.intakeExtendo, power);
         }
     }
 }

@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.collections.auto.Autos;
-import org.firstinspires.ftc.teamcode.collections.Color;
+import org.firstinspires.ftc.teamcode.utils.collections.Autos;
+import org.firstinspires.ftc.teamcode.utils.collections.Color;
 
 public class AutoSelection extends Thread{
     private Gamepad gamepad;

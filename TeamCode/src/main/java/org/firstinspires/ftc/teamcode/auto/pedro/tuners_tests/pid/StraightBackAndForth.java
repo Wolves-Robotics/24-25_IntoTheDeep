@@ -72,18 +72,18 @@ public class StraightBackAndForth extends OpMode {
      */
     @Override
     public void loop() {
-//        follower.update();
-//        if (!follower.isBusy()) {
-//            if (forward) {
-//                forward = false;
-//                follower.followPath(backwards);
-//            } else {
-//                forward = true;
-//                follower.followPath(forwards);
-//            }
-//        }
-//
-//        telemetryA.addData("going forward", forward);
+        follower.update();
+        if (!follower.isBusy()) {
+            if (forward) {
+                forward = false;
+                follower.followPath(backwards);
+            } else {
+                forward = true;
+                follower.followPath(forwards);
+            }
+        }
+
+        telemetryA.addData("going forward", forward);
         follower.telemetryDebug(telemetryA);
     }
 }

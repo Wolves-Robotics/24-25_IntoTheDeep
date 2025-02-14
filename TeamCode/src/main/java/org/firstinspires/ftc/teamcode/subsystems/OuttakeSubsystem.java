@@ -1,22 +1,24 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.utils.Constants.*;
+
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.utils.Constants;
-import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
-import org.firstinspires.ftc.teamcode.utils.utilClasses.PIDF;
+import org.firstinspires.ftc.teamcode.utils.collections.Names;
+import org.firstinspires.ftc.teamcode.utils.collections.outtake.OuttakeArmState;
 
-public class OuttakeSubsystem extends Thread{
+public class OuttakeSubsystem extends SubsystemBase {
     private static OuttakeSubsystem instance = null;
     private PIDController pidController;
-    private ElapsedTime elapsedTime;
-    private PIDF pidf;
     private int target;
     private boolean pidOn;
     private double power, pos;
+    private OuttakeArmState outtakeArmState;
 
     public static void reset() {
         instance = new OuttakeSubsystem();
@@ -27,53 +29,70 @@ public class OuttakeSubsystem extends Thread{
     }
 
     private OuttakeSubsystem() {
-        pidController = new PIDController(Constants.op, Constants.oi, Constants.od);
-
-//        pidf = new PIDF(
-//                Constants.op,
-//                Constants.oi,
-//                Constants.od,
-//                Constants.of,
-//                () -> (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake))/2,
-//                x -> {robotHardware.setMotorPower(Names.leftOuttake, x); robotHardware.setMotorPower(Names.rightOuttake, x);}
-//        );
+        super();
+        pidController = new PIDController(OP, OI, OD);
 
         target = 0;
         pidOn = false;
-        power = 0;
-
-        elapsedTime = new ElapsedTime();
-
-        start();
-//        pidf.start();
     }
 
-    public void setTarget(int _target) {target = Math.max(Math.min(_target, Constants.outtakeMaxTarget), Constants.outtakeMinTarget);}
-    public int getTarget() {return target;}
-    public double getPos() {return pos;}
+    public void setTarget(int _target) {
+        target = Range.clip(_target, OUTTAKE_MIN_TARGET, OUTTAKE_MAX_TARGET);
+    }
+    public int getTarget() {
+        return target;
+    }
+    public double getPos() {
+        return pos;
+    }
 
-    public void clawOpen() {RobotHardware.getInstance().setServoPos(Names.claw, 0.35);}
-    public void clawClose() {RobotHardware.getInstance().setServoPos(Names.claw, 0);}
+    public void setClawOpen(boolean open) {
+        if (open) RobotHardware.getInstance().setServoPos(Names.claw, CLAW_OPEN);
+        else RobotHardware.getInstance().setServoPos(Names.claw, CLAW_CLOSE);
+    }
 
-    public void clawDown() {
-        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.05);
-        RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.15);
+    public void setHangOut(boolean out) {
+        if (out) {
+            RobotHardware.getInstance().setServoPos(Names.leftHang, 0.4);
+            RobotHardware.getInstance().setServoPos(Names.rightHang, 0.4);
+        } else {
+            RobotHardware.getInstance().setServoPos(Names.leftHang, 0.1);
+            RobotHardware.getInstance().setServoPos(Names.rightHang, 0.1);
+        }
     }
-    public void clawNeutral() {
-        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.2);
-        RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.1);
+
+    public void setArmState(OuttakeArmState _outtakeArmState) {
+        outtakeArmState = _outtakeArmState;
+        switch (outtakeArmState) {
+            case autoStart:
+                RobotHardware.getInstance().setServoPos(Names.outtakeArm, AUTO_START_ARM_POS);
+                RobotHardware.getInstance().setServoPos(Names.outtakePivot, AUTO_START_PIVOT_POS);
+                break;
+            case readyToTransfer:
+                RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.2);
+                RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.1);
+                break;
+            case downToTransfer:
+                RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.05);
+                RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.15);
+                break;
+            case sampleScoring:
+                RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.50);
+                RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.38);
+                break;
+            case specimenGrabbing:
+                RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.74);
+                RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.29);
+                break;
+            case specimenScoring:
+                RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
+                RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
+                break;
+        }
     }
-    public void clawSample() {
-        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.45);
-        RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.4);
-    }
-    public void clawSpecimenGrab() {
-        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.74);
-        RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.29);
-    }
-    public void clawSpecimenPlace() {
-        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
-        RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
+
+    public OuttakeArmState getOuttakeArmState() {
+        return outtakeArmState;
     }
 
     public void startPid() {
@@ -84,23 +103,13 @@ public class OuttakeSubsystem extends Thread{
         pidOn = false;
     }
 
-    public void resetTimer() {
-        elapsedTime.reset();
-    }
-
-    public double getSeconds() {
-        return elapsedTime.seconds();
-    }
-
     @Override
-    public void run() {
-        while (!currentThread().isInterrupted()) {
-            if (pidOn) {
-                pos = (RobotHardware.getInstance().getMotorPos(Names.leftOuttake) + RobotHardware.getInstance().getMotorPos(Names.rightOuttake)) / 2.;
-                power = pidController.calculate(pos, target) + Constants.of;
-                RobotHardware.getInstance().setMotorPower(Names.leftOuttake, power);
-                RobotHardware.getInstance().setMotorPower(Names.rightOuttake, power);
-            }
+    public void periodic() {
+        if (pidOn) {
+            pos = (RobotHardware.getInstance().getMotorPos(Names.leftOuttake) + RobotHardware.getInstance().getMotorPos(Names.rightOuttake)) / 2.;
+            power = pidController.calculate(pos, target) + OF;
+            RobotHardware.getInstance().setMotorPower(Names.leftOuttake, power);
+            RobotHardware.getInstance().setMotorPower(Names.rightOuttake, power);
         }
     }
 
