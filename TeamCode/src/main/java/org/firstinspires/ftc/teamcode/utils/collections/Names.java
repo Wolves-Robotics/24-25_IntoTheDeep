@@ -10,6 +10,7 @@ public enum Names {
     leftOuttake,
     rightOuttake,
     intakeExtendo,
+
     slurp,
     door,
     intakePivot,
@@ -17,8 +18,7 @@ public enum Names {
     outtakeArm,
     outtakePivot,
     claw,
-    leftHang,
-    rightHang,
+
     intakeColor,
-    transferColor
+    transferDistance
 }

@@ -10,8 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.utils.collections.Names;
 
 import java.util.HashMap;
@@ -37,12 +36,10 @@ public class RobotHardware extends Thread {
         servoClassMap.put(Names.outtakeArm,    new ServoClass(Names.outtakeArm));
         servoClassMap.put(Names.outtakePivot,  new ServoClass(Names.outtakePivot));
         servoClassMap.put(Names.claw,          new ServoClass(Names.claw));
-        servoClassMap.put(Names.leftHang,      new ServoClass(Names.leftHang));
-        servoClassMap.put(Names.rightHang,     new ServoClass(Names.rightHang));
 
         colorSensorMap = new HashMap<>();
         colorSensorMap.put(Names.intakeColor,    new ColorSensorClass(Names.intakeColor));
-        colorSensorMap.put(Names.transferColor,  new ColorSensorClass(Names.transferColor));
+        colorSensorMap.put(Names.transferDistance,  new ColorSensorClass(Names.transferDistance));
     }
 
     private static RobotHardware instance = null;
@@ -96,8 +93,9 @@ public class RobotHardware extends Thread {
     private RobotHardware(HardwareMap _hardwareMap) {
         hardwareMap = _hardwareMap;
 
-        IntakeSubsystem.reset();
-        OuttakeSubsystem.reset();
+//        IntakeSubsystem.reset();
+//        OuttakeSubsystem.reset();
+//        DriveSubsystem.reset();
 
         lynxModuleInit();
 
@@ -128,7 +126,16 @@ public class RobotHardware extends Thread {
         lights = hardwareMap.get(RevBlinkinLedDriver.class, Constants.getStringName(Names.lights));
     }
 
-    public void servoInit() {
+    public void autoServoInit() {
+        setServoPos(Names.intakeArm, 0.1);
+        setServoPos(Names.intakePivot, 0.19);
+        setServoPos(Names.claw, 0.3);
+        setServoPos(Names.outtakeArm, 0.23);
+        setServoPos(Names.outtakePivot, 0.4);
+        setServoPos(Names.door, 0.7);
+    }
+
+    public void teleOpServoInit() {
         setServoPos(Names.intakeArm, 0.1);
         setServoPos(Names.intakePivot, 0.19);
         setServoPos(Names.claw, 0.3);
@@ -210,9 +217,12 @@ public class RobotHardware extends Thread {
         return colorSensorMap.get(name).colorSensor.green();
     }
 
+    public double getDistance(Names name) {
+        return colorSensorMap.get(name).colorSensor.getDistance(DistanceUnit.CM);
+    }
+
     public void startPids() {
-        IntakeSubsystem.getInstance().startPid();
-        OuttakeSubsystem.getInstance().startPid();
+
     }
 
     public void setLightColor(RevBlinkinLedDriver.BlinkinPattern pattern) {

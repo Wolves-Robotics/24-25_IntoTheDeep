@@ -20,11 +20,9 @@ public class Constants {
             case outtakeArm: return     "outtakeArm";
             case outtakePivot: return   "IDK4";
             case claw: return           "IDK3";
-            case leftHang: return       "leftcliterous";
-            case rightHang: return      "rightcliterous";
 
             case intakeColor: return    "color1";
-            case transferColor: return  "color2";
+            case transferDistance: return  "color2";
 
             case pinpoint: return       "pinpoint";
 
@@ -50,8 +48,6 @@ public class Constants {
             case outtakeArm: return     false;
             case outtakePivot: return   false;
             case claw: return           false;
-            case leftHang: return       false;
-            case rightHang: return      true;
 
             default: return             false;
         }
