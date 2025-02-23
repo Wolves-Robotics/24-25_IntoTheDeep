@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto.classes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -26,6 +27,7 @@ public class Auto extends OpMode {
     public void init() {
         RobotHardware.reset(hardwareMap);
         RobotHardware.getInstance().servoInit();
+        RobotHardware.getInstance().setLightColor(RevBlinkinLedDriver.BlinkinPattern.BLACK);
         autoSelection = new AutoSelection(gamepad1);
 
         telemetryA = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -62,6 +64,8 @@ public class Auto extends OpMode {
 
     @Override
     public void loop() {
+        OuttakeSubsystem.getInstance().updatePID();
+        IntakeSubsystem.getInstance().updatePID();
         auto.updateTelemetry(telemetryA);
         OuttakeSubsystem.getInstance().updateTelemetry(telemetryA);
         telemetryA.update();

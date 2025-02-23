@@ -17,6 +17,8 @@ public enum Names {
     outtakeArm,
     outtakePivot,
     claw,
+    leftHang,
+    rightHang,
     intakeColor,
     transferColor
 }

@@ -44,7 +44,7 @@ public class OuttakeSubsystem extends Thread{
 
         elapsedTime = new ElapsedTime();
 
-        start();
+//        start();
 //        pidf.start();
     }
 
@@ -64,7 +64,7 @@ public class OuttakeSubsystem extends Thread{
         RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.1);
     }
     public void clawSample() {
-        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.45);
+        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.48);
         RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.4);
     }
     public void clawSpecimenGrab() {
@@ -92,17 +92,29 @@ public class OuttakeSubsystem extends Thread{
         return elapsedTime.seconds();
     }
 
-    @Override
-    public void run() {
-        while (!currentThread().isInterrupted()) {
-            if (pidOn) {
-                pos = (RobotHardware.getInstance().getMotorPos(Names.leftOuttake) + RobotHardware.getInstance().getMotorPos(Names.rightOuttake)) / 2.;
-                power = pidController.calculate(pos, target) + Constants.of;
-                RobotHardware.getInstance().setMotorPower(Names.leftOuttake, power);
-                RobotHardware.getInstance().setMotorPower(Names.rightOuttake, power);
-            }
+    public void updatePID() {
+        if (pidOn) {
+            pos = (RobotHardware.getInstance().getMotorPos(Names.leftOuttake) + RobotHardware.getInstance().getMotorPos(Names.rightOuttake)) / 2.;
+            power = pidController.calculate(pos, target) + Constants.of;
+            if (target == 0 && pos < 50 && pos > 5) power -= 0.1;
+            if (target == 0 && pos <= 5) power = 0;
+            RobotHardware.getInstance().setMotorPower(Names.leftOuttake, power);
+            RobotHardware.getInstance().setMotorPower(Names.rightOuttake, power);
         }
     }
+
+//    @Override
+//    public void run() {
+//        while (!currentThread().isInterrupted()) {
+//            if (pidOn) {
+//                pos = (RobotHardware.getInstance().getMotorPos(Names.leftOuttake) + RobotHardware.getInstance().getMotorPos(Names.rightOuttake)) / 2.;
+//                power = pidController.calculate(pos, target) + Constants.of;
+//                if (target == 0 && pos < 50 && pos > 0) power -= 0.1;
+//                RobotHardware.getInstance().setMotorPower(Names.leftOuttake, power);
+//                RobotHardware.getInstance().setMotorPower(Names.rightOuttake, power);
+//            }
+//        }
+//    }
 
     public void updateTelemetry(Telemetry telemetry) {
         telemetry.addData("Outtake target", target);

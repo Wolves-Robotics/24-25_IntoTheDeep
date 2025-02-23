@@ -33,9 +33,9 @@ public class DriveSubsystem extends Thread{
         start();
     }
 
-    public void setFollower(HardwareMap hardwareMap, Pose pose) {
+    public void setFollower(Pose pose) {
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
+        follower = new Follower(RobotHardware.getInstance().getHardwareMap());
         follower.setStartingPose(pose);
     }
 
@@ -60,7 +60,23 @@ public class DriveSubsystem extends Thread{
     }
 
     public boolean atParametricEnd() {
-        return follower.atParametricEnd();
+        return !follower.isBusy();
+    }
+
+    public Follower getFollower() {
+        return follower;
+    }
+
+    public double getYPos() {
+        return follower.getPose().getY();
+    }
+
+    public double getXPos() {
+        return follower.getPose().getX();
+    }
+
+    public double getHeadimg() {
+        return follower.getPose().getHeading();
     }
 
     public void drive(double x, double y, double rot, boolean robotCentric) {
@@ -99,7 +115,10 @@ public class DriveSubsystem extends Thread{
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            if (follower != null) follower.update();
+            if (follower != null) {
+                follower.update();
+                follower.drawOnDashBoard();
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.utils;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -39,6 +40,8 @@ public class RobotHardware extends Thread {
         servoClassMap.put(Names.outtakeArm,    new ServoClass(Names.outtakeArm,    false));
         servoClassMap.put(Names.outtakePivot,  new ServoClass(Names.outtakePivot,  false));
         servoClassMap.put(Names.claw,          new ServoClass(Names.claw,          false));
+        servoClassMap.put(Names.leftHang,      new ServoClass(Names.leftHang,      false));
+        servoClassMap.put(Names.rightHang,     new ServoClass(Names.rightHang,     true));
 
         colorSensorMap = new HashMap<>();
         colorSensorMap.put(Names.intakeColor,    new ColorSensorClass(Names.intakeColor));
@@ -55,6 +58,7 @@ public class RobotHardware extends Thread {
     private HashMap<Names, ColorSensorClass> colorSensorMap;
 
     private IMU imu;
+    private GoBildaPinpointDriver pinpoint;
 
     private RevBlinkinLedDriver lights;
     private RevBlinkinLedDriver.BlinkinPattern prevPatter;
@@ -64,6 +68,7 @@ public class RobotHardware extends Thread {
 
         public MotorClass(Names name, boolean isReverse) {
             motor = hardwareMap.dcMotor.get(Constants.getStringName(name));
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (isReverse) motor.setDirection(DcMotor.Direction.REVERSE);
         }
     }
@@ -124,6 +129,10 @@ public class RobotHardware extends Thread {
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         imu.initialize(parameters);
         imu.resetYaw();
+//        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+//        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+//        pinpoint.setOffsets(2.875, -6.875);
+//        pinpoint.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
     }
 
     private void setLights() {
@@ -166,10 +175,16 @@ public class RobotHardware extends Thread {
         return servoClassMap.get(name).servo.getPosition();
     }
 
+    public double getYaw() {
+        return pinpoint.getHeading();
+    }
     public YawPitchRollAngles getImuAngles() {
         return imu.getRobotYawPitchRollAngles();
     }
-    public void resetImuYaw() {imu.resetYaw();}
+    public void resetImuYaw() {
+        imu.resetYaw();
+//        pinpoint.recalibrateIMU();
+    }
 
     public void setMotorPower(Names name, double power) {
         motorClassMap.get(name).motor.setPower(power);
@@ -187,9 +202,9 @@ public class RobotHardware extends Thread {
     }
 
     public boolean isRed(Names name) {
-        return  colorSensorMap.get(name).colorSensor.red() >= 150 &&
-                colorSensorMap.get(name).colorSensor.green() <= 285 &&
-                colorSensorMap.get(name).colorSensor.blue() <= 120;
+        return  colorSensorMap.get(name).colorSensor.red() >= 110 &&
+                colorSensorMap.get(name).colorSensor.green() <= 110 &&
+                colorSensorMap.get(name).colorSensor.blue() <= 50;
     }
 
     public int getRed(Names name) {
@@ -197,9 +212,9 @@ public class RobotHardware extends Thread {
     }
 
     public boolean isBlue(Names name) {
-        return  colorSensorMap.get(name).colorSensor.red() <= 110 &&
-                colorSensorMap.get(name).colorSensor.green() <= 220 &&
-                colorSensorMap.get(name).colorSensor.blue() >= 130;
+        return  colorSensorMap.get(name).colorSensor.red() <= 80 &&
+                colorSensorMap.get(name).colorSensor.green() <= 94 &&
+                colorSensorMap.get(name).colorSensor.blue() >= 100;
     }
 
     public int getBlue(Names name) {
@@ -207,9 +222,9 @@ public class RobotHardware extends Thread {
     }
 
     public boolean isYellow(Names name) {
-        return  colorSensorMap.get(name).colorSensor.red() >= 240 &&
-                colorSensorMap.get(name).colorSensor.green() >= 300 &&
-                colorSensorMap.get(name).colorSensor.blue() <= 300;
+        return  colorSensorMap.get(name).colorSensor.red() >= 200 &&
+                colorSensorMap.get(name).colorSensor.green() >= 210 &&
+                colorSensorMap.get(name).colorSensor.blue() <= 90;
     }
 
     public int getGreen(Names name) {
@@ -226,6 +241,15 @@ public class RobotHardware extends Thread {
             prevPatter = pattern;
             lights.setPattern(pattern);
         }
+    }
+
+    public void killServos() {
+        servoClassMap.get(Names.claw).servo.setPwmDisable();
+        servoClassMap.get(Names.outtakeArm).servo.setPwmDisable();
+        servoClassMap.get(Names.outtakePivot).servo.setPwmDisable();
+        servoClassMap.get(Names.intakeArm).servo.setPwmDisable();
+        servoClassMap.get(Names.intakePivot).servo.setPwmDisable();
+        servoClassMap.get(Names.door).servo.setPwmDisable();
     }
 
     public void updateLeds(Names names) {

@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 public class OuttakeLowSample extends InstantCommand {
     public OuttakeLowSample() {
         super(
-                () -> OuttakeSubsystem.getInstance().setTarget(1300)
+                () -> OuttakeSubsystem.getInstance().setTarget(300)
         );
     }
 }

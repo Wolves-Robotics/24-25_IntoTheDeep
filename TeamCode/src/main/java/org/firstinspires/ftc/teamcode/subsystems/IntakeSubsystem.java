@@ -35,7 +35,7 @@ public class IntakeSubsystem extends Thread {
     public int getTarget() {return target;}
 
     public void slurpForward() {RobotHardware.getInstance().setMotorPower(Names.slurp, 1);}
-    public void slurpBackward() {RobotHardware.getInstance().setMotorPower(Names.slurp, -0.75);}
+    public void slurpBackward() {RobotHardware.getInstance().setMotorPower(Names.slurp, -0.5);}
     public void slurpStop() {RobotHardware.getInstance().setMotorPower(Names.slurp, 0);}
 
     public void bucketDown() {
@@ -49,6 +49,10 @@ public class IntakeSubsystem extends Thread {
     public void bucketUp() {
         RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.2);
         RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.01);
+    }
+    public void bucketHover() {
+        RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.45);
+        RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.6);
     }
 
     public void doorClose() {
@@ -76,14 +80,20 @@ public class IntakeSubsystem extends Thread {
         pidOn = true;
     }
 
-
-    @Override
-    public void run() {
-        while (!currentThread().isInterrupted()) {
-            if (pidOn) {
-                double power = pidController.calculate(RobotHardware.getInstance().getMotorPos(Names.intakeExtendo), target);
-                RobotHardware.getInstance().setMotorPower(Names.intakeExtendo, power);
-            }
+    public void updatePID() {
+        if (pidOn) {
+            double power = pidController.calculate(RobotHardware.getInstance().getMotorPos(Names.intakeExtendo), target);
+            RobotHardware.getInstance().setMotorPower(Names.intakeExtendo, power);
         }
     }
+
+//    @Override
+//    public void run() {
+//        while (!currentThread().isInterrupted()) {
+//            if (pidOn) {
+//                double power = pidController.calculate(RobotHardware.getInstance().getMotorPos(Names.intakeExtendo), target);
+//                RobotHardware.getInstance().setMotorPower(Names.intakeExtendo, power);
+//            }
+//        }
+//    }
 }
