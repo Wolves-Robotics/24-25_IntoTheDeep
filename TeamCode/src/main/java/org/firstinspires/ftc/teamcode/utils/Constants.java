@@ -25,6 +25,7 @@ public class Constants {
             case transferDistance: return  "color2";
 
             case pinpoint: return       "pinpoint";
+            case imu: return            "imu";
 
             case lights: return         "led";
             default: return "";
@@ -53,11 +54,16 @@ public class Constants {
         }
     }
 
-    public static final double IP = 0.018, II = 0.175, ID = 0.0009;
-    public static final double OP = 0.005, OI = 0.19, OD = 0.00012, OF = 0.05;
+    public static final double IP = 0.01, ID = 0.7, IF = 0., IL = 0.2;
+    public static final int I_DEAD = 3;
+    public static final double OP = 0.006, OD = 0.25, OF = 0.18, OL = 0.2;
+    public static final int O_DEAD = 5;
 
-    public static final int INTAKE_MIN_TARGET = 0, INTAKE_MAX_TARGET = 400;
+    public static final int INTAKE_MIN_TARGET = 0, INTAKE_MAX_TARGET = 380;
     public static final int OUTTAKE_MIN_TARGET = 0, OUTTAKE_MAX_TARGET = 1940;
+
+    public static final int RED_RED = 150, RED_GREEN = 285, RED_BLUE = 120;
+    public static final int BLUE_RED = 110, BLUE_GREEN = 220, BLUE_BLUE = 130;
 
     //TODO: add all servo and motor positions and powers
     public static final double CLAW_OPEN = 0.35, CLAW_CLOSE = 0;

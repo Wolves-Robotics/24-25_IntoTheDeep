@@ -9,5 +9,6 @@ public class Drive extends InstantCommand {
         super(
                 () -> DriveSubsystem.getInstance().drive(x, y, rot, fieldCentric)
         );
+        addRequirements(DriveSubsystem.getInstance());
     }
 }

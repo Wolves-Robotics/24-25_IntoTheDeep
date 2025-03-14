@@ -20,5 +20,7 @@ public enum Names {
     claw,
 
     intakeColor,
-    transferDistance
+    transferDistance,
+
+    imu
 }

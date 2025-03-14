@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.utils.collections.Names;
 
 public class DriveSubsystem extends SubsystemBase {
     private static DriveSubsystem instance = null;
-    private RobotHardware robotHardware;
 
     public static void reset() {
         instance = new DriveSubsystem();
@@ -23,8 +22,6 @@ public class DriveSubsystem extends SubsystemBase {
     private DriveSubsystem() {
         super();
 
-        robotHardware = RobotHardware.getInstance();
-
         Constants.setConstants(FConstants.class, LConstants.class);
     }
 
@@ -32,22 +29,22 @@ public class DriveSubsystem extends SubsystemBase {
         y = y * -1;
 
         if (fieldCentric) {
-            double botHeading = robotHardware.getHeading();
+            double botHeading = RobotHardware.getInstance().getHeading();
 
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
             double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rot), 1);
-            robotHardware.setMotorPower(Names.frontLeft, (rotY + rotX + rot) / denominator);
-            robotHardware.setMotorPower(Names.backLeft, (rotY - rotX + rot) / denominator);
-            robotHardware.setMotorPower(Names.frontRight, (rotY - rotX - rot) / denominator);
-            robotHardware.setMotorPower(Names.backRight, (rotY + rotX - rot) / denominator);
+            RobotHardware.getInstance().setMotorPower(Names.frontLeft, (rotY + rotX + rot) / denominator);
+            RobotHardware.getInstance().setMotorPower(Names.backLeft, (rotY - rotX + rot) / denominator);
+            RobotHardware.getInstance().setMotorPower(Names.frontRight, (rotY - rotX - rot) / denominator);
+            RobotHardware.getInstance().setMotorPower(Names.backRight, (rotY + rotX - rot) / denominator);
         } else {
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rot), 1);
-            robotHardware.setMotorPower(Names.frontLeft, (y + x + rot) / denominator);
-            robotHardware.setMotorPower(Names.backLeft, (y - x + rot) / denominator);
-            robotHardware.setMotorPower(Names.frontRight, (y - x - rot) / denominator);
-            robotHardware.setMotorPower(Names.backRight, (y + x - rot) / denominator);
+            RobotHardware.getInstance().setMotorPower(Names.frontLeft, (y + x + rot) / denominator);
+            RobotHardware.getInstance().setMotorPower(Names.backLeft, (y - x + rot) / denominator);
+            RobotHardware.getInstance().setMotorPower(Names.frontRight, (y - x - rot) / denominator);
+            RobotHardware.getInstance().setMotorPower(Names.backRight, (y + x - rot) / denominator);
         }
     }
 }

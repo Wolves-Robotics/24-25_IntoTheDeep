@@ -1,22 +1,28 @@
 package org.firstinspires.ftc.teamcode.utils;
 
-import com.acmerobotics.dashboard.config.Config;
+import static org.firstinspires.ftc.teamcode.utils.Constants.*;
+
 import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakesSubsystem;
 import org.firstinspires.ftc.teamcode.utils.collections.Names;
 
 import java.util.HashMap;
 import java.util.List;
 
-@Config
 public class RobotHardware extends Thread {
     private void setHardwareMaps() {
         motorClassMap = new HashMap<>();
@@ -52,6 +58,7 @@ public class RobotHardware extends Thread {
     private HashMap<Names, ColorSensorClass> colorSensorMap;
 
     private GoBildaPinpointDriver pinpoint;
+    private IMU imu;
 
     private RevBlinkinLedDriver lights;
     private RevBlinkinLedDriver.BlinkinPattern prevPatter;
@@ -93,9 +100,9 @@ public class RobotHardware extends Thread {
     private RobotHardware(HardwareMap _hardwareMap) {
         hardwareMap = _hardwareMap;
 
-//        IntakeSubsystem.reset();
-//        OuttakeSubsystem.reset();
-//        DriveSubsystem.reset();
+        IntakeSubsystem.reset();
+        OuttakesSubsystem.reset();
+        DriveSubsystem.reset();
 
         lynxModuleInit();
 
@@ -117,9 +124,15 @@ public class RobotHardware extends Thread {
     }
 
     private void setImu() {
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, Constants.getStringName(Names.pinpoint));
-        pinpoint.setOffsets(73.025, -174.498);
-        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        imu = hardwareMap.get(IMU.class, Constants.getStringName(Names.imu));
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
+        imu.initialize(parameters);
+        imu.resetYaw();
+//        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, Constants.getStringName(Names.pinpoint));
+//        pinpoint.setOffsets(73.025, -174.498);
+//        pinpoint.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
     }
 
     private void setLights() {
@@ -139,8 +152,8 @@ public class RobotHardware extends Thread {
         setServoPos(Names.intakeArm, 0.1);
         setServoPos(Names.intakePivot, 0.19);
         setServoPos(Names.claw, 0.3);
-        setServoPos(Names.outtakeArm, 0.23);
-        setServoPos(Names.outtakePivot, 0.4);
+        setServoPos(Names.outtakeArm, 0.2);
+        setServoPos(Names.outtakePivot, 0.1);
         setServoPos(Names.door, 0.7);
     }
 
@@ -156,6 +169,16 @@ public class RobotHardware extends Thread {
         return hardwareMap;
     }
 
+    public void startPDFL() {
+        IntakeSubsystem.getInstance().startPid();
+        OuttakesSubsystem.getInstance().startPDFL();
+    }
+
+    public void update() {
+        IntakeSubsystem.getInstance().update();
+        OuttakesSubsystem.getInstance().update();
+    }
+
     public int getMotorPos(Names name) {
         return motorClassMap.get(name).motor.getCurrentPosition();
     }
@@ -164,11 +187,13 @@ public class RobotHardware extends Thread {
     }
 
     public double getHeading() {
-        return pinpoint.getHeading();
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+//        return pinpoint.getHeading();
     }
 
     public void resetImuYaw() {
-        pinpoint.resetPosAndIMU();
+        imu.resetYaw();
+//        pinpoint.resetPosAndIMU();
     }
 
     public void setMotorPower(Names name, double power) {
@@ -176,6 +201,10 @@ public class RobotHardware extends Thread {
     }
     public void setServoPos(Names name, double pos) {
         servoClassMap.get(name).servo.setPosition(pos);
+    }
+
+    public double getMotorPower(Names name) {
+        return motorClassMap.get(name).motor.getPower();
     }
 
     public void setMotorDirection(Names name, boolean reverse) {
@@ -187,9 +216,9 @@ public class RobotHardware extends Thread {
     }
 
     public boolean isRed(Names name) {
-        return  colorSensorMap.get(name).colorSensor.red() >= 150 &&
-                colorSensorMap.get(name).colorSensor.green() <= 285 &&
-                colorSensorMap.get(name).colorSensor.blue() <= 120;
+        return  colorSensorMap.get(name).colorSensor.red() >= RED_RED &&
+                colorSensorMap.get(name).colorSensor.green() <= RED_GREEN &&
+                colorSensorMap.get(name).colorSensor.blue() <= RED_BLUE;
     }
 
     public int getRed(Names name) {
@@ -219,10 +248,6 @@ public class RobotHardware extends Thread {
 
     public double getDistance(Names name) {
         return colorSensorMap.get(name).colorSensor.getDistance(DistanceUnit.CM);
-    }
-
-    public void startPids() {
-
     }
 
     public void setLightColor(RevBlinkinLedDriver.BlinkinPattern pattern) {
