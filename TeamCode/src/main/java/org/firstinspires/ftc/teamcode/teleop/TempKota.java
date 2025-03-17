@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.commands.driveSubsystem.Drive;
 import org.firstinspires.ftc.teamcode.commands.outtake.GrabSample;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.OuttakesSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 import org.firstinspires.ftc.teamcode.utils.collections.intake.IntakeStatusState;
 
@@ -45,19 +45,19 @@ public class TempKota extends OpMode {
 
         gamepadEx1.getGamepadButton(GamepadKeys.Button.RIGHT_STICK_BUTTON)
                 .whenPressed(() -> {
-                    OuttakesSubsystem.getInstance().clawNeutral();
-                    OuttakesSubsystem.getInstance().clawOpen();
-                    OuttakesSubsystem.getInstance().setTarget(0);
+                    OuttakeSubsystem.getInstance().clawNeutral();
+                    OuttakeSubsystem.getInstance().clawOpen();
+                    OuttakeSubsystem.getInstance().setTarget(0);
                 });
 
         gamepadEx1.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(() -> {
-                    OuttakesSubsystem.getInstance().clawSample();
-                    OuttakesSubsystem.getInstance().setTarget(740);
+                    OuttakeSubsystem.getInstance().clawSample();
+                    OuttakeSubsystem.getInstance().setTarget(740);
                 });
 
         gamepadEx1.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER)
-                .whenPressed(OuttakesSubsystem.getInstance()::switchClaw);
+                .whenPressed(OuttakeSubsystem.getInstance()::switchClaw);
     }
 
     @Override
@@ -69,8 +69,8 @@ public class TempKota extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.left_trigger > 0.7) {
-            OuttakesSubsystem.getInstance().clawSample();
-            OuttakesSubsystem.getInstance().setTarget(300);
+            OuttakeSubsystem.getInstance().clawSample();
+            OuttakeSubsystem.getInstance().setTarget(300);
         }
 
         new Drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x, true).schedule();

@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.OuttakesSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 import org.firstinspires.ftc.teamcode.utils.collections.Names;
 
 import java.util.HashMap;
@@ -101,7 +101,7 @@ public class RobotHardware extends Thread {
         hardwareMap = _hardwareMap;
 
         IntakeSubsystem.reset();
-        OuttakesSubsystem.reset();
+        OuttakeSubsystem.reset();
         DriveSubsystem.reset();
 
         lynxModuleInit();
@@ -161,7 +161,7 @@ public class RobotHardware extends Thread {
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
             lynxModuleUpdate();
-            pinpoint.update();
+//            pinpoint.update();
         }
     }
 
@@ -171,12 +171,12 @@ public class RobotHardware extends Thread {
 
     public void startPDFL() {
         IntakeSubsystem.getInstance().startPid();
-        OuttakesSubsystem.getInstance().startPDFL();
+        OuttakeSubsystem.getInstance().startPDFL();
     }
 
     public void update() {
         IntakeSubsystem.getInstance().update();
-        OuttakesSubsystem.getInstance().update();
+        OuttakeSubsystem.getInstance().update();
     }
 
     public int getMotorPos(Names name) {

@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 import org.firstinspires.ftc.teamcode.utils.collections.Names;
 import org.firstinspires.ftc.teamcode.utils.utilClasses.PDFL;
 
-public class OuttakesSubsystem extends SubsystemBase {
-    private static OuttakesSubsystem instance;
+public class OuttakeSubsystem extends SubsystemBase {
+    private static OuttakeSubsystem instance;
 
     private PDFL pdfl;
     private boolean pdflOn;
@@ -20,14 +20,14 @@ public class OuttakesSubsystem extends SubsystemBase {
     private boolean clawOpen;
 
     public static void reset() {
-        instance = new OuttakesSubsystem();
+        instance = new OuttakeSubsystem();
     }
 
-    public static OuttakesSubsystem getInstance() {
+    public static OuttakeSubsystem getInstance() {
         return instance;
     }
 
-    private OuttakesSubsystem() {
+    private OuttakeSubsystem() {
         pdfl = new PDFL(
                 () -> (RobotHardware.getInstance().getMotorPos(Names.leftOuttake) + RobotHardware.getInstance().getMotorPos(Names.rightOuttake)) / 2,
                 (p) -> {RobotHardware.getInstance().setMotorPower(Names.leftOuttake, p); RobotHardware.getInstance().setMotorPower(Names.rightOuttake, p);});
@@ -59,7 +59,7 @@ public class OuttakesSubsystem extends SubsystemBase {
     }
 
     public void clawDown() {
-        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.05);
+        RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.057);
         RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.15);
     }
     public void clawNeutral() {

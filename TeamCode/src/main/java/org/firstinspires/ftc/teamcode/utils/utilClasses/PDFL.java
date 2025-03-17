@@ -67,9 +67,11 @@ public class PDFL {
             power -= l;
         }
 
-        if (target == 0 && error > -25) {
-            power -= 0.15;
+        if (target == 0 && 2 < pos && pos < 15) {
+            power -= 0.1;
         }
+
+        power = Math.max(-0.7, power);
 
         output.setMotorPower(power);
     }
