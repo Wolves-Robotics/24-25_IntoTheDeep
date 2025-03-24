@@ -15,12 +15,15 @@ import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.Point;
+import com.pedropathing.util.Constants;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.auto.pedro.constants.FConstants;
+import org.firstinspires.ftc.teamcode.auto.pedro.constants.LConstants;
 import org.firstinspires.ftc.teamcode.collections.auto.sample.GrabSamp;
 import org.firstinspires.ftc.teamcode.collections.auto.sample.SampleEnum;
 import org.firstinspires.ftc.teamcode.collections.auto.sample.ScoreSamp;
@@ -59,7 +62,9 @@ public class DepSample extends OpMode {
         robotHardware.setServoPos(Names.outtakeArm, 0.23);
         robotHardware.setServoPos(Names.outtakePivot, 0.4);
         robotHardware.setServoPos(Names.door, 0.7);
-        follower = new Follower(hardwareMap);
+        Constants.setConstants(FConstants.class, LConstants.class);
+        follower = new Follower(RobotHardware.getInstance().getHardwareMap());
+//        follower = new Follower(RobotHardware.getInstance().getHardwareMap(), FConstants.class, LConstants.class);
         follower.setStartingPose(new Pose(100, 100, 0));
         follower.update();
         elapsedTime = new ElapsedTime();

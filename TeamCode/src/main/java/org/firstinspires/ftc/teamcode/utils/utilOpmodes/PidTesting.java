@@ -28,8 +28,8 @@ public class PidTesting extends OpMode {
         RobotHardware.reset(hardwareMap);
         robotHardware = RobotHardware.getInstance();
         robotHardware.start();
-        robotHardware.setServoPos(Names.intakeArm, 0);
-        robotHardware.setServoPos(Names.intakePivot, 0);
+        robotHardware.setServoPos(Names.outtakeArm, 0.3);
+        robotHardware.setServoPos(Names.outtakePivot, 0.3);
         intake = new PIDController(ip, ii, id);
         intakePid = new PIDF(0, 0, 0,
                 () -> robotHardware.getMotorPos(Names.intakeExtendo),
@@ -55,18 +55,21 @@ public class PidTesting extends OpMode {
 //        outtakePidf.setCoefficients(op, oi, od, of);
 //        outtakePidf.setTarget(oTarget);
 //        outtakePidf.updateTelemetry(multipleTelemetry, "Outtake");
-        robotHardware.setServoPos(Names.intakeArm, iArm);
-        robotHardware.setServoPos(Names.intakePivot, iPiv);
 
         intake.setPID(ip, ii, id);
         robotHardware.setMotorPower(Names.intakeExtendo, intake.calculate(robotHardware.getMotorPos(Names.intakeExtendo), iTarget));
 
         outtake.setPID(op, oi, od);
-        double power = outtake.calculate((robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake))/2., oTarget) + of;
+        double pos = (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake))/2.;
+        double power = outtake.calculate(pos, oTarget) + of;
+        if (oTarget == 0 && pos < 50 && pos > 5) power -= 0.1;
+        if (oTarget == 0 && pos <= 5) power = 0;
+
         robotHardware.setMotorPower(Names.leftOuttake, power);
         robotHardware.setMotorPower(Names.rightOuttake, power);
         multipleTelemetry.addData("Intake pos", robotHardware.getMotorPos(Names.intakeExtendo));
         multipleTelemetry.addData("Intake target", iTarget);
+        multipleTelemetry.addData("outtake power", power);
         multipleTelemetry.addData("Outtake pos", (robotHardware.getMotorPos(Names.leftOuttake) + robotHardware.getMotorPos(Names.rightOuttake))/2.);
         multipleTelemetry.addData("Outtake target", oTarget);
         multipleTelemetry.update();

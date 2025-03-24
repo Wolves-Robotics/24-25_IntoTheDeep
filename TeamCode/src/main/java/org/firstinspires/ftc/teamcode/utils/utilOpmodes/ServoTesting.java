@@ -17,15 +17,19 @@ public class ServoTesting extends OpMode {
             intakeArmReverse = false,
             outtakePivotReverse = false,
             outtakeArmReverse = false,
-            clawReverse = false;
+            clawReverse = false,
+            leftHangReverse = false,
+            rightHangReverse = true;
 
     public static double
-            doorPos = 0,
-            intakePivotPos = 0,
-            intakeArmPos = 0,
-            outtakePivotPos = 0,
-            outtakeArmPos = 0,
-            clawPos = 0;
+            doorPos = 0.6,
+            intakePivotPos = 0.3,
+            intakeArmPos = 0.3,
+            outtakePivotPos = 0.5,
+            outtakeArmPos = 0.5,
+            clawPos = 0.2,
+            leftHangPos = 0.5,
+            rightHangPos = 0.5;
 
     @Override
     public void init() {
@@ -42,6 +46,8 @@ public class ServoTesting extends OpMode {
         robotHardware.setServoDirection(Names.outtakePivot, outtakePivotReverse);
         robotHardware.setServoDirection(Names.outtakeArm, outtakeArmReverse);
         robotHardware.setServoDirection(Names.claw, clawReverse);
+        robotHardware.setServoDirection(Names.leftHang, leftHangReverse);
+        robotHardware.setServoDirection(Names.rightHang, rightHangReverse);
 
         robotHardware.setServoPos(Names.door, doorPos);
         robotHardware.setServoPos(Names.intakePivot, intakePivotPos);
@@ -49,5 +55,7 @@ public class ServoTesting extends OpMode {
         robotHardware.setServoPos(Names.outtakePivot, outtakePivotPos);
         robotHardware.setServoPos(Names.outtakeArm, outtakeArmPos);
         robotHardware.setServoPos(Names.claw, clawPos);
+        robotHardware.setServoPos(Names.leftHang, leftHangPos);
+        robotHardware.setServoPos(Names.rightHang, rightHangPos);
     }
 }
