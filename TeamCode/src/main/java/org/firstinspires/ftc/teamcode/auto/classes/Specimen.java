@@ -208,7 +208,7 @@ public class Specimen extends BaseAuto{
                 new WaitCommand(50),
                 new ClawSpecimenPlace(),
                 new FollowPath(scoreSpec2Path, true),
-                new SetOuttakeTarget(0),
+                new SetOuttakeTarget(50),
                 new WaitCommand(400),
                 new OpenClaw(),
 

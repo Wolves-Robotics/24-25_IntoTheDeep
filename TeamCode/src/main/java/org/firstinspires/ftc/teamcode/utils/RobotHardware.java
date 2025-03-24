@@ -40,8 +40,8 @@ public class RobotHardware extends Thread {
         servoClassMap.put(Names.outtakeArm,    new ServoClass(Names.outtakeArm,    false));
         servoClassMap.put(Names.outtakePivot,  new ServoClass(Names.outtakePivot,  false));
         servoClassMap.put(Names.claw,          new ServoClass(Names.claw,          false));
-        servoClassMap.put(Names.leftHang,      new ServoClass(Names.leftHang,      false));
-        servoClassMap.put(Names.rightHang,     new ServoClass(Names.rightHang,     true));
+//        servoClassMap.put(Names.leftHang,      new ServoClass(Names.leftHang,      false));
+//        servoClassMap.put(Names.rightHang,     new ServoClass(Names.rightHang,     true));
 
         colorSensorMap = new HashMap<>();
         colorSensorMap.put(Names.intakeColor,    new ColorSensorClass(Names.intakeColor));
@@ -74,7 +74,7 @@ public class RobotHardware extends Thread {
     }
 
     private static class ServoClass {
-        ServoImplEx servo;
+        Servo servo;
 
         public ServoClass(Names name, boolean isReverse) {
             servo = hardwareMap.get(ServoImplEx.class, Constants.getStringName(name));
@@ -112,6 +112,15 @@ public class RobotHardware extends Thread {
         resetSubsystems();
 
         start();
+    }
+
+    public void teleOpServoInit() {
+        setServoPos(Names.intakeArm, 0.1);
+        setServoPos(Names.intakePivot, 0.19);
+        setServoPos(Names.claw, 0.3);
+        setServoPos(Names.outtakeArm, 0.2);
+        setServoPos(Names.outtakePivot, 0.1);
+        setServoPos(Names.door, 0.7);
     }
 
     private void lynxModuleInit() {
@@ -243,14 +252,14 @@ public class RobotHardware extends Thread {
         }
     }
 
-    public void killServos() {
-        servoClassMap.get(Names.claw).servo.setPwmDisable();
-        servoClassMap.get(Names.outtakeArm).servo.setPwmDisable();
-        servoClassMap.get(Names.outtakePivot).servo.setPwmDisable();
-        servoClassMap.get(Names.intakeArm).servo.setPwmDisable();
-        servoClassMap.get(Names.intakePivot).servo.setPwmDisable();
-        servoClassMap.get(Names.door).servo.setPwmDisable();
-    }
+//    public void killServos() {
+//        servoClassMap.get(Names.claw).servo.setPwmDisable();
+//        servoClassMap.get(Names.outtakeArm).servo.setPwmDisable();
+//        servoClassMap.get(Names.outtakePivot).servo.setPwmDisable();
+//        servoClassMap.get(Names.intakeArm).servo.setPwmDisable();
+//        servoClassMap.get(Names.intakePivot).servo.setPwmDisable();
+//        servoClassMap.get(Names.door).servo.setPwmDisable();
+//    }
 
     public void updateLeds(Names names) {
         if (isRed(names)) setLightColor(RevBlinkinLedDriver.BlinkinPattern.RED);

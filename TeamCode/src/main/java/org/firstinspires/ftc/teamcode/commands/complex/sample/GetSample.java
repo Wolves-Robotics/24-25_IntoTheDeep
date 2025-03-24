@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 public class GetSample extends CommandBase {
     private double time;
 
-    private ElapsedTime elapsedTime;
+    private ElapsedTime elapsedTime, turnTime;
 
     private boolean extended = false, wrongColor = false,
                     left = true;
@@ -20,11 +20,13 @@ public class GetSample extends CommandBase {
         time = _time;
 
         elapsedTime = new ElapsedTime();
+        turnTime = new ElapsedTime();
     }
 
     @Override
     public void initialize() {
         elapsedTime.reset();
+        turnTime.reset();
 
         IntakeSubsystem.getInstance().bucketDown();
         IntakeSubsystem.getInstance().slurpForward();
@@ -42,10 +44,16 @@ public class GetSample extends CommandBase {
             wrongColor = true;
         }
 
-        if (DriveSubsystem.getInstance().atParametricEnd()) {
+        if (turnTime.milliseconds() > 50) {
             DriveSubsystem.getInstance().getFollower().turnDegrees(20, left);
             left = !left;
+            turnTime.reset();
         }
+
+//        if (DriveSubsystem.getInstance().atParametricEnd()) {
+//            DriveSubsystem.getInstance().getFollower().turnDegrees(20, left);
+//            left = !left;
+//        }
     }
 
     @Override

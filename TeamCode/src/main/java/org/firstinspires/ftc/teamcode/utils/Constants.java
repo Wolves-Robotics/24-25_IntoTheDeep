@@ -18,8 +18,8 @@ public class Constants {
             case outtakeArm: return     "outtakeArm";
             case outtakePivot: return   "IDK4";
             case claw: return           "IDK3";
-            case leftHang: return       "leftcliterous";
-            case rightHang: return      "right";
+            case leftHang: return       "idkhang1";
+            case rightHang: return      "idkhang2";
 
             case intakeColor: return    "color1";
             case transferColor: return  "color2";

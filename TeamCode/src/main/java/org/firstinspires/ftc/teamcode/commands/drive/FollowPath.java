@@ -41,6 +41,6 @@ public class FollowPath extends CommandBase {
     @Override
     public boolean isFinished() {
         return (override != null && override.getAsBoolean()) ||
-                (override == null && driveSubsystem.atParametricEnd());
+                (override == null && driveSubsystem.isNotBusy());
     }
 }

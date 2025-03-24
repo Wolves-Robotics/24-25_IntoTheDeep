@@ -15,6 +15,7 @@ import com.pedropathing.pathgen.Point;
 
 import org.firstinspires.ftc.teamcode.auto.pedro.constants.FConstants;
 import org.firstinspires.ftc.teamcode.auto.pedro.constants.LConstants;
+import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
 /**
  * This is the StraightBackAndForth autonomous OpMode. It runs the robot in a specified distance
@@ -50,7 +51,8 @@ public class StraightBackAndForth extends OpMode {
     @Override
     public void init() {
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
+        follower = new Follower(RobotHardware.getInstance().getHardwareMap());
+//        follower = new Follower(RobotHardware.getInstance().getHardwareMap(), FConstants.class, LConstants.class);
 
         forwards = new Path(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(DISTANCE,0, Point.CARTESIAN)));
         forwards.setConstantHeadingInterpolation(0);

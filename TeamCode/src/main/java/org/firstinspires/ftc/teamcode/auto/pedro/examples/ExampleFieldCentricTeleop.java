@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.auto.pedro.constants.FConstants;
 import org.firstinspires.ftc.teamcode.auto.pedro.constants.LConstants;
+import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
 /**
  * This is an example teleop that showcases movement and field-centric driving.
@@ -25,7 +26,8 @@ public class ExampleFieldCentricTeleop extends OpMode {
     @Override
     public void init() {
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
+        follower = new Follower(RobotHardware.getInstance().getHardwareMap());
+//        follower = new Follower(RobotHardware.getInstance().getHardwareMap(), FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
     }
 

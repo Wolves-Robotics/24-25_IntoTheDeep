@@ -5,7 +5,6 @@ import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.util.Constants;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -36,6 +35,7 @@ public class DriveSubsystem extends Thread{
     public void setFollower(Pose pose) {
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(RobotHardware.getInstance().getHardwareMap());
+//        follower = new Follower(RobotHardware.getInstance().getHardwareMap(), FConstants.class, LConstants.class);
         follower.setStartingPose(pose);
     }
 
@@ -59,8 +59,17 @@ public class DriveSubsystem extends Thread{
         follower.telemetryDebug(telemetry);
     }
 
-    public boolean atParametricEnd() {
+    public boolean isNotBusy() {
         return !follower.isBusy();
+    }
+
+    public boolean atParametricEnd() {
+        return follower.atParametricEnd();
+    }
+
+    public boolean isTurning() {
+//        return follower.isTurning();
+        return false;
     }
 
     public Follower getFollower() {

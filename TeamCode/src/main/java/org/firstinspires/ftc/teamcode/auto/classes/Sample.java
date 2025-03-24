@@ -13,12 +13,16 @@ import org.firstinspires.ftc.teamcode.collections.Color;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.GrabSample;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetract;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyHighSample;
+import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyLowSample;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.ReadyOuttake;
 import org.firstinspires.ftc.teamcode.commands.drive.FollowPath;
 import org.firstinspires.ftc.teamcode.commands.intake.BucketHover;
 import org.firstinspires.ftc.teamcode.commands.intake.DoorClose;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.GetSample;
+import org.firstinspires.ftc.teamcode.commands.outtake.ClawSample;
 import org.firstinspires.ftc.teamcode.commands.outtake.OpenClaw;
+import org.firstinspires.ftc.teamcode.commands.outtake.OuttakeLowSample;
+import org.firstinspires.ftc.teamcode.commands.outtake.SetOuttakeTarget;
 
 public class Sample extends BaseAuto {
     private Pose
@@ -42,25 +46,25 @@ public class Sample extends BaseAuto {
         super(_color);
 
         startPose = new Pose(7, 109, Math.toRadians(-90));
-        sample1BucketPose = new Pose(16.7, 132.8, Math.toRadians(-20));
+        sample1BucketPose = new Pose(16.7, 131, Math.toRadians(-20));
 
-        sample2Pose = new Pose(25.9, 128.8, Math.toRadians(-19));
+        sample2Pose = new Pose(25, 128.2, Math.toRadians(-19));
         sample2BucketPose = new Pose(16.7, 132.8, Math.toRadians(-20));
 
-        sample3Pose = new Pose(25.6, 135.2, Math.toRadians(-7));
+        sample3Pose = new Pose(24, 133.5, Math.toRadians(-7));
         sample3BucketPose = new Pose(17.7, 133.8, Math.toRadians(-20));
 
-        sample4Pose = new Pose(25.7, 133, Math.toRadians(22));
+        sample4Pose = new Pose(25.7, 134.7, Math.toRadians(24));
         sample4BucketPose = new Pose(17.7, 133.8, Math.toRadians(-20));
 
         submersible1Control1 = new Pose(63.8, 114.7);
-        submersible1Pose = new Pose(60.7, 96.1, Math.toRadians(-90));
+        submersible1Pose = new Pose(60.7, 97, Math.toRadians(-90));
 
         sample5BucketControl1 = new Pose(63.8, 114.7);
         sample5BucketPose = new Pose(17.7, 133.8, Math.toRadians(-20));
 
-        parkControlPose = new Pose(60, 170);
-        parkPose = new Pose(114.7, 150, Math.toRadians(180));
+        parkControlPose = new Pose(100, 130);
+        parkPose = new Pose(60.7, 95, Math.toRadians(90));
 
         driveSubsystem.setFollower(startPose);
 
@@ -164,6 +168,8 @@ public class Sample extends BaseAuto {
                 new FollowPath(scoreSample5Path, true),
                 new OpenClaw(),
                 new WaitCommand(150),
+                new SetOuttakeTarget(200),
+                new ClawSample(),
                 new FollowPath(parkPath, true)
         ));
 
@@ -175,7 +181,7 @@ public class Sample extends BaseAuto {
                 new ReadyOuttake(),
                 new BucketHover(),
                 new FollowPath(path, true),
-                new GetSample(2),
+                new GetSample(1.25),
                 new IntakeRetract()
         );
     }
@@ -311,6 +317,6 @@ public class Sample extends BaseAuto {
 
     @Override
     public void updateTelemetry(Telemetry telemetry) {
-
+        telemetry.addData("Heading", Math.toDegrees(driveSubsystem.getHeadimg()));
     }
 }

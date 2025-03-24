@@ -28,8 +28,8 @@ public class ServoTesting extends OpMode {
             outtakePivotPos = 0.5,
             outtakeArmPos = 0.5,
             clawPos = 0.2,
-            leftHangPos = 0,
-            rightHangPos = 0;
+            leftHangPos = 0.5,
+            rightHangPos = 0.5;
 
     @Override
     public void init() {
