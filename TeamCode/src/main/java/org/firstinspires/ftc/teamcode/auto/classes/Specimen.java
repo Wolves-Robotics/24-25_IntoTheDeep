@@ -55,7 +55,7 @@ public class Specimen extends BaseAuto{
         super(_color);
 
         startPose = new Pose(8, 60, Math.toRadians(180));
-        scoreSpec1Pose = new Pose(31.5, 59.5, Math.toRadians(180));
+        scoreSpec1Pose = new Pose(31, 59.5, Math.toRadians(180));
 
         farSamp1Control1 = new Pose(30.5, 18.8);
         farSamp1Control2 = new Pose(43, 40.5);
@@ -76,34 +76,31 @@ public class Specimen extends BaseAuto{
 
         scoreSpec2Control1 = new Pose(42, 28);
         scoreSpec2Control2 = new Pose(1, 67.7);
-        scoreSpec2Pose = new Pose(30.5, 63, Math.toRadians(180));
+        scoreSpec2Pose = new Pose(31.5, 63, Math.toRadians(180));
 
-        readySpec3Control1 = new Pose(8.7, 59.5);
-        readySpec3Control2 = new Pose(70, 25.3);
-        readySpec3Pose = new Pose(14.5, 30, Math.toRadians(0));
+        readySpec3Control1 = new Pose(13.1, 69.7);
+        readySpec3Pose = new Pose(10, 14.5, Math.toRadians(90));
 
         scoreSpec3Control1 = new Pose(34.3, 37.6);
         scoreSpec3Control2 = new Pose(0.6, 68);
         scoreSpec3Pose = new Pose(30.5, 67, Math.toRadians(180));
 
-        readySpec4Control1 = new Pose(8.7, 59.5);
-        readySpec4Control2 = new Pose(70, 25.3);
-        readySpec4Pose = new Pose(14.5, 30, Math.toRadians(0));
+        readySpec4Control1 = new Pose(13.1, 69.7);
+        readySpec4Pose = new Pose(10, 14.5, Math.toRadians(90));
 
         scoreSpec4Control1 = new Pose(34.3, 37.6);
         scoreSpec4Control2 = new Pose(0.6, 68);
         scoreSpec4Pose = new Pose(30.5, 71, Math.toRadians(180));
 
-//        readySpec5Control1 = new Pose(7.6, 59.5);
-//        readySpec5Control2 = new Pose(70, 25.3);
-//        readySpec5Pose = new Pose(14.5, 30, Math.toRadians(0));
-//
-//        scoreSpec5Control1 = new Pose(34.3, 37.6);
-//        scoreSpec5Control2 = new Pose(0.6, 68);
-//        scoreSpec5Pose = new Pose(30.5, 75);
+        readySpec5Control1 = new Pose(13.1, 69.7);
+        readySpec5Pose = new Pose(10, 14.5, Math.toRadians(90));
+
+        scoreSpec5Control1 = new Pose(34.3, 37.6);
+        scoreSpec5Control2 = new Pose(0.6, 68);
+        scoreSpec5Pose = new Pose(30.5, 74, Math.toRadians(180));
 
         parkControl1 = new Pose(9.8, 69);
-        parkPose = new Pose(12.5, 27.5, Math.toRadians(-90));
+        parkPose = new Pose(12.5, 27.5, Math.toRadians(180));
 
         driveSubsystem.setFollower(startPose);
 
@@ -149,7 +146,7 @@ public class Specimen extends BaseAuto{
                 .build();
 
         readySpec3Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(scoreSpec2Pose), new Point(readySpec3Control1), new Point(readySpec3Control2), new Point(readySpec3Pose)))
+                .addPath(new BezierCurve(new Point(scoreSpec2Pose), new Point(readySpec3Control1), new Point(readySpec3Pose)))
                 .setLinearHeadingInterpolation(scoreSpec2Pose.getHeading(), readySpec3Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(3.5)
                 .build();
@@ -160,7 +157,7 @@ public class Specimen extends BaseAuto{
                 .build();
 
         readySpec4Path = new PathBuilder()
-                .addPath(new BezierCurve(new Point(scoreSpec3Pose), new Point(readySpec4Control1), new Point(readySpec4Control2), new Point(readySpec4Pose)))
+                .addPath(new BezierCurve(new Point(scoreSpec3Pose), new Point(readySpec4Control1), new Point(readySpec4Pose)))
                 .setLinearHeadingInterpolation(scoreSpec3Pose.getHeading(), readySpec4Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(3.5)
                 .build();
@@ -170,15 +167,15 @@ public class Specimen extends BaseAuto{
                 .setLinearHeadingInterpolation(readySpec4Pose.getHeading(), scoreSpec4Pose.getHeading())
                 .build();
 
-//        readySpec5Path = new PathBuilder()
-//                .addPath(new BezierCurve(new Point(scoreSpec4Pose), new Point(readySpec5Control1), new Point(readySpec5Control2), new Point(readySpec5Pose)))
-//                .setLinearHeadingInterpolation(scoreSpec4Pose.getHeading(), readySpec5Pose.getHeading())
-//                .build();
-//
-//        scoreSpec5Path = new PathBuilder()
-//                .addPath(new BezierCurve(new Point(readySpec5Pose), new Point(scoreSpec5Control1), new Point(scoreSpec5Control2), new Point(scoreSpec5Pose)))
-//                .setLinearHeadingInterpolation(readySpec5Pose.getHeading(), scoreSpec5Pose.getHeading())
-//                .build();
+        readySpec5Path = new PathBuilder()
+                .addPath(new BezierCurve(new Point(scoreSpec4Pose), new Point(readySpec5Control1), new Point(readySpec5Pose)))
+                .setLinearHeadingInterpolation(scoreSpec4Pose.getHeading(), readySpec5Pose.getHeading())
+                .build();
+
+        scoreSpec5Path = new PathBuilder()
+                .addPath(new BezierCurve(new Point(readySpec5Pose), new Point(scoreSpec5Control1), new Point(scoreSpec5Control2), new Point(scoreSpec5Pose)))
+                .setLinearHeadingInterpolation(readySpec5Pose.getHeading(), scoreSpec5Pose.getHeading())
+                .build();
 
         parkPath = new PathBuilder()
                 .addPath(new BezierCurve(scoreSpec4Pose, parkControl1, parkPose))
@@ -187,53 +184,66 @@ public class Specimen extends BaseAuto{
 
         schedule(new SequentialCommandGroup(
                 new ReadySpecimenPlace(),
-                new FollowPath(scoreSpec1Path, false),
+                new FollowPath(scoreSpec1Path, false, () -> DriveSubsystem.getInstance().getXPos() > 30.9),
                 new SetOuttakeTarget(0),
-                new WaitCommand(250),
+                new WaitCommand(300),
                 new OpenClaw(),
                 new ClawNeutral(),
 
                 new FollowPath(farSamp1Path, false, () -> DriveSubsystem.getInstance().getYPos() < 27),
-                new FollowPath(jailSamp1Path, false, () -> DriveSubsystem.getInstance().getXPos() < 20),
+                new FollowPath(jailSamp1Path, false, () -> DriveSubsystem.getInstance().getXPos() < 30),
                 new FollowPath(farSamp2Path, false, () -> DriveSubsystem.getInstance().getYPos() < 17),
-                new FollowPath(jailSamp2Path, false, () -> DriveSubsystem.getInstance().getXPos() < 20),
+                new FollowPath(jailSamp2Path, false, () -> DriveSubsystem.getInstance().getXPos() < 30),
                 new FollowPath(farSamp3Path, false, () -> DriveSubsystem.getInstance().getYPos() < 10.5),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(jailSamp3ReadySpec2Path, true, () -> DriveSubsystem.getInstance().getXPos() < 15.4),
+                new FollowPath(jailSamp3ReadySpec2Path, true, () -> DriveSubsystem.getInstance().getXPos() < 15.5),
                 new CloseClaw(),
                 new WaitCommand(125),
 
                 new OuttakeHighSpecimen(),
                 new WaitCommand(50),
                 new ClawSpecimenPlace(),
-                new FollowPath(scoreSpec2Path, true),
+                new FollowPath(scoreSpec2Path, true, () -> DriveSubsystem.getInstance().getXPos() > 29.8),
                 new SetOuttakeTarget(50),
                 new WaitCommand(400),
                 new OpenClaw(),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(readySpec3Path, true, () -> DriveSubsystem.getInstance().getXPos() < 15.3),
+                new FollowPath(readySpec3Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.5),
                 new CloseClaw(),
                 new WaitCommand(125),
 
                 new OuttakeHighSpecimen(),
                 new WaitCommand(50),
                 new ClawSpecimenPlace(),
-                new FollowPath(scoreSpec3Path, true),
+                new FollowPath(scoreSpec3Path, true, () -> DriveSubsystem.getInstance().getXPos() > 29.8),
                 new SetOuttakeTarget(0),
                 new WaitCommand(400),
                 new OpenClaw(),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(readySpec4Path, true, () -> DriveSubsystem.getInstance().getXPos() < 15.3),
+                new FollowPath(readySpec4Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.5),
                 new CloseClaw(),
                 new WaitCommand(125),
 
                 new OuttakeHighSpecimen(),
                 new WaitCommand(50),
                 new ClawSpecimenPlace(),
-                new FollowPath(scoreSpec4Path, true),
+                new FollowPath(scoreSpec4Path, true, () -> DriveSubsystem.getInstance().getXPos() > 29.8),
+                new SetOuttakeTarget(0),
+                new WaitCommand(400),
+                new OpenClaw(),
+
+                new ReadySpecimenGrab(),
+                new FollowPath(readySpec5Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.5),
+                new CloseClaw(),
+                new WaitCommand(125),
+
+                new OuttakeHighSpecimen(),
+                new WaitCommand(50),
+                new ClawSpecimenPlace(),
+                new FollowPath(scoreSpec5Path, true, () -> DriveSubsystem.getInstance().getXPos() > 29.8),
                 new SetOuttakeTarget(0),
                 new WaitCommand(400),
                 new OpenClaw(),

@@ -149,7 +149,7 @@ public class RobotHardware extends Thread {
     }
 
     public void servoInit() {
-        setServoPos(Names.intakeArm, 0.1);
+        setServoPos(Names.intakeArm, 0.02);
         setServoPos(Names.intakePivot, 0.19);
         setServoPos(Names.claw, 0.3);
         setServoPos(Names.outtakeArm, 0.23);

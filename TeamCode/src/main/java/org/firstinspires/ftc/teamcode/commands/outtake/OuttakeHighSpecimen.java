@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.subsystems.OuttakeSubsystem;
 public class OuttakeHighSpecimen extends InstantCommand {
     public OuttakeHighSpecimen() {
         super(
-                () -> OuttakeSubsystem.getInstance().setTarget(500)
+                () -> OuttakeSubsystem.getInstance().setTarget(470)
         );
     }
 }
