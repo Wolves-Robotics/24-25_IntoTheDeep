@@ -23,6 +23,9 @@ import org.firstinspires.ftc.teamcode.commands.outtake.ClawSample;
 import org.firstinspires.ftc.teamcode.commands.outtake.OpenClaw;
 import org.firstinspires.ftc.teamcode.commands.outtake.OuttakeLowSample;
 import org.firstinspires.ftc.teamcode.commands.outtake.SetOuttakeTarget;
+import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
+
+import java.util.function.BooleanSupplier;
 
 public class Sample extends BaseAuto {
     private Pose
@@ -48,11 +51,11 @@ public class Sample extends BaseAuto {
         startPose = new Pose(7, 109, Math.toRadians(-90));
         sample1BucketPose = new Pose(16.7, 131, Math.toRadians(-20));
 
-        sample2Pose = new Pose(25, 128.2, Math.toRadians(-19));
-        sample2BucketPose = new Pose(16.7, 132.8, Math.toRadians(-20));
+        sample2Pose = new Pose(26, 128.2, Math.toRadians(-19));
+        sample2BucketPose = new Pose(17.2, 132.8, Math.toRadians(-20));
 
-        sample3Pose = new Pose(24, 133.5, Math.toRadians(-7));
-        sample3BucketPose = new Pose(17.7, 133.8, Math.toRadians(-20));
+        sample3Pose = new Pose(24, 131.5, Math.toRadians(-4));
+        sample3BucketPose = new Pose(18, 133.8, Math.toRadians(-20));
 
         sample4Pose = new Pose(25.7, 134.7, Math.toRadians(24));
         sample4BucketPose = new Pose(17.7, 133.8, Math.toRadians(-20));
@@ -137,22 +140,21 @@ public class Sample extends BaseAuto {
 
         schedule(new SequentialCommandGroup(
                 new ReadyHighSample(),
-                new WaitCommand(500),
-                new FollowPath(scoreSample1Path, true),
+                new WaitCommand(150),
+                new FollowPath(scoreSample1Path, true, () -> DriveSubsystem.getInstance().getYPos() > 129.5),
                 new OpenClaw(),
-                new WaitCommand(50),
 
-                grab(getSample2Path),
+                grab(getSample2Path, () -> DriveSubsystem.getInstance().getXPos() > 24),
 
-                score(scoreSample2Path),
+                score(scoreSample2Path, 100, () -> DriveSubsystem.getInstance().getXPos() < 17.5),
 
-                grab(getSample3Path),
+                grab(getSample3Path, () -> DriveSubsystem.getInstance().getXPos() > 22),
 
-                score(scoreSample3Path),
+                score(scoreSample3Path, 200, () -> DriveSubsystem.getInstance().getXPos() < 18),
 
-                grab(getSample4Path),
+                grab(getSample4Path, () -> DriveSubsystem.getInstance().getXPos() < 23.7),
 
-                score(scoreSample4Path),
+                score(scoreSample4Path, 200, () -> DriveSubsystem.getInstance().getXPos() < 18),
 
                 new ReadyOuttake(),
                 new DoorClose(),
@@ -165,7 +167,7 @@ public class Sample extends BaseAuto {
                 new WaitCommand(120),
 
                 new ReadyHighSample(),
-                new FollowPath(scoreSample5Path, true),
+                new FollowPath(scoreSample5Path, true, () -> DriveSubsystem.getInstance().getXPos() < 18),
                 new OpenClaw(),
                 new WaitCommand(150),
                 new SetOuttakeTarget(200),
@@ -178,9 +180,19 @@ public class Sample extends BaseAuto {
 
     private SequentialCommandGroup grab(Path path) {
         return new SequentialCommandGroup(
-                new ReadyOuttake(),
                 new BucketHover(),
                 new FollowPath(path, true),
+                new ReadyOuttake(),
+                new GetSample(1.25),
+                new IntakeRetract()
+        );
+    }
+
+    private SequentialCommandGroup grab(Path path, BooleanSupplier override) {
+        return new SequentialCommandGroup(
+                new BucketHover(),
+                new FollowPath(path, true),
+                new ReadyOuttake(),
                 new GetSample(1.25),
                 new IntakeRetract()
         );
@@ -195,6 +207,20 @@ public class Sample extends BaseAuto {
                 new ReadyHighSample(),
                 new WaitCommand(550),
                 new FollowPath(path, true),
+                new OpenClaw(),
+                new WaitCommand(150)
+        );
+    }
+
+    private SequentialCommandGroup score(Path path, int timing, BooleanSupplier override) {
+        return new SequentialCommandGroup(
+                new WaitCommand(600),
+                new GrabSample(),
+                new DoorClose(),
+                new WaitCommand(120),
+                new ReadyHighSample(),
+                new WaitCommand(timing),
+                new FollowPath(path, true, override),
                 new OpenClaw(),
                 new WaitCommand(150)
         );

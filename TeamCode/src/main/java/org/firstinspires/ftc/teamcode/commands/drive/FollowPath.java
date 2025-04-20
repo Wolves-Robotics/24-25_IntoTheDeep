@@ -33,6 +33,8 @@ public class FollowPath extends CommandBase {
         this(new PathChain(_path), _holdEnd);
     }
 
+    public FollowPath(Path _path, boolean _holdEnd, BooleanSupplier _override) {this(new PathChain(_path), _holdEnd, _override);}
+
     @Override
     public void initialize() {
         driveSubsystem.followPath(path, holdEnd);

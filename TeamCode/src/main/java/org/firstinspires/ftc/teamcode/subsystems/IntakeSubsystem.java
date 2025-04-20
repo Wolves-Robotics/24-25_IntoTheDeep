@@ -97,8 +97,7 @@ public class IntakeSubsystem extends Thread {
                 changeState(IntakeStatusState.IntakeHover);
                 break;
         }
-    }
-
+    }  m
 
     public void setTarget(int _target) {target = Math.max(Math.min(_target, Constants.intakeMaxTarget), Constants.intakeMinTarget);}
     public int getTarget() {return target;}
@@ -116,7 +115,7 @@ public class IntakeSubsystem extends Thread {
         RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.3);
     }
     public void bucketUp() {
-        RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.2);
+        RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.17);
         RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.01);
     }
     public void bucketHover() {
