@@ -21,7 +21,7 @@ public class ColorSensorTest extends OpMode {
     public void init() {
         RobotHardware.reset(hardwareMap);
         robotHardware = RobotHardware.getInstance();
-        colorSensor = Names.intakeColor;
+        colorSensor = Names.transferColor;
         lights = hardwareMap.get(RevBlinkinLedDriver.class, "led");
     }
 

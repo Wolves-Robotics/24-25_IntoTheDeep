@@ -57,17 +57,17 @@ public class Sample extends BaseAuto {
         sample3Pose = new Pose(24, 131.5, Math.toRadians(-4));
         sample3BucketPose = new Pose(18, 133.8, Math.toRadians(-20));
 
-        sample4Pose = new Pose(25.7, 134.7, Math.toRadians(24));
+        sample4Pose = new Pose(25.7, 132.7, Math.toRadians(24));
         sample4BucketPose = new Pose(17.7, 133.8, Math.toRadians(-20));
 
         submersible1Control1 = new Pose(63.8, 114.7);
-        submersible1Pose = new Pose(60.7, 97, Math.toRadians(-90));
+        submersible1Pose = new Pose(60.7, 97-24, Math.toRadians(-90));
 
         sample5BucketControl1 = new Pose(63.8, 114.7);
         sample5BucketPose = new Pose(17.7, 133.8, Math.toRadians(-20));
 
         parkControlPose = new Pose(100, 130);
-        parkPose = new Pose(60.7, 95, Math.toRadians(90));
+        parkPose = new Pose(60.7, 95-24, Math.toRadians(90));
 
         driveSubsystem.setFollower(startPose);
 

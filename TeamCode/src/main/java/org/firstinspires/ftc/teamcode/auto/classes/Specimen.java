@@ -54,7 +54,7 @@ public class Specimen extends BaseAuto{
     protected Specimen(Color _color) {
         super(_color);
 
-        startPose = new Pose(8, 60, Math.toRadians(180));
+        startPose = new Pose(8.1, 60, Math.toRadians(180));
         scoreSpec1Pose = new Pose(31, 59.5, Math.toRadians(180));
 
         farSamp1Control1 = new Pose(30.5, 18.8);
@@ -170,6 +170,7 @@ public class Specimen extends BaseAuto{
         readySpec5Path = new PathBuilder()
                 .addPath(new BezierCurve(new Point(scoreSpec4Pose), new Point(readySpec5Control1), new Point(readySpec5Pose)))
                 .setLinearHeadingInterpolation(scoreSpec4Pose.getHeading(), readySpec5Pose.getHeading())
+                .setZeroPowerAccelerationMultiplier(3.5)
                 .build();
 
         scoreSpec5Path = new PathBuilder()
@@ -197,7 +198,7 @@ public class Specimen extends BaseAuto{
                 new FollowPath(farSamp3Path, false, () -> DriveSubsystem.getInstance().getYPos() < 10.5),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(jailSamp3ReadySpec2Path, true, () -> DriveSubsystem.getInstance().getXPos() < 15.5),
+                new FollowPath(jailSamp3ReadySpec2Path, true, () -> DriveSubsystem.getInstance().getXPos() < 15.8),
                 new CloseClaw(),
                 new WaitCommand(125),
 
@@ -210,7 +211,7 @@ public class Specimen extends BaseAuto{
                 new OpenClaw(),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(readySpec3Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.5),
+                new FollowPath(readySpec3Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.55),
                 new CloseClaw(),
                 new WaitCommand(125),
 
@@ -223,7 +224,7 @@ public class Specimen extends BaseAuto{
                 new OpenClaw(),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(readySpec4Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.5),
+                new FollowPath(readySpec4Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.55),
                 new CloseClaw(),
                 new WaitCommand(125),
 
@@ -236,7 +237,7 @@ public class Specimen extends BaseAuto{
                 new OpenClaw(),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(readySpec5Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.5),
+                new FollowPath(readySpec5Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.55),
                 new CloseClaw(),
                 new WaitCommand(125),
 

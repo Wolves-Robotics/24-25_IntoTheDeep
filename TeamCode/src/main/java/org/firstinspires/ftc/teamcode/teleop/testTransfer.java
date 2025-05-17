@@ -4,42 +4,41 @@ import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.GrabSample;
 import org.firstinspires.ftc.teamcode.commands.complex.sample.IntakeRetract;
+import org.firstinspires.ftc.teamcode.commands.outtake.OpenClaw;
 import org.firstinspires.ftc.teamcode.utils.Names;
 import org.firstinspires.ftc.teamcode.utils.RobotHardware;
+import org.firstinspires.ftc.teamcode.utils.utilClasses.ButtonTimer;
 
-@TeleOp
-public class SoloKota extends OpMode {
+public class testTransfer extends OpMode {
 
     private RobotHardware robotHardware;
     private double deltaTime = 0;
     private PIDController intakePID, outtakePID;
     private ElapsedTime clawTime;
-    private boolean grab=false, manualIntake=false, holdHang = false;
+    private boolean grab=false, manualIntake=false;
     private double ip=0.014, ii=0.15, id=0.00081, op=0.04, oi=0, od=0.001, of=0.16;
     private double iTarget=0, oTarget=0;
 
     private CRServo lefthang;
     private CRServo rightHang;
 
+    private ButtonTimer buttonTimer, clawTimer;
+
     @Override
     public void init() {
         CommandScheduler.getInstance().reset();
         RobotHardware.reset(hardwareMap);
         robotHardware = RobotHardware.getInstance();
-        clawTime = new ElapsedTime();
         intakePID = new PIDController(ip, ii, id);
-        outtakePID = new PIDController(op, oi, od);
 
-        lefthang = hardwareMap.get(CRServo.class, "idkhang2");
-        rightHang = hardwareMap.get(CRServo.class, "idkhang1");
+        buttonTimer = new ButtonTimer(500);
+        clawTimer = new ButtonTimer(200);
 
     }
 
@@ -51,7 +50,7 @@ public class SoloKota extends OpMode {
     @Override
     public void loop() {
         CommandScheduler.getInstance().run();
-        //COMMANDS
+
         if (gamepad1.a) {
             robotHardware.setMotorPower(Names.intakeExtendo, -1);
             manualIntake = true;
@@ -65,7 +64,6 @@ public class SoloKota extends OpMode {
             robotHardware.setServoPos(Names.intakePivot, 0.48);
             robotHardware.setMotorPower(Names.slurp, 1);
             robotHardware.setServoPos(Names.door, 0.73);
-
         }
         if (gamepad1.b){
             CommandScheduler.getInstance().schedule(new IntakeRetract());
@@ -74,21 +72,12 @@ public class SoloKota extends OpMode {
 
         if (gamepad1.dpad_left) robotHardware.setMotorPower(Names.slurp, -1);
 
-        if((gamepad1.right_bumper || gamepad2.right_bumper) && clawTime.seconds() > 0.2) {
-            clawTime.reset();
+        if (gamepad1.right_bumper && clawTimer.isReady()) {
             grab = !grab;
             if (grab) robotHardware.setServoPos(Names.claw ,0);
             else robotHardware.setServoPos(Names.claw, 0.35);
         }
-        if(gamepad1.right_stick_button) {
-            robotHardware.setServoPos(Names.outtakeArm, 0.2);
-            robotHardware.setServoPos(Names.outtakePivot, 0.1);
-            robotHardware.setServoPos(Names.intakeArm, 0.3);
-            robotHardware.setServoPos(Names.intakePivot, 0.22);
-            robotHardware.setServoPos(Names.claw, 0.35);
 
-            oTarget = 0;
-        }
         if(gamepad1.left_stick_button) {
             CommandScheduler.getInstance().schedule(new GrabSample());
             grab = true;
@@ -114,44 +103,6 @@ public class SoloKota extends OpMode {
             iTarget = 0;
         }
 
-        if (gamepad1.options) {
-            robotHardware.resetImuYaw();
-        }
-
-        if(gamepad2.dpad_right){
-            oTarget = 20;
-            RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.7);
-            RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.3);
-            robotHardware.setServoPos(Names.intakePivot, 0.22);
-            robotHardware.setServoPos(Names.intakeArm, 0.3);
-        }
-
-        if(gamepad2.dpad_up){
-            oTarget = 450;
-            RobotHardware.getInstance().setServoPos(Names.outtakeArm, 0.6);
-            RobotHardware.getInstance().setServoPos(Names.outtakePivot, 0.55);
-        }
-        if(gamepad2.dpad_down){
-            oTarget = 0;
-        }
-
-        if (gamepad1.dpad_up) {
-            lefthang.setPower(1);
-            rightHang.setPower(-1);
-        } else if (gamepad1.dpad_right) {
-            lefthang.setPower(-1);
-            rightHang.setPower(1);
-        } else if (!holdHang){
-            lefthang.setPower(0);
-            rightHang.setPower(0);
-        }
-
-
-
-        // sudo rm /* -rf
-
-
-        //DRIVING
         double x = gamepad1.left_stick_x + gamepad2.left_stick_x;
         double y = -gamepad1.left_stick_y - gamepad2.left_stick_y;
         double rot = gamepad1.right_stick_x + gamepad2.right_stick_x;
@@ -188,15 +139,8 @@ public class SoloKota extends OpMode {
         robotHardware.setMotorPower(Names.leftOuttake, power);
         robotHardware.setMotorPower(Names.rightOuttake, power);
 
-        if (robotHardware.isRed(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.RED);
-        else if (robotHardware.isBlue(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
-        else if (robotHardware.isYellow(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.GOLD);
-        else robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_WHITE);
-
-        deltaTime = getRuntime();
-        resetRuntime();
-
-        telemetry.addData("delta time", deltaTime);
-        telemetry.update();
+        if (gamepad1.options) {
+            robotHardware.resetImuYaw();
+        }
     }
 }

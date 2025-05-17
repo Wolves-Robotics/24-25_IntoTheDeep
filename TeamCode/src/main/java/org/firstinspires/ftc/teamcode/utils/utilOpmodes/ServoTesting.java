@@ -46,8 +46,6 @@ public class ServoTesting extends OpMode {
         robotHardware.setServoDirection(Names.outtakePivot, outtakePivotReverse);
         robotHardware.setServoDirection(Names.outtakeArm, outtakeArmReverse);
         robotHardware.setServoDirection(Names.claw, clawReverse);
-        robotHardware.setServoDirection(Names.leftHang, leftHangReverse);
-        robotHardware.setServoDirection(Names.rightHang, rightHangReverse);
 
         robotHardware.setServoPos(Names.door, doorPos);
         robotHardware.setServoPos(Names.intakePivot, intakePivotPos);
@@ -55,7 +53,5 @@ public class ServoTesting extends OpMode {
         robotHardware.setServoPos(Names.outtakePivot, outtakePivotPos);
         robotHardware.setServoPos(Names.outtakeArm, outtakeArmPos);
         robotHardware.setServoPos(Names.claw, clawPos);
-        robotHardware.setServoPos(Names.leftHang, leftHangPos);
-        robotHardware.setServoPos(Names.rightHang, rightHangPos);
     }
 }

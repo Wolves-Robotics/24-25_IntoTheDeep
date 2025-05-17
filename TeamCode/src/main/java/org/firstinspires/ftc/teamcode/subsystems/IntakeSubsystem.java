@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -18,6 +19,7 @@ public class IntakeSubsystem extends Thread {
     private IntakeStatusState intakeStatusState;
     private int index;
     private ElapsedTime elapsedTime;
+
 
     public static void reset() {
         instance = new IntakeSubsystem();
@@ -97,7 +99,7 @@ public class IntakeSubsystem extends Thread {
                 changeState(IntakeStatusState.IntakeHover);
                 break;
         }
-    }  m
+    }
 
     public void setTarget(int _target) {target = Math.max(Math.min(_target, Constants.intakeMaxTarget), Constants.intakeMinTarget);}
     public int getTarget() {return target;}
@@ -115,7 +117,7 @@ public class IntakeSubsystem extends Thread {
         RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.3);
     }
     public void bucketUp() {
-        RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.17);
+        RobotHardware.getInstance().setServoPos(Names.intakePivot, 0.23);
         RobotHardware.getInstance().setServoPos(Names.intakeArm, 0.01);
     }
     public void bucketHover() {
@@ -141,6 +143,11 @@ public class IntakeSubsystem extends Thread {
     public void stopManual() {
         pidOn = true;
         target = RobotHardware.getInstance().getMotorPos(Names.intakeExtendo);
+    }
+
+
+    public void setIntakeSpeed() {
+        RobotHardware.getInstance().setMotorPower(Names.slurp, 0.7);
     }
 
     public void startPid() {
