@@ -40,6 +40,8 @@ public class Sample extends BaseAuto {
             sample5BucketControl1, sample5BucketPose,
             submersible2Control1, submersible2Pose,
             sample6BucketControl1, sample6BucketPose,
+            submersible3Control1, submersible3Pose,
+            sample7BucketControl1, sample7BucketPose,
             parkControlPose, parkPose;
 
     private Path
@@ -49,6 +51,7 @@ public class Sample extends BaseAuto {
             getSample4Path, scoreSample4Path,
             submersible1Path, scoreSample5Path,
             submersible2Path, scoreSample6Path,
+            submersible3Path, scoreSample7Path,
             parkPath;
 
     protected Sample(Color _color) {
@@ -77,6 +80,12 @@ public class Sample extends BaseAuto {
 
         sample6BucketControl1 = new Pose(63.8, 114.7);
         sample6BucketPose = new Pose(17.7, 133.8, Math.toRadians(-20));
+
+        submersible3Control1 = new Pose(63.8, 114.7);
+        submersible3Pose = new Pose(72, 97, Math.toRadians(-90));
+
+        sample7BucketControl1 = new Pose(63.8, 114.7);
+        sample7BucketPose = new Pose(17.7, 133.8, Math.toRadians(-20));
 
         parkControlPose = new Pose(80, 130);
         parkPose = new Pose(60.7, 95, Math.toRadians(90));
@@ -158,12 +167,26 @@ public class Sample extends BaseAuto {
         ));
         scoreSample6Path.setLinearHeadingInterpolation(submersible2Pose.getHeading(), sample6BucketPose.getHeading());
 
+        submersible3Path = new Path(new BezierCurve(
+                sample6BucketPose,
+                submersible3Control1,
+                submersible3Pose
+        ));
+        submersible3Path.setLinearHeadingInterpolation(sample6BucketPose.getHeading(), submersible3Pose.getHeading());
+
+        scoreSample7Path = new Path(new BezierCurve(
+                submersible3Pose,
+                sample7BucketControl1,
+                sample7BucketPose
+        ));
+        scoreSample7Path.setLinearHeadingInterpolation(submersible3Pose.getHeading(), sample7BucketPose.getHeading());
+
         parkPath = new Path(new BezierCurve(
                 new Point(sample5BucketPose),
                 new Point(parkControlPose),
                 new Point(parkPose)
         ));
-        parkPath.setLinearHeadingInterpolation(sample5BucketPose.getHeading(), parkPose.getHeading());
+        parkPath.setLinearHeadingInterpolation(sample7BucketPose.getHeading(), parkPose.getHeading());
 
         schedule(new SequentialCommandGroup(
                 new ReadyHighSample(),
@@ -188,13 +211,15 @@ public class Sample extends BaseAuto {
                 new BucketHover(),
                 new FollowPath(submersible1Path, true),
                 new GetSample(2, color),
-                new IntakeRetract(),
-                new TransferDistance(),
-                new GrabSample(),
-                new WaitCommand(120),
+                new FollowPath(scoreSample5Path, true, () -> DriveSubsystem.getInstance().getXPos() < 18.5)
+                        .alongWith(new IntakeRetract()
+                                .andThen(new IntakeRetract())
+                                .andThen(new TransferDistance())
+                                .andThen(new GrabSample())
+                                .andThen(new WaitCommand(120))
+                                .andThen(new ReadyHighSample())
+                        ),
 
-                new ReadyHighSample(),
-                new FollowPath(scoreSample5Path, true, () -> DriveSubsystem.getInstance().getXPos() < 18.5),
                 new OpenClaw(),
                 new WaitCommand(150),
                 new SetOuttakeTarget(200),
@@ -205,13 +230,34 @@ public class Sample extends BaseAuto {
                 new BucketHover(),
                 new FollowPath(submersible2Path, true),
                 new GetSample(2, color),
-                new IntakeRetract(),
-                new TransferDistance(),
-                new GrabSample(),
-                new WaitCommand(120),
+                new FollowPath(scoreSample6Path, true, () -> DriveSubsystem.getInstance().getXPos() < 18)
+                        .alongWith(new IntakeRetract()
+                                .andThen(new IntakeRetract())
+                                .andThen(new TransferDistance())
+                                .andThen(new GrabSample())
+                                .andThen(new WaitCommand(120))
+                                .andThen(new ReadyHighSample())
+                        ),
 
-                new ReadyHighSample(),
-                new FollowPath(scoreSample6Path, true, () -> DriveSubsystem.getInstance().getXPos() < 18),
+                new OpenClaw(),
+                new WaitCommand(150),
+                new SetOuttakeTarget(200),
+                new ClawSample(),
+
+                new ReadyOuttake(),
+                new DoorClose(),
+                new BucketHover(),
+                new FollowPath(submersible3Path, true),
+                new GetSample(2, color),
+                new FollowPath(scoreSample7Path, true, () -> DriveSubsystem.getInstance().getXPos() < 18)
+                        .alongWith(new IntakeRetract()
+                                .andThen(new IntakeRetract())
+                                .andThen(new TransferDistance())
+                                .andThen(new GrabSample())
+                                .andThen(new WaitCommand(120))
+                                .andThen(new ReadyHighSample())
+                        ),
+
                 new OpenClaw(),
                 new WaitCommand(150),
                 new SetOuttakeTarget(200),
