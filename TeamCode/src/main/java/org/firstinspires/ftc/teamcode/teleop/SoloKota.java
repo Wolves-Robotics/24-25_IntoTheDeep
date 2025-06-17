@@ -22,7 +22,7 @@ public class SoloKota extends OpMode {
     private double deltaTime = 0;
     private PIDController intakePID, outtakePID;
     private ElapsedTime clawTime;
-    private boolean grab=false, manualIntake=false, holdHang = false;
+    private boolean grab=false, manualIntake=false, holdHang = false, intaking = false;
     private double ip=0.014, ii=0.15, id=0.00081, op=0.04, oi=0, od=0.001, of=0.16;
     private double iTarget=0, oTarget=0;
 
@@ -41,6 +41,7 @@ public class SoloKota extends OpMode {
         lefthang = hardwareMap.get(CRServo.class, "idkhang2");
         rightHang = hardwareMap.get(CRServo.class, "idkhang1");
 
+        intaking = false;
     }
 
     @Override
@@ -65,27 +66,27 @@ public class SoloKota extends OpMode {
             robotHardware.setServoPos(Names.intakePivot, 0.48);
             robotHardware.setMotorPower(Names.slurp, 1);
             robotHardware.setServoPos(Names.door, 0.73);
+            intaking = true;
 
         }
         if (gamepad1.b){
             CommandScheduler.getInstance().schedule(new IntakeRetract());
+            intaking = false;
             iTarget = 0;
         }
-
-        if (gamepad1.dpad_left) robotHardware.setMotorPower(Names.slurp, -1);
 
         if((gamepad1.right_bumper || gamepad2.right_bumper) && clawTime.seconds() > 0.2) {
             clawTime.reset();
             grab = !grab;
-            if (grab) robotHardware.setServoPos(Names.claw ,0);
-            else robotHardware.setServoPos(Names.claw, 0.35);
+            if (grab) robotHardware.setServoPos(Names.claw ,0.11);
+            else robotHardware.setServoPos(Names.claw, 0.5);
         }
         if(gamepad1.right_stick_button) {
             robotHardware.setServoPos(Names.outtakeArm, 0.2);
             robotHardware.setServoPos(Names.outtakePivot, 0.1);
             robotHardware.setServoPos(Names.intakeArm, 0.3);
             robotHardware.setServoPos(Names.intakePivot, 0.22);
-            robotHardware.setServoPos(Names.claw, 0.35);
+            robotHardware.setServoPos(Names.claw, 0.5);
 
             oTarget = 0;
         }
@@ -106,6 +107,12 @@ public class SoloKota extends OpMode {
             robotHardware.setServoPos(Names.outtakeArm, 0.45);
             robotHardware.setServoPos(Names.outtakePivot, 0.4);
             robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.AQUA);
+        }
+
+        if (gamepad1.dpad_up) {
+            oTarget = 0;
+            robotHardware.setServoPos(Names.outtakeArm, 0.45);
+            robotHardware.setServoPos(Names.outtakePivot, 0.4);
         }
 
         if (gamepad1.dpad_down) {
@@ -135,7 +142,7 @@ public class SoloKota extends OpMode {
             oTarget = 0;
         }
 
-        if (gamepad1.dpad_up) {
+        if (gamepad1.right_trigger > 0.75) {
             lefthang.setPower(1);
             rightHang.setPower(-1);
         } else if (gamepad1.dpad_right) {
@@ -146,7 +153,16 @@ public class SoloKota extends OpMode {
             rightHang.setPower(0);
         }
 
+        if (gamepad1.dpad_left) {
+            robotHardware.setMotorPower(Names.slurp, -1);
+            intaking = false;
+        }
 
+        if (RobotHardware.getInstance().getDistance(Names.intakeColor) < 0.75 && intaking) {
+            robotHardware.setMotorPower(Names.slurp, 0.3);
+        } else if (intaking) {
+            robotHardware.setMotorPower(Names.slurp, 1);
+        }
 
         // sudo rm /* -rf
 

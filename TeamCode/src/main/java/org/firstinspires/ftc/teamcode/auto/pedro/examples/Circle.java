@@ -7,14 +7,13 @@ import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.auto.pedro.constants.FConstants;
+import org.firstinspires.ftc.teamcode.auto.pedro.constants.LConstants;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
-
-import org.firstinspires.ftc.teamcode.auto.pedro.constants.FConstants;
-import org.firstinspires.ftc.teamcode.auto.pedro.constants.LConstants;
-import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
 /**
  * This is the Circle autonomous OpMode. It runs the robot in a PathChain that's actually not quite
@@ -44,9 +43,7 @@ public class Circle extends OpMode {
      */
     @Override
     public void init() {
-        Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(RobotHardware.getInstance().getHardwareMap());
-//        follower = new Follower(RobotHardware.getInstance().getHardwareMap(), FConstants.class, LConstants.class);
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
 
         circle = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(0,0, Point.CARTESIAN), new Point(RADIUS,0, Point.CARTESIAN), new Point(RADIUS, RADIUS, Point.CARTESIAN)))

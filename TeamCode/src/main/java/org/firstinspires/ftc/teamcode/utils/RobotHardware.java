@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.localization.GoBildaPinpointDriver;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
@@ -83,10 +85,10 @@ public class RobotHardware extends Thread {
     }
 
     private static class ColorSensorClass {
-        ColorSensor colorSensor;
+        RevColorSensorV3 colorSensor;
 
         public ColorSensorClass(Names name) {
-            colorSensor = hardwareMap.get(ColorSensor.class, Constants.getStringName(name));
+            colorSensor = hardwareMap.get(RevColorSensorV3.class, Constants.getStringName(name));
         }
     }
 
@@ -117,7 +119,7 @@ public class RobotHardware extends Thread {
     public void teleOpServoInit() {
         setServoPos(Names.intakeArm, 0.1);
         setServoPos(Names.intakePivot, 0.19);
-        setServoPos(Names.claw, 0.3);
+        setServoPos(Names.claw, 0.5);
         setServoPos(Names.outtakeArm, 0.2);
         setServoPos(Names.outtakePivot, 0.1);
         setServoPos(Names.door, 0.7);
@@ -151,7 +153,7 @@ public class RobotHardware extends Thread {
     public void servoInit() {
         setServoPos(Names.intakeArm, 0.02);
         setServoPos(Names.intakePivot, 0.19);
-        setServoPos(Names.claw, 0.3);
+        setServoPos(Names.claw, 0.5);
         setServoPos(Names.outtakeArm, 0.23);
         setServoPos(Names.outtakePivot, 0.4);
         setServoPos(Names.door, 0.7);
@@ -238,6 +240,10 @@ public class RobotHardware extends Thread {
 
     public int getGreen(Names name) {
         return colorSensorMap.get(name).colorSensor.green();
+    }
+
+    public double getDistance(Names name) {
+        return colorSensorMap.get(name).colorSensor.getDistance(DistanceUnit.CM);
     }
 
     public void startPids() {

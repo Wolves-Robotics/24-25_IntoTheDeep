@@ -34,8 +34,7 @@ public class DriveSubsystem extends Thread{
 
     public void setFollower(Pose pose) {
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(RobotHardware.getInstance().getHardwareMap());
-//        follower = new Follower(RobotHardware.getInstance().getHardwareMap(), FConstants.class, LConstants.class);
+        follower = new Follower(RobotHardware.getInstance().getHardwareMap(), FConstants.class, LConstants.class);
         follower.setStartingPose(pose);
     }
 

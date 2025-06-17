@@ -72,7 +72,7 @@ public class Specimen extends BaseAuto{
         farSamp3Control1 = new Pose(67.5, 17);
         farSamp3Pose = new Pose(58.5, 9.5, Math.toRadians(0));
 
-        jailSamp3ReadySpec2Pose = new Pose(15, 9.5, Math.toRadians(0));
+        jailSamp3ReadySpec2Pose = new Pose(15.5, 9.5, Math.toRadians(0));
 
         scoreSpec2Control1 = new Pose(42, 28);
         scoreSpec2Control2 = new Pose(1, 67.7);
@@ -198,7 +198,7 @@ public class Specimen extends BaseAuto{
                 new FollowPath(farSamp3Path, false, () -> DriveSubsystem.getInstance().getYPos() < 10.5),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(jailSamp3ReadySpec2Path, true, () -> DriveSubsystem.getInstance().getXPos() < 15.8),
+                new FollowPath(jailSamp3ReadySpec2Path, true, () -> DriveSubsystem.getInstance().getXPos() < 16),
                 new CloseClaw(),
                 new WaitCommand(125),
 
@@ -211,7 +211,7 @@ public class Specimen extends BaseAuto{
                 new OpenClaw(),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(readySpec3Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.55),
+                new FollowPath(readySpec3Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.9),
                 new CloseClaw(),
                 new WaitCommand(125),
 
@@ -224,7 +224,7 @@ public class Specimen extends BaseAuto{
                 new OpenClaw(),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(readySpec4Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.55),
+                new FollowPath(readySpec4Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.9),
                 new CloseClaw(),
                 new WaitCommand(125),
 
@@ -237,7 +237,7 @@ public class Specimen extends BaseAuto{
                 new OpenClaw(),
 
                 new ReadySpecimenGrab(),
-                new FollowPath(readySpec5Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.55),
+                new FollowPath(readySpec5Path, true, () -> DriveSubsystem.getInstance().getYPos() < 15.9),
                 new CloseClaw(),
                 new WaitCommand(125),
 

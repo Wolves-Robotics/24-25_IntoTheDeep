@@ -19,7 +19,6 @@ public class PidTesting extends OpMode {
     private PIDF intakePid, outtakePidf;
     public static double ip=0, ii=0, id=0, op=0, oi=0, od=0, of=0;
     public static int iTarget=0, oTarget=0;
-    public static double iArm=0, iPiv=0;
     private MultipleTelemetry multipleTelemetry;
 
 
@@ -28,8 +27,8 @@ public class PidTesting extends OpMode {
         RobotHardware.reset(hardwareMap);
         robotHardware = RobotHardware.getInstance();
         robotHardware.start();
-        robotHardware.setServoPos(Names.outtakeArm, 0.3);
-        robotHardware.setServoPos(Names.outtakePivot, 0.3);
+        robotHardware.setServoPos(Names.intakeArm, 0.3);
+        robotHardware.setServoPos(Names.intakePivot, 0.3);
         intake = new PIDController(ip, ii, id);
         intakePid = new PIDF(0, 0, 0,
                 () -> robotHardware.getMotorPos(Names.intakeExtendo),

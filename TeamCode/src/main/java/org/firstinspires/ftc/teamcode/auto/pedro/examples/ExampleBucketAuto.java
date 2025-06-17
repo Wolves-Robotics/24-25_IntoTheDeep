@@ -14,7 +14,6 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.auto.pedro.constants.FConstants;
 import org.firstinspires.ftc.teamcode.auto.pedro.constants.LConstants;
-import org.firstinspires.ftc.teamcode.utils.RobotHardware;
 
 /**
  * This is an example auto that showcases movement and control of two servos autonomously.
@@ -266,9 +265,7 @@ public class ExampleBucketAuto extends OpMode {
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
 
-        Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(RobotHardware.getInstance().getHardwareMap());
-//        follower = new Follower(RobotHardware.getInstance().getHardwareMap(), FConstants.class, LConstants.class);
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
     }

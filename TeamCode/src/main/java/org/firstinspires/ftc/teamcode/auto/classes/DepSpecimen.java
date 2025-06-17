@@ -67,8 +67,7 @@ public class DepSpecimen extends OpMode {
         robotHardware.setServoPos(Names.outtakePivot, 0.4);
         robotHardware.setServoPos(Names.door, 0.7);
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(RobotHardware.getInstance().getHardwareMap());
-//        follower = new Follower(RobotHardware.getInstance().getHardwareMap(), FConstants.class, LConstants.class);
+        follower = new Follower(RobotHardware.getInstance().getHardwareMap(), FConstants.class, LConstants.class);
         follower.setStartingPose(new Pose(135, 80, 0));
         follower.update();
         elapsedTime = new ElapsedTime();

@@ -59,13 +59,15 @@ public class ColorSensorTest extends OpMode {
             telemetry.addData("Highest green", highestGreen);
             telemetry.addData("Lowest green", lowestGreen);
 
+            telemetry.addData("Distance", robotHardware.getDistance(Names.intakeColor));
+
             telemetry.update();
         }
 
         if (gamepad1.x) {
-            totalRed = 0; numRed = 0; highestRed = -999; lowestRed = 999;
-            totalBlue = 0; numBlue = 0; highestBlue = -999; lowestBlue = 999;
-            totalGreen = 0; numGreen = 0; highestGreen = -999; lowestGreen = 999;
+            totalRed = 0; numRed = 0; highestRed = -999999; lowestRed = 999999;
+            totalBlue = 0; numBlue = 0; highestBlue = -999999; lowestBlue = 999999;
+            totalGreen = 0; numGreen = 0; highestGreen = -999999; lowestGreen = 999999;
 
             telemetry.addData("Average red", 0);
             telemetry.addData("Highest red", highestRed);
@@ -80,12 +82,9 @@ public class ColorSensorTest extends OpMode {
             telemetry.addData("Highest green", highestGreen);
             telemetry.addData("Lowest green", lowestGreen);
 
+            telemetry.addData("Distance", robotHardware.getDistance(Names.intakeColor));
+
             telemetry.update();
         }
-
-        if (robotHardware.isRed(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.RED);
-        else if (robotHardware.isBlue(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.BLUE);
-        else if (robotHardware.isYellow(Names.intakeColor)) robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.GOLD);
-        else robotHardware.setLightColor(RevBlinkinLedDriver.BlinkinPattern.HEARTBEAT_WHITE);
     }
 }

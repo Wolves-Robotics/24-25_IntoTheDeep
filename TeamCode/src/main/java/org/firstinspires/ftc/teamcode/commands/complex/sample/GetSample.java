@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.commands.complex.sample;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.collections.Color;
 import org.firstinspires.ftc.teamcode.subsystems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.utils.Names;
@@ -13,11 +14,14 @@ public class GetSample extends CommandBase {
 
     private ElapsedTime elapsedTime, turnTime;
 
+    private Color color;
+
     private boolean extended = false, wrongColor = false,
                     left = true;
 
-    public GetSample(double _time) {
+    public GetSample(double _time, Color _color) {
         time = _time;
+        color = _color;
 
         elapsedTime = new ElapsedTime();
         turnTime = new ElapsedTime();
@@ -39,7 +43,7 @@ public class GetSample extends CommandBase {
             extended = true;
         }
 
-        if (RobotHardware.getInstance().isBlue(Names.intakeColor) || RobotHardware.getInstance().isRed(Names.intakeColor)) {
+        if ((RobotHardware.getInstance().isBlue(Names.intakeColor) && color == Color.Red) || (RobotHardware.getInstance().isRed(Names.intakeColor) && color == Color.Blue)) {
             IntakeSubsystem.getInstance().slurpBackward();
             wrongColor = true;
         }
@@ -58,7 +62,9 @@ public class GetSample extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (RobotHardware.getInstance().isYellow(Names.intakeColor)) ||
+        return (RobotHardware.getInstance().isYellow(Names.intakeColor) ||
+                (RobotHardware.getInstance().isRed(Names.intakeColor) && color == Color.Red) ||
+                (RobotHardware.getInstance().isBlue(Names.intakeColor) && color == Color.Blue)) ||
                 (elapsedTime.seconds() > time) ||
                 (wrongColor);
     }

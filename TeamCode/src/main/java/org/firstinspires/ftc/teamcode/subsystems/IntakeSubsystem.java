@@ -103,6 +103,9 @@ public class IntakeSubsystem extends Thread {
 
     public void setTarget(int _target) {target = Math.max(Math.min(_target, Constants.intakeMaxTarget), Constants.intakeMinTarget);}
     public int getTarget() {return target;}
+    public int getPos() {
+        return RobotHardware.getInstance().getMotorPos(Names.intakeExtendo);
+    }
 
     public void slurpForward() {RobotHardware.getInstance().setMotorPower(Names.slurp, 1);}
     public void slurpBackward() {RobotHardware.getInstance().setMotorPower(Names.slurp, -0.5);}
